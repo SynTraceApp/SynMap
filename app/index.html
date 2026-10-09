@@ -218,7 +218,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 .space-map { position: relative; width: 100%; aspect-ratio: 4 / 3; max-width: 100%; border-radius: 14px; background: var(--page); border: 1px solid var(--line); }
 .space-map span { position: absolute; transform: translate(-50%, -50%); font-size: 11px; font-weight: 700; color: var(--on-violet); background: var(--violet); border-radius: 999px; padding: 1px 5px; white-space: nowrap; }
 .space-map span.old { background: transparent; color: var(--muted); border: 1px dashed var(--muted); }
-.export { display: flex; flex-direction: column; gap: 8px; }
+.export { display: flex; flex-direction: column; gap: 12px; }
+.export .fld input { font-size: 15px; }
 .export textarea { min-height: 120px; font-family: var(--mono); font-size: 11px; }
 
 /* Time estimate, pause and resume */
@@ -456,7 +457,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   <!-- Tid i rummet (sequence-space, Rothen m.fl. 2016) -->
   <section class="screen" id="s-space" hidden>
     <div class="topbar"><button class="back" id="space-quit" aria-label="Pausa testet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="track"><span id="space-bar"></span></div><span class="count" id="space-count"></span><button class="text-btn pause" id="space-pause">Pausa</button></div>
-    <div class="stack" style="gap:6px"><h1>Tid i rummet</h1><p class="muted small">Tryck där du upplever att det här ligger, med skärmen som rummet framför dig. Mitten är du.</p><p class="muted small">Du kan pausa när du vill. Svaren sparas.</p></div>
+    <div class="stack" style="gap:6px"><h1>Tid i rummet</h1><p class="muted small">Tryck där du upplever att följande tidsangivelse befinner sig i rummet. Mitten är du.</p><p class="muted small">Du kan pausa när du vill. Svaren sparas.</p></div>
     <div class="space-item" id="space-item" aria-live="polite"></div>
     <div class="space-field" id="space-field" role="application" aria-label="Rummet runt dig"><span class="you">du</span></div>
     <button class="nocolor" id="space-none"><span class="o"></span>Har ingen plats</button>
@@ -511,11 +512,22 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <div id="res-list" class="stack" style="gap:14px"></div>
     <div class="consist" id="consist"></div>
     <div class="grow"></div>
-    <details class="export" id="export"><summary>Kopiera mina data</summary><div>
-      <p class="muted small">Alla dina svar som text. CSV-formatet kan läsas av forskarnas verktyg synr. Inget skickas någonstans, du kopierar och delar själv.</p>
-      <div class="nav-row" style="grid-template-columns:1fr 1fr"><button class="btn soft" id="copy-csv">Kopiera CSV</button><button class="btn soft" id="copy-json">Kopiera allt (JSON)</button></div>
-      <textarea id="export-text" readonly aria-label="Exporterade data" hidden></textarea>
-    </div></details>
+    <div class="card export" id="export">
+      <h2>Dela med en forskare</h2>
+      <p class="muted small">Spara dina svar som en fil och skicka den till forskaren. Inget skickas automatiskt, du väljer själv vem som får filen.</p>
+      <label class="fld"><span class="lbl">Studiekod</span><input type="text" id="study-code" placeholder="Om forskaren har gett dig en kod" autocomplete="off"></label>
+      <label class="fld"><span class="lbl">Forskarens e-post</span><input type="email" id="study-mail" placeholder="namn@universitet.se" autocomplete="off"></label>
+      <button class="btn primary" id="dl-file">Spara fil med mina svar</button>
+      <button class="btn soft" id="mail-btn" disabled>Mejla forskaren</button>
+      <p class="small" id="share-msg" hidden></p>
+      <p class="muted small" id="pid-line"></p>
+      <details><summary>Fler format</summary><div>
+        <p class="muted small">Filen ovan innehåller allt (JSON). CSV är bara färgsvaren, i ett format som forskarnas verktyg synr kan läsa.</p>
+        <div class="nav-row" style="grid-template-columns:1fr 1fr"><button class="btn soft" id="dl-csv">Spara CSV</button><button class="btn soft" id="copy-csv">Kopiera CSV</button></div>
+        <button class="btn soft" id="copy-json">Kopiera allt (JSON)</button>
+        <textarea id="export-text" readonly aria-label="Exporterade data" hidden></textarea>
+      </div></details>
+    </div>
     <button class="btn soft" id="res-meaning">Vad betyder resultatet?</button>
     <button class="btn soft" id="res-profile">Visa min profil</button>
     <button class="btn primary" id="res-continue">Fortsätt</button>
@@ -669,6 +681,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   S.paused ||= {};
   S.lang ||= "sv";
   S.clan ||= { a: {}, done: null };
+  S.study ||= {};
+  // A researcher can hand out a link with ?studie=KOD&mejl=adress so the fields are filled in.
+  try { const q = new URLSearchParams(location.search); if (q.get("studie")) S.study.code = q.get("studie").slice(0, 40); if (q.get("mejl")) S.study.mail = q.get("mejl").slice(0, 120); } catch {}
   S.pid ||= "synmap-" + Math.random().toString(36).slice(2, 10);
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
   const now = () => Date.now() + S.offsetDays * 864e5;
@@ -678,6 +693,23 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // ---------- language ----------
   // Swedish is the source text; EN maps it to English. t() also fills {placeholders}.
   const EN = {
+"Dela med en forskare": "Share with a researcher",
+"Spara dina svar som en fil och skicka den till forskaren. Inget skickas automatiskt, du väljer själv vem som får filen.": "Save your answers as a file and send it to the researcher. Nothing is sent automatically; you choose who gets the file.",
+"Studiekod": "Study code",
+"Om forskaren har gett dig en kod": "If the researcher gave you a code",
+"Forskarens e-post": "Researcher's email",
+"namn@universitet.se": "name@university.edu",
+"Spara fil med mina svar": "Save a file with my answers",
+"Mejla forskaren": "Email the researcher",
+"Fler format": "More formats",
+"Filen ovan innehåller allt (JSON). CSV är bara färgsvaren, i ett format som forskarnas verktyg synr kan läsa.": "The file above contains everything (JSON). CSV is only the colour answers, in a format the research tool synr can read.",
+"Spara CSV": "Save CSV",
+"Sparad som {f}. Bifoga filen när du mejlar forskaren.": "Saved as {f}. Attach the file when you email the researcher.",
+"Filen sparades inte.": "The file was not saved.",
+"Det gick inte att spara en fil här. Använd Kopiera under Fler format i stället.": "A file could not be saved here. Use Copy under More formats instead.",
+"Ditt deltagar-id: {p}. Det finns i filen så att forskaren kan hålla isär svaren utan ditt namn.": "Your participant ID: {p}. It is in the file so the researcher can tell answers apart without your name.",
+"SynMap-svar": "SynMap answers",
+"Hej!\n\nHär är mina svar från SynMap. Filen är bifogad.\n\nDeltagar-id: {p}\nStudiekod: {c}\n": "Hi!\n\nHere are my answers from SynMap. The file is attached.\n\nParticipant ID: {p}\nStudy code: {c}\n",
 "ca {m} min, med snabbtest": "about {m} min, with speed test",
 "Gör snabbtestet (del 2)": "Do the speed test (part 2)",
 "Snabbtestet hoppades över eftersom svaren inte gick att bedöma. Det behöver färger som går att skilja åt.": "The speed test was skipped because the answers could not be assessed. It needs colours that can be told apart.",
@@ -801,7 +833,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
  "Färgfält: nyans åt sidan, ljushet uppåt och nedåt": "Colour field: hue left to right, lightness up and down",
  "Mättnad": "Saturation",
  "Ingen färg": "No colour",
- "Tryck där du upplever att det här ligger, med skärmen som rummet framför dig. Mitten är du.": "Tap where you feel this is located, with the screen as the space in front of you. The centre is you.",
+ "Tryck där du upplever att följande tidsangivelse befinner sig i rummet. Mitten är du.": "Tap where in space you feel the following time reference is located. The centre is you.",
  "Du kan pausa när du vill. Svaren sparas.": "You can pause whenever you like. Your answers are saved.",
  "Rummet runt dig": "The space around you",
  "du": "you",
@@ -1098,7 +1130,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     document.querySelectorAll("section[id^='s-']").forEach(s => s.hidden = s.id !== id);
     window.scrollTo(0, 0);
     if (id === "s-choose") renderChoose();
-    if (id === "s-results") renderResults();
+    if (id === "s-results") { renderResults(); renderShare(); }
     if (id === "s-follow") renderFollow();
     if (id === "s-profile") renderProfile();
     if (id === "s-bg") renderBg();
@@ -1569,10 +1601,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // ---------- export ----------
   const hex = c => "#" + c.map(v => v.toString(16).padStart(2, "0")).join("");
   function exportCsv() {
-    const rows = ["participant_id,test,session,session_date,trial,trial_symbol,trial_color,trial_time"];
+    const rows = ["participant_id,test,session,session_date,trial,trial_symbol,trial_color,trial_time,study_code"];
     for (const k of KEYS) S.sessions[k].forEach((ss, si) => ss.responses.forEach((r, ti) => {
       if (k === "space") return;
-      rows.push([S.pid, k, si + 1, new Date(ss.date).toISOString().slice(0, 10), ti + 1, JSON.stringify(r.s), r.rgb ? hex(r.rgb) : "", r.ms ?? ""].join(","));
+      rows.push([S.pid, k, si + 1, new Date(ss.date).toISOString().slice(0, 10), ti + 1, JSON.stringify(r.s), r.rgb ? hex(r.rgb) : "", r.ms ?? "", JSON.stringify(S.study.code || "")].join(","));
     }));
     return rows.join("\n");
   }
@@ -1583,9 +1615,44 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     return ta;
   }
   $("copy-csv").addEventListener("click", e => { copyOut(exportCsv()); e.target.textContent = t("Kopierat"); setTimeout(() => e.target.textContent = t("Kopiera CSV"), 1600); });
-  $("copy-json").addEventListener("click", e => {
+  function exportJson() {
     const { done, ...background } = S.bg;
-    copyOut(JSON.stringify({ app: "SynMap", version: 2, app_version: APP_V, participant_id: S.pid, exported: new Date().toISOString(), background, answers: S.answers, clan: S.clan.done ? { answers: S.clan.a, scores: clanScores(), date: S.clan.done } : null, sessions: S.sessions }, null, 1));
+    return JSON.stringify({ app: "SynMap", version: 2, app_version: APP_V, participant_id: S.pid, study_code: S.study.code || null, exported: new Date().toISOString(), background, answers: S.answers, clan: S.clan.done ? { answers: S.clan.a, scores: clanScores(), date: S.clan.done } : null, sessions: S.sessions }, null, 1);
+  }
+  const fileName = ext => `synmap_${(S.study.code || "data").replace(/[^\w-]+/g, "")}_${S.pid.replace("synmap-", "")}_${new Date(now()).toISOString().slice(0, 10)}.${ext}`;
+  // Saves through the claude.ai downloads capability when the page runs as an artifact, otherwise as an ordinary browser download.
+  let dlCap;
+  (async () => { try { dlCap = window.claude?.use ? await window.claude.use("downloads") : null; } catch { dlCap = null; } })();
+  async function saveFile(name, text, mime) {
+    const msg = $("share-msg");
+    try {
+      if (dlCap) await dlCap.save({ filename: name, data: text });
+      else {
+        const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: mime })); a.download = name;
+        document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+      }
+      msg.textContent = t("Sparad som {f}. Bifoga filen när du mejlar forskaren.", { f: name }); msg.hidden = false;
+    } catch (e) {
+      msg.textContent = e && e.code === "declined" ? t("Filen sparades inte.") : t("Det gick inte att spara en fil här. Använd Kopiera under Fler format i stället."); msg.hidden = false;
+    }
+  }
+  function renderShare() {
+    $("study-code").value = S.study.code || ""; $("study-mail").value = S.study.mail || "";
+    $("mail-btn").disabled = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(S.study.mail || "");
+    $("pid-line").textContent = t("Ditt deltagar-id: {p}. Det finns i filen så att forskaren kan hålla isär svaren utan ditt namn.", { p: S.pid });
+  }
+  $("study-code").addEventListener("input", e => { S.study.code = e.target.value.trim(); save(); });
+  $("study-mail").addEventListener("input", e => { S.study.mail = e.target.value.trim(); save(); renderShare(); });
+  $("dl-file").addEventListener("click", () => saveFile(fileName("json"), exportJson(), "application/json"));
+  $("dl-csv").addEventListener("click", () => saveFile(fileName("csv"), exportCsv(), "text/csv"));
+  $("mail-btn").addEventListener("click", () => {
+    const subj = t("SynMap-svar") + (S.study.code ? " " + S.study.code : "") + " " + S.pid;
+    const body = t("Hej!\n\nHär är mina svar från SynMap. Filen är bifogad.\n\nDeltagar-id: {p}\nStudiekod: {c}\n", { p: S.pid, c: S.study.code || "–" });
+    const a = document.createElement("a"); a.href = `mailto:${encodeURIComponent(S.study.mail)}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`; a.target = "_blank"; a.rel = "noopener";
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+  $("copy-json").addEventListener("click", e => {
+    copyOut(exportJson());
     e.target.textContent = t("Kopierat"); setTimeout(() => e.target.textContent = t("Kopiera allt (JSON)"), 1600);
   });
 
