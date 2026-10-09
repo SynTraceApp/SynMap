@@ -13,3 +13,6 @@ Kort logg över beslut som påverkar framtida arbete. Nyast överst. Format: `- 
 - 2026-10-09 – Samlad bedömning per test i fyra nivåer (Starkt/Måttligt/Svagt stöd, Kan inte bedömas). Starkt stöd kräver godkänd uppföljning. Gränser: konsistens 135,3, uppföljning 45 (135,3/3), snabbtest 80 % rätt, Tid i rummet 0,2029 % och flytt under 10 %. Ordet diagnos används aldrig. – Rickard
 - 2026-10-09 – Testytan är alltid neutral grå #8a8a8a, oberoende av ljust eller mörkt läge. – Rickard
 - 2026-10-09 – Appen är tvåspråkig (svenska och engelska). Stimuli sparas alltid på svenska; engelska bokstavstestet är A–Z. – Rickard
+- 2026-10-09 – Tester och frågor ska bygga på etablerad forskning där det går, med källan angiven i appen. – Rickard
+- 2026-10-09 – CLaN-enkäten (Rothen m.fl. 2013) används med den engelska originaltexten och en egen svensk översättning. Fråga Sussex-gruppen om lov och om en validerad översättning innan appen sprids brett. – Rickard
+- 2026-10-09 – Ljudtestet följer Ward m.fl. (2006): pianotoner en kvint isär och samma ton på olika instrument, syntetiserade i webbläsaren. – Rickard

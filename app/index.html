@@ -261,6 +261,15 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 .faq details > div { font-size: 15px; gap: 8px; }
 .faq a { color: var(--violet); font-weight: 600; }
 
+/* CLaN questionnaire result */
+.fac { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--line); padding-top: 10px; }
+.fac:first-of-type { border-top: 0; padding-top: 0; }
+.fac-top { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.fac-top b { color: var(--navy); min-width: 0; flex: 1; }
+.fac-top span { font-family: var(--mono); font-size: 13px; }
+.bar { height: 8px; border-radius: 4px; background: var(--line); position: relative; overflow: hidden; }
+.bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: linear-gradient(90deg, var(--teal), var(--violet)); }
+
 /* Comparison over time */
 .cmp { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 8px; }
 .cmp div { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; border-radius: 12px; background: var(--page); }
@@ -389,6 +398,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       <span class="txt"><b>Tid i rummet</b><span class="muted small">Undersök om siffror, dagar och månader har bestämda platser runt dig.</span><span class="meta"><span class="chip" id="chip-space"></span><span class="est" id="est-space"></span></span></span>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
     </button>
+    <button class="card test-card" id="pick-clan">
+      <span class="icon-disc" data-icon="clan"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="8" cy="10" r="3" fill="#ff6fa8"/><circle cx="8" cy="18" r="3" fill="#ffb56b"/><circle cx="8" cy="26" r="3" fill="#47bdb1"/><g stroke="#7657d5" stroke-width="2.4" stroke-linecap="round"><path d="M14 10h15M14 18h11M14 26h13"/></g></svg></span>
+      <span class="txt"><b>Enkät: Så upplever du färgerna</b><span class="muted small">16 frågor från forskningen (CLaN) om var färgerna syns och hur de kommer.</span><span class="meta"><span class="chip" id="chip-clan"></span><span class="est" id="est-clan"></span></span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
     <div class="links-row"><button class="text-btn" id="to-results">Mina resultat</button><button class="text-btn" id="to-profile">Min profil</button><button class="text-btn" id="to-intro">Ändra mina svar</button></div>
   </section>
 
@@ -426,6 +440,17 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     </div>
     <div class="grow"></div>
     <div class="nav-row"><button class="btn soft" id="test-prev" disabled>Föregående</button><button class="btn primary" id="test-next" disabled>Nästa</button></div>
+  </section>
+
+  <!-- Enkät: CLaN (Rothen m.fl. 2013) -->
+  <section class="screen" id="s-clan" hidden>
+    <div class="topbar"><button class="back" id="clan-back" aria-label="Föregående fråga"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="track"><span id="clan-bar"></span></div><span class="count" id="clan-count"></span></div>
+    <h1>Så upplever du färgerna</h1>
+    <p class="lead" id="clan-lead"></p>
+    <h2 id="clan-q"></h2>
+    <div class="options" role="radiogroup" id="clan-opts"></div>
+    <div class="grow"></div>
+    <div class="nav-row"><button class="btn soft" id="clan-prev">Föregående</button><button class="btn primary" id="clan-next" disabled>Nästa</button></div>
   </section>
 
   <!-- Tid i rummet (sequence-space, Rothen m.fl. 2016) -->
@@ -587,9 +612,14 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   const DAYS_EN = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const DAYS = ["Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag", "Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"];
   // Eight tones across two octaves; labels are never shown, so note names cannot cue a colour.
-  const TONES = [131, 165, 196, 247, 294, 392, 523, 659].map((f, i) => ({ id: "t" + (i + 1), f }));
+  const TONES = [131, 165, 196, 247, 294, 392, 523, 659].map((f, i) => ({ id: "t" + (i + 1), f, tim: "sine" })); // used before 2026-10-09, kept for old sessions
+  // After Ward, Huckstep & Tsakanikos (2006): piano notes a fifth apart from low to high, and middle C on different instruments.
+  const NOTES = [["A2", 110], ["E3", 164.81], ["B3", 246.94], ["F#4", 369.99], ["Db5", 554.37], ["Ab5", 830.61], ["Eb6", 1244.51]];
+  const TIMBRES = [["piano", "Piano"], ["strings", "Stråkar"], ["flute", "Flöjt"], ["clarinet", "Klarinett"], ["sine", "Ren ton"]];
+  const SOUNDS = NOTES.map(([n, f]) => ({ id: "p-" + n, f, tim: "piano", short: n }))
+    .concat(TIMBRES.map(([k, name]) => ({ id: "c4-" + k, f: 261.63, tim: k, name })));
   const TESTS = {
-    sound: { title: "Ljud → färg", lead: "Lyssna på ljudet och svara på frågorna om du upplever en färg.", stimuli: TONES.map(t => t.id), q: "2. Vilken färg upplevde du?", sub: "Färgupplevelser rapporterade" },
+    sound: { title: "Ljud → färg", lead: "Lyssna och svara om du upplever en färg. Du hör pianotoner från låga till höga och samma ton på olika instrument.", stimuli: SOUNDS.map(x => x.id), all: SOUNDS.concat(TONES).map(x => x.id), q: "2. Vilken färg upplevde du?", sub: "Färgupplevelser rapporterade" },
     digits: { title: "Siffra → färg", lead: "Gå på känsla och svara utan att försöka minnas tidigare svar.", stimuli: DIGITS, q: "Vilken färg förknippar du med siffran?", sub: "Färgassociationer registrerade" },
     letters: { title: "Bokstav → färg", lead: "Gå på känsla och svara utan att försöka minnas tidigare svar.", stimuli: LETTERS, q: "Vilken färg förknippar du med bokstaven?", sub: "Färgassociationer registrerade" },
     time: { title: "Veckodag och månad → färg", lead: "Gå på känsla och svara utan att försöka minnas tidigare svar.", stimuli: DAYS, q: "Vilken färg förknippar du med ordet?", sub: "Färgassociationer registrerade", word: true }
@@ -597,10 +627,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   TESTS.space = { title: "Tid i rummet", stimuli: DIGITS.concat(DAYS), sub: "Platser registrerade", kind: "space" };
   // Stimuli are stored in Swedish; disp() shows them in the current language.
   const disp = s => S.lang === "en" && DAYS.includes(s) ? DAYS_EN[DAYS.indexOf(s)] : s;
-  const label = (key, s, i) => key === "sound" ? String(i + 1) : disp(s).length > 2 ? disp(s).slice(0, 3) : disp(s);
+  const soundLabel = id => { const x = SOUNDS.find(o => o.id === id); return x ? x.short || t(x.name).slice(0, 3) : id.slice(1); };
+  const label = (key, s, i) => key === "sound" ? soundLabel(s) : disp(s).length > 2 ? disp(s).slice(0, 3) : disp(s);
   // English letters are A–Z; a session keeps whatever letters it was run with.
   const stimFor = key => key === "letters" && S.lang === "en" ? LETTERS.slice(0, 26) : TESTS[key].stimuli;
-  const orderFor = (key, sess) => TESTS[key].stimuli.filter(x => stimFor(key).includes(x) || (sess && sess.responses.some(r => r.s === x)));
+  const orderFor = (key, sess) => (TESTS[key].all || TESTS[key].stimuli).filter(x => stimFor(key).includes(x) || (sess && sess.responses.some(r => r.s === x)));
   const SPACE_LIMIT = 0.2029; // % of the field; Rothen m.fl. (2016)
   // Screening questions, modelled on the Synesthesia Battery pretest (Eagleman m.fl. 2007).
   const YES = ["Ja, tydligt", "Ibland", "Nej", "Vet inte"];
@@ -637,6 +668,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   S.bg ||= {};
   S.paused ||= {};
   S.lang ||= "sv";
+  S.clan ||= { a: {}, done: null };
   S.pid ||= "synmap-" + Math.random().toString(36).slice(2, 10);
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
   const now = () => Date.now() + S.offsetDays * 864e5;
@@ -646,6 +678,51 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // ---------- language ----------
   // Swedish is the source text; EN maps it to English. t() also fills {placeholders}.
   const EN = {
+"Enkät: Så upplever du färgerna": "Questionnaire: how you experience the colours",
+"16 frågor från forskningen (CLaN) om var färgerna syns och hur de kommer.": "16 research questions (CLaN) about where the colours appear and how they come.",
+"Så upplever du färgerna": "How you experience the colours",
+"Lyssna och svara om du upplever en färg. Du hör pianotoner från låga till höga och samma ton på olika instrument.": "Listen and answer whether you experience a colour. You will hear piano notes from low to high, and the same note on different instruments.",
+"Stråkar": "Strings",
+"Flöjt": "Flute",
+"Klarinett": "Clarinet",
+"Ren ton": "Pure tone",
+"A2–Eb6 är pianotoner från låg till hög. De andra är samma ton (C4) på piano, stråkar, flöjt, klarinett och som ren ton. De flesta, med eller utan synestesi, väljer ljusare färger för högre toner (Ward m.fl., 2006). Det som skiljer är att den som har synestesi väljer samma färg gång på gång.": "A2–Eb6 are piano notes from low to high. The others are the same note (C4) on piano, strings, flute, clarinet and as a pure tone. Most people, with or without synesthesia, choose lighter colours for higher notes (Ward et al., 2006). What differs is that people with synesthesia choose the same colour again and again.",
+"CLaN, 16 frågor (Rothen m.fl., 2013)": "CLaN, 16 questions (Rothen et al., 2013)",
+"Medelvärde 1–5 för varje del. Enkäten har ingen gräns för synestesi, den beskriver hur du upplever färgerna. Den svenska översättningen är vår egen och inte prövad i forskning.": "Mean from 1 to 5 for each part. The questionnaire has no cut-off for synesthesia; it describes how you experience the colours.",
+"Enkäten CLaN:": "CLaN questionnaire:",
+"(av 5)": "(out of 5)",
+"Jag upplever de synestetiska färgerna även när jag inte riktar uppmärksamheten mot dem (till exempel när jag läser en bok).": "I experience the synaesthetic colours even if I do not attend to them specifically (e.g. while reading a book).",
+"Jag ser de synestetiska färgerna på skärmen (eller mycket nära den).": "I see the synaesthetic colours on the computer screen (or very close to it).",
+"Det känns som att jag måste gå och hämta färgerna, snarare än att färgerna kommer till mig.": "It feels like I have to go and fetch the colours, rather than the colours coming to me.",
+"Jag upplever de synestetiska färgerna på flera ställen samtidigt (till exempel både på skärmen och bokstavligen inne i huvudet, eller någon annan kombination).": "I experience the synaesthetic colours in several locations at the same time (for instance, both on the screen and literally inside my head or some other combination).",
+"Jag upplever bara färgerna hos bokstäver och siffror om jag tänker på dem som att de har en färg.": "I only experience the synaesthetic colours of letters/numbers if I think about them as having a colour.",
+"När jag snabbt tittar på en boksida dyker de synestetiska färgerna upp innan jag hunnit uppfatta vilka bokstäverna eller orden är.": "When I am looking quickly at a page of a book the synaesthetic colours appear before I am aware of what the letters/words are.",
+"Jag ”ser” inte färger när jag tittar på bokstäverna eller siffrorna.": "I do not \"see\" colours when I look at the letters/numbers.",
+"Det verkar som att färgen finns på skärmen där bokstaven eller siffran står.": "It seems that the colour is on the screen where the letter/number is printed.",
+"De synestetiska färgerna dyker upp automatiskt, utan någon ansträngning från min sida.": "The synaesthetic colours appear automatically without any effort on my part.",
+"Jag kan peka på var de synestetiska färgerna finns.": "I can point to the location of the synaesthetic colours.",
+"Mina synestetiska färger har inte ändrat styrka genom åren.": "My synaesthetic colours did not change their intensity over the years.",
+"Jag använder medvetet mina synestetiska färger för att komma ihåg nummerföljder (till exempel pinkoder och telefonnummer).": "I use my synaesthetic colours deliberately for remembering sequences of numbers (e.g. PINs, telephone numbers).",
+"Jag försöker medvetet använda mina synestetiska färger i vardagen.": "I deliberately try to use my synaesthetic colours in my everyday life.",
+"Jag använder mina synestetiska färger för att komma ihåg datum och planera möten (till exempel 28.02.2010).": "I use my synaesthetic colours to remember dates and plan appointments (e.g. 28.02.2010).",
+"Mina synestetiska färger var svagare förr (alltså för flera år sedan).": "My synaesthetic colours were weaker in the past (i.e. years ago).",
+"Mina synestetiska färger var starkare förr (alltså för flera år sedan).": "My synaesthetic colours were stronger in the past (i.e. years ago).",
+"Tar helt avstånd": "Strongly disagree",
+"Tar delvis avstånd": "Moderately disagree",
+"Varken eller": "Neither agree nor disagree",
+"Instämmer delvis": "Moderately agree",
+"Instämmer helt": "Strongly agree",
+"Plats": "Localisation",
+"Automatik": "Automaticity",
+"Medveten användning": "Deliberate use",
+"Förändring över tid": "Change over time",
+"Högt: färgerna syns ute på tecknet eller skärmen. Lågt: de finns inne i huvudet eller som en vetskap.": "High: the colours appear out on the character or screen. Low: they are in your mind or something you just know.",
+"Högt: färgerna kommer av sig själva, utan att du försöker.": "High: the colours come by themselves, without you trying.",
+"Högt: du använder färgerna medvetet, till exempel för att minnas.": "High: you use the colours on purpose, for example to remember things.",
+"Högt: färgerna har blivit starkare eller svagare med åren.": "High: the colours have become stronger or weaker over the years.",
+"Påbörjad, {i} av {n}": "Started, {i} of {n}",
+"Tänk på färgerna du upplever för bokstäver och siffror, till exempel A, B, C och 0–9.": "Think about the colours you experience for letters and numbers, such as A, B, C and 0–9.",
+"Tänk nu på dina synestetiska färger i allmänhet.": "Now think about your synaesthetic experiences in general.",
  "Upptäck hur dina sinnen kan vara sammankopplade.": "Discover how your senses may be connected.",
  "Börja": "Start",
  "Om synestesi": "About synesthesia",
@@ -1098,7 +1175,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const rec = answered.filter(k => S.answers[ASKED[k]] !== "Nej");
     const all = !rec.length;
     for (const k of KEYS) (all || rec.includes(k) ? $("rec-list") : $("more-list")).appendChild($("pick-" + k));
-    $("more-tests").hidden = all || rec.length === KEYS.length;
+    (all || (S.answers.graph && S.answers.graph !== "Nej") ? $("rec-list") : $("more-list")).appendChild($("pick-clan"));
+    $("more-tests").hidden = !$("more-list").children.length;
     $("rec-h").textContent = t(all
       ? (answered.length ? "Du svarade nej på alla färgfrågor, men du kan ändå prova ett test:" : "Alla tester")
       : "Utvalda för dig utifrån dina svar");
@@ -1107,10 +1185,13 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       chip.textContent = st.label; chip.className = "chip " + st.cls;
       $("est-" + key).textContent = st.open ? t("ca {m} min", { m: estMin(key) }) : "";
     }
+    const cs = clanState();
+    $("chip-clan").textContent = cs.label; $("chip-clan").className = "chip " + cs.cls;
+    $("est-clan").textContent = S.clan.done ? "" : t("ca {m} min", { m: 3 });
     renderResume();
   }
   // Rough minutes per test, from seconds per item; the colour tests add about a minute for the speed test.
-  const EST_SEC = { sound: 12, digits: 5, letters: 5, time: 5, space: 3 };
+  const EST_SEC = { sound: 11, digits: 5, letters: 5, time: 5, space: 3 };
   function estMin(key) {
     const p = S.paused[key], left = p ? p.list.length - p.i : stimFor(key).length * REPS;
     return Math.max(1, Math.round(left * EST_SEC[key] / 60) + (key === "sound" || key === "space" ? 0 : 1));
@@ -1140,17 +1221,47 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   $("wave-l").innerHTML = BARS.map(h => `<span style="height:${h}px"></span>`).join("");
   $("wave-r").innerHTML = BARS.slice().reverse().map(h => `<span style="height:${h}px"></span>`).join("");
   let actx = null, playTimer = 0;
-  function playTone(f) {
+  // Synthesised instruments (Web Audio), two seconds each. They imitate piano, strings, flute and clarinet; they are not recordings.
+  function playSound(snd) {
     actx ||= new (window.AudioContext || window.webkitAudioContext)();
-    const t = actx.currentTime, o = actx.createOscillator(), o2 = actx.createOscillator(), g = actx.createGain(), flt = actx.createBiquadFilter();
-    o.type = "triangle"; o.frequency.value = f; o2.type = "sine"; o2.frequency.value = f * 2;
-    flt.type = "lowpass"; flt.frequency.value = 2400;
-    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.35, t + 0.03); g.gain.exponentialRampToValueAtTime(0.001, t + 1.4);
-    const g2 = actx.createGain(); g2.gain.value = 0.25;
-    o.connect(flt); o2.connect(g2); g2.connect(flt); flt.connect(g); g.connect(actx.destination);
-    o.start(t); o2.start(t); o.stop(t + 1.5); o2.stop(t + 1.5);
+    if (actx.state === "suspended") actx.resume();
+    const t0 = actx.currentTime + .02, f = snd.f, dur = 2, end = t0 + dur + .4;
+    const out = actx.createGain(); out.gain.value = .9; out.connect(actx.destination);
+    const osc = (freq, type, dest) => { const o = actx.createOscillator(); o.type = type; o.frequency.value = freq; o.connect(dest); o.start(t0); o.stop(end); return o; };
+    // Held note: attack, steady level, short release.
+    const held = (peak, attack, dest) => { const g = actx.createGain(); g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(peak, t0 + attack); g.gain.setValueAtTime(peak, t0 + dur - .25); g.gain.linearRampToValueAtTime(0, t0 + dur); g.connect(dest); return g; };
+    const vibrato = (depth, targets) => { const v = actx.createOscillator(), vg = actx.createGain(); v.frequency.value = 5.3; vg.gain.setValueAtTime(0, t0); vg.gain.linearRampToValueAtTime(f * depth, t0 + .4); v.connect(vg); v.start(t0); v.stop(end); targets.forEach(o => vg.connect(o.frequency)); };
+    if (snd.tim === "piano") {
+      // Struck string: many partials, slightly stretched, higher ones dying faster; low notes ring longer.
+      for (let n = 1; n <= 10; n++) {
+        const fn = f * n * Math.sqrt(1 + .0003 * n * n); if (fn > 10000) break;
+        const g = actx.createGain(), amp = .3 / Math.pow(n, 1.2), len = Math.max(.3, 2.6 - Math.log2(f / 110) * .3) / Math.pow(n, .5);
+        g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(amp, t0 + .005); g.gain.exponentialRampToValueAtTime(1e-4, t0 + len * 2.2);
+        g.connect(out); osc(fn, "sine", g);
+      }
+    } else if (snd.tim === "strings") {
+      const lp = actx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = Math.min(5000, f * 10); lp.connect(out);
+      const g = held(.15, .3, lp);
+      vibrato(.004, [-7, 0, 7].map(c => osc(f * Math.pow(2, c / 1200), "sawtooth", g)));
+    } else if (snd.tim === "flute") {
+      const g = held(.2, .09, out);
+      const parts = [[1, 1], [2, .22], [3, .07]].map(([n, a]) => { const pg = actx.createGain(); pg.gain.value = a; pg.connect(g); return osc(f * n, "sine", pg); });
+      vibrato(.005, parts);
+      // A little breath noise.
+      const buf = actx.createBuffer(1, actx.sampleRate * (dur + .4), actx.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      const src = actx.createBufferSource(), bp = actx.createBiquadFilter(), ng = held(.025, .05, out);
+      src.buffer = buf; bp.type = "bandpass"; bp.frequency.value = f * 2; bp.Q.value = 1.5; src.connect(bp); bp.connect(ng); src.start(t0); src.stop(end);
+    } else if (snd.tim === "clarinet") {
+      // Mostly odd harmonics, which gives the hollow clarinet sound.
+      const g = held(.24, .05, out), o = actx.createOscillator();
+      o.setPeriodicWave(actx.createPeriodicWave(new Float32Array(10), new Float32Array([0, 1, .04, .5, .03, .28, .02, .13, .01, .06])));
+      o.frequency.value = f; o.connect(g); o.start(t0); o.stop(end);
+    } else {
+      osc(f, "sine", held(.2, .03, out));
+    }
     $("player").classList.add("playing"); clearTimeout(playTimer);
-    playTimer = setTimeout(() => $("player").classList.remove("playing"), 1400);
+    playTimer = setTimeout(() => $("player").classList.remove("playing"), dur * 1000);
   }
 
   // ---------- colour maths ----------
@@ -1242,6 +1353,70 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   $("sat").addEventListener("input", () => { drawPlane(); refreshTrial(); });
   window.addEventListener("resize", () => { if (!$("s-test").hidden) drawPlane(); });
 
+  // ---------- CLaN questionnaire ----------
+  // Coloured Letters and Numbers, Rothen, Tsakanikos, Meier & Ward (2013). Items 1–10 are about letters and digits, 11–16 about synaesthesia in general.
+  const CLAN = [
+    [2, "Jag upplever de synestetiska färgerna även när jag inte riktar uppmärksamheten mot dem (till exempel när jag läser en bok)."],
+    [1, "Jag ser de synestetiska färgerna på skärmen (eller mycket nära den)."],
+    [2, "Det känns som att jag måste gå och hämta färgerna, snarare än att färgerna kommer till mig."],
+    [1, "Jag upplever de synestetiska färgerna på flera ställen samtidigt (till exempel både på skärmen och bokstavligen inne i huvudet, eller någon annan kombination)."],
+    [2, "Jag upplever bara färgerna hos bokstäver och siffror om jag tänker på dem som att de har en färg."],
+    [1, "När jag snabbt tittar på en boksida dyker de synestetiska färgerna upp innan jag hunnit uppfatta vilka bokstäverna eller orden är."],
+    [1, "Jag ”ser” inte färger när jag tittar på bokstäverna eller siffrorna."],
+    [1, "Det verkar som att färgen finns på skärmen där bokstaven eller siffran står."],
+    [2, "De synestetiska färgerna dyker upp automatiskt, utan någon ansträngning från min sida."],
+    [1, "Jag kan peka på var de synestetiska färgerna finns."],
+    [4, "Mina synestetiska färger har inte ändrat styrka genom åren."],
+    [3, "Jag använder medvetet mina synestetiska färger för att komma ihåg nummerföljder (till exempel pinkoder och telefonnummer)."],
+    [3, "Jag försöker medvetet använda mina synestetiska färger i vardagen."],
+    [3, "Jag använder mina synestetiska färger för att komma ihåg datum och planera möten (till exempel 28.02.2010)."],
+    [4, "Mina synestetiska färger var svagare förr (alltså för flera år sedan)."],
+    [4, "Mina synestetiska färger var starkare förr (alltså för flera år sedan)."]
+  ];
+  const CLAN_REV = [3, 5, 7, 11]; // scored 5–1
+  const CLAN_SCALE = ["Tar helt avstånd", "Tar delvis avstånd", "Varken eller", "Instämmer delvis", "Instämmer helt"];
+  const CLAN_F = [
+    { n: "Plats", d: "Högt: färgerna syns ute på tecknet eller skärmen. Lågt: de finns inne i huvudet eller som en vetskap." },
+    { n: "Automatik", d: "Högt: färgerna kommer av sig själva, utan att du försöker." },
+    { n: "Medveten användning", d: "Högt: du använder färgerna medvetet, till exempel för att minnas." },
+    { n: "Förändring över tid", d: "Högt: färgerna har blivit starkare eller svagare med åren." }
+  ];
+  function clanScores() {
+    return [1, 2, 3, 4].map(f => {
+      const v = CLAN.map((x, i) => [x[0], i + 1]).filter(([ff, n]) => ff === f && S.clan.a[n]).map(([, n]) => CLAN_REV.includes(n) ? 6 - S.clan.a[n] : S.clan.a[n]);
+      return v.length ? v.reduce((a, x) => a + x, 0) / v.length : null;
+    });
+  }
+  function clanState() {
+    const n = Object.keys(S.clan.a).length;
+    if (S.clan.done) return { label: t("Klar"), cls: "teal" };
+    if (n) return { label: t("Påbörjad, {i} av {n}", { i: n, n: CLAN.length }), cls: "teal" };
+    return { label: t("Ej påbörjat"), cls: "" };
+  }
+  let ci = 0;
+  function showClan() {
+    const n = ci + 1;
+    $("clan-count").textContent = `${n} / ${CLAN.length}`;
+    $("clan-bar").style.width = `${Math.max(ci / CLAN.length * 100, 2)}%`;
+    $("clan-lead").textContent = t(n <= 10 ? "Tänk på färgerna du upplever för bokstäver och siffror, till exempel A, B, C och 0–9." : "Tänk nu på dina synestetiska färger i allmänhet.");
+    $("clan-q").textContent = t(CLAN[ci][1]);
+    $("clan-opts").innerHTML = CLAN_SCALE.map((o, i) => `<button class="opt" role="radio" aria-checked="${S.clan.a[n] === i + 1}"><span class="r"></span>${t(o)}</button>`).join("");
+    $("clan-opts").querySelectorAll(".opt").forEach((b, i) => b.addEventListener("click", () => { S.clan.a[n] = i + 1; save(); showClan(); }));
+    $("clan-next").disabled = !S.clan.a[n];
+    $("clan-next").textContent = t(n === CLAN.length ? "Klar" : "Nästa");
+    $("clan-prev").disabled = ci === 0;
+  }
+  $("pick-clan").addEventListener("click", () => {
+    const k = CLAN.findIndex((_, i) => !S.clan.a[i + 1]);
+    ci = k >= 0 ? k : 0; showClan(); go("s-clan");
+  });
+  $("clan-prev").addEventListener("click", () => { if (ci > 0) { ci--; showClan(); } });
+  $("clan-back").addEventListener("click", () => { if (ci > 0) { ci--; showClan(); } else go("s-choose", false); });
+  $("clan-next").addEventListener("click", () => {
+    if (ci < CLAN.length - 1) { ci++; showClan(); return; }
+    S.clan.done = now(); save(); history.length = 0; history.push("s-choose"); go("s-results", false);
+  });
+
   // ---------- test flow ----------
   let T = null; // { key, list, i, responses, played, auto }
   function shuffled(stimuli) {
@@ -1300,7 +1475,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("test-next").disabled = sound ? !(T.auto && (T.auto !== "ja" || rgb)) : !rgb;
   }
   $("play").addEventListener("click", () => {
-    playTone(TONES.find(t => t.id === T.list[T.i]).f);
+    playSound(SOUNDS.concat(TONES).find(x => x.id === T.list[T.i]));
     $("play-hint").textContent = t("Du kan lyssna igen");
     if (!T.played) { T.played = true; refreshTrial(); }
   });
@@ -1407,7 +1582,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   $("copy-csv").addEventListener("click", e => { copyOut(exportCsv()); e.target.textContent = t("Kopierat"); setTimeout(() => e.target.textContent = t("Kopiera CSV"), 1600); });
   $("copy-json").addEventListener("click", e => {
     const { done, ...background } = S.bg;
-    copyOut(JSON.stringify({ app: "SynMap", version: 2, app_version: APP_V, participant_id: S.pid, exported: new Date().toISOString(), background, answers: S.answers, sessions: S.sessions }, null, 1));
+    copyOut(JSON.stringify({ app: "SynMap", version: 2, app_version: APP_V, participant_id: S.pid, exported: new Date().toISOString(), background, answers: S.answers, clan: S.clan.done ? { answers: S.clan.a, scores: clanScores(), date: S.clan.done } : null, sessions: S.sessions }, null, 1));
     e.target.textContent = t("Kopierat"); setTimeout(() => e.target.textContent = t("Kopiera allt (JSON)"), 1600);
   });
 
@@ -1551,7 +1726,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   }
 
   // ---------- results ----------
-  const ICONS = { sound: document.querySelector('[data-icon="sound"]').innerHTML, digits: document.querySelector('[data-icon="digits"]').innerHTML, letters: document.querySelector('[data-icon="letters"]').innerHTML, time: document.querySelector('[data-icon="time"]').innerHTML, space: document.querySelector('[data-icon="space"]').innerHTML };
+  const ICONS = { clan: document.querySelector('[data-icon="clan"]').innerHTML, sound: document.querySelector('[data-icon="sound"]').innerHTML, digits: document.querySelector('[data-icon="digits"]').innerHTML, letters: document.querySelector('[data-icon="letters"]').innerHTML, time: document.querySelector('[data-icon="time"]').innerHTML, space: document.querySelector('[data-icon="space"]').innerHTML };
   const secs = ms => dec(ms / 1000, 2) + " s";
   const n1 = x => dec(x);
   function renderResults() {
@@ -1574,7 +1749,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       rows += kv(t("Konsistens inom sessionen"), !v.ok ? t("kan inte bedömas") : w.n >= 3 ? n1(w.mean) : t("för få färgsvar"));
       if (ss.length > 1) { const b = between(ss[0], last); rows += kv(t("Skillnad mot första sessionen"), b ? n1(b.mean) : "–"); }
       let note = `<p class="muted small">${t("Lägre värde betyder att du valde mer lika färger varje gång.")}`;
-      if (key === "sound") note += " " + t("För ljud finns ingen etablerad gräns ännu.");
+      if (key === "sound") note += " " + t("För ljud finns ingen etablerad gräns ännu.") + `</p><p class="muted small">${t("A2–Eb6 är pianotoner från låg till hög. De andra är samma ton (C4) på piano, stråkar, flöjt, klarinett och som ren ton. De flesta, med eller utan synestesi, väljer ljusare färger för högre toner (Ward m.fl., 2006). Det som skiljer är att den som har synestesi väljer samma färg gång på gång.")}`;
       else if (w.n >= 3) note += " " + t("Som jämförelse har forskning om bokstäver och siffror använt gränsen {l} (Rothen m.fl., 2013).", { l: dec(LIM_LUV) }) + (key === "time" ? " " + t("För dagar och månader går den bara att använda som en grov jämförelse.") : "") + " " + t("Värdet är ingen bedömning av dig.");
       note += "</p>";
       if (last.speed) {
@@ -1590,7 +1765,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
           const a = meanOf(first, s), b = meanOf(last, s);
           const dot = c => c ? `<span style="background:${css(meanRgb(c))}"></span>` : `<span class="nc"></span>`;
           const d = a && b ? Math.round(dist(meanLuv(a), meanLuv(b))) : null;
-          return `<div title="${t("Första och senaste sessionen")}"><b>${key === "sound" ? t("Ljud {n}", { n: i + 1 }) : label(key, s, i)}</b><span class="pair">${dot(a)}${dot(b)}</span><small>${d === null ? "–" : d}</small></div>`;
+          return `<div title="${t("Första och senaste sessionen")}"><b>${label(key, s, i)}</b><span class="pair">${dot(a)}${dot(b)}</span><small>${d === null ? "–" : d}</small></div>`;
         }).join("");
         cmp = `<p class="sub-h">${t("Första och senaste sessionen, tecken för tecken")}</p><p class="muted small">${t("Vänster prick är din färg vid första tillfället ({d}), höger prick vid det senaste. Siffran är avståndet mellan dem: lägre betyder mer lika.", { d: fmtDate(first.date) })}</p><div class="cmp">${cells}</div>`;
       }
@@ -1602,11 +1777,19 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
         <details${ss.length > 1 ? " open" : ""}><summary>${t("Visa detaljer")}</summary><div><p class="muted small">${t("Senaste session {d}", { d: fmtDate(last.date) })}</p><div class="legend">${legend}</div>${rows}${note}${cmp}${last.note ? `<p class="small"><span class="muted">${t("Din beskrivning:")}</span> ${last.note.replace(/</g, "&lt;")}</p>` : ""}</div></details>`;
       list.appendChild(card);
     }
+    if (S.clan.done) { any = true; list.appendChild(clanCard()); }
     if (!any) list.innerHTML = `<div class="card"><h2>${t("Inga resultat än")}</h2><p class="muted small">${t("När du har gjort ett test visas dina svar här, med en färgprick för varje ljud eller siffra.")}</p></div>`;
     const info = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01" stroke-linecap="round"/></svg>`;
     $("consist").innerHTML = followed
       ? `${info}<div><b>${t("Konsistens")}</b><span class="muted small">${t("Uppföljning gjord. Resultatet är fortfarande preliminärt tills forskare har bestämt kriterierna.")}</span></div>`
       : `${info}<div><b>${t("Konsistens")}</b><span class="muted small">${t("Ännu inte utvärderad. Den bedöms först när du har gjort en uppföljning.")}</span></div>`;
+  }
+  function clanCard() {
+    const sc = clanScores(), card = document.createElement("div"); card.className = "card res-card";
+    card.innerHTML = `<div class="res-head"><span class="icon-disc">${ICONS.clan}</span><div><b>${t("Enkät: Så upplever du färgerna")}</b><div class="muted small">${t("CLaN, 16 frågor (Rothen m.fl., 2013)")}</div></div></div>`
+      + CLAN_F.map((f, i) => sc[i] === null ? "" : `<div class="fac"><div class="fac-top"><b>${t(f.n)}</b><span>${dec(sc[i])} / 5</span></div><div class="bar"><i style="width:${(sc[i] - 1) / 4 * 100}%"></i></div><span class="muted small">${t(f.d)}</span></div>`).join("")
+      + `<p class="muted small">${t("Medelvärde 1–5 för varje del. Enkäten har ingen gräns för synestesi, den beskriver hur du upplever färgerna. Den svenska översättningen är vår egen och inte prövad i forskning.")}</p>`;
+    return card;
   }
   function spaceCard(ss) {
     const last = ss[ss.length - 1], sc = spaceScore(last), first = ss.length > 1 ? spaceScore(ss[0]) : null;
@@ -1694,9 +1877,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     });
     $("profile-map").innerHTML = out;
     const A = S.answers, kind = $("profile-kind");
-    kind.hidden = !A.where;
+    kind.hidden = !A.where && !S.clan.done;
     const low = x => S.lang === "en" ? t(x).replace(/^Yes|^No/, m => m.toLowerCase()) : t(x).toLowerCase();
     if (A.where) kind.innerHTML = `<b>${t("Så beskriver du dina färger")}</b><span class="small">${t("Var:")} ${low(A.where)}</span>${A.eyes ? `<span class="small">${t("Kvar när du blundar:")} ${low(A.eyes)}</span>` : ""}${A.auto ? `<span class="small">${t("Kommer av sig själv:")} ${low(A.auto)}</span>` : ""}${A.since ? `<span class="small">${t("Hur länge:")} ${low(A.since)}</span>` : ""}<span class="muted small">${t("Forskare skiljer på färger som syns ute i världen och färger som finns inne i huvudet. Båda räknas som synestesi.")}</span>`;
+    else kind.innerHTML = `<b>${t("Så beskriver du dina färger")}</b>`;
+    if (S.clan.done) { const sc = clanScores(); kind.innerHTML += `<span class="small">${t("Enkäten CLaN:")} ${CLAN_F.map((f, i) => sc[i] === null ? "" : `${t(f.n).toLowerCase()} ${dec(sc[i])}`).filter(Boolean).join(", ")} ${t("(av 5)")}</span>`; }
 
     const disc = k => `<span class="icon-disc">${ICONS[k]}</span>`;
     const blankDisc = `<span class="icon-disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--muted)" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke-dasharray="3 3"/></svg></span>`;
