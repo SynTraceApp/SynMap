@@ -30,6 +30,8 @@
   --stim-ink: #111318;
   --stage-light: #f4f4f7;
   --stage-dark: #1c1e27;
+  --neutral: #8a8a8a;
+  --neutral-ink: #17181c;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -67,7 +69,7 @@ button { cursor: pointer; border: 0; background: none; }
 .btn.primary { background: linear-gradient(180deg, var(--violet), var(--violet-2)); color: var(--on-violet); box-shadow: 0 6px 16px color-mix(in srgb, var(--violet) 30%, transparent); }
 .btn.soft { background: var(--violet-soft); color: var(--navy); font-weight: 600; }
 .btn:disabled { opacity: .35; cursor: not-allowed; box-shadow: none; }
-button:focus-visible, select:focus-visible, canvas:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+button:focus-visible, select:focus-visible, input:focus-visible, canvas:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
 
 /* Top bar with back arrow and connected-dot stepper */
 .topbar { display: flex; align-items: center; gap: 10px; min-height: 36px; }
@@ -138,7 +140,7 @@ canvas.foot-rib { left: 0; right: 0; bottom: 0; width: 100%; height: 190px; }
 .play-hint { text-align: center; font-family: var(--mono); font-size: 13px; color: var(--muted); }
 .q { font-weight: 600; color: var(--navy); }
 .stim-row { display: flex; align-items: center; justify-content: center; gap: 20px; min-height: 130px; }
-.stim { font-family: var(--stimulus); font-weight: 700; font-size: 120px; line-height: 1; min-width: 1ch; text-align: center; color: var(--stim-ink); }
+.stim { font-family: var(--stimulus); font-weight: 700; font-size: 120px; line-height: 1; min-width: 1ch; text-align: center; color: var(--neutral-ink); }
 .preview { width: 52px; height: 52px; border-radius: 50%; border: 1.5px dashed var(--line); flex: none; }
 .preview.set { border-style: solid; border-color: color-mix(in srgb, var(--stim-ink) 15%, transparent); }
 .picker { display: flex; flex-direction: column; gap: 12px; }
@@ -150,7 +152,9 @@ canvas.foot-rib { left: 0; right: 0; bottom: 0; width: 100%; height: 190px; }
 .nocolor .o { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--muted); }
 .q-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .pv { width: 34px; height: 34px; border-radius: 50%; border: 1.5px dashed var(--line); flex: none; }
-.stim { transition: color .12s; -webkit-text-stroke: 1px color-mix(in srgb, var(--stim-ink) 14%, transparent); }
+.stim { transition: color .12s; -webkit-text-stroke: 1px color-mix(in srgb, var(--neutral-ink) 14%, transparent); }
+/* Fixed neutral test surface: the same mid grey in light and dark mode, so the page colour does not tint what people pick. */
+.stim-row { background: var(--neutral); border-radius: 22px; padding: 14px; }
 
 /* After test */
 .scale { display: flex; gap: 8px; }
@@ -185,11 +189,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 .stim.word { font-size: 46px; font-weight: 700; letter-spacing: -0.01em; }
 
 /* Speeded match test */
-.speed-stage { height: 220px; border-radius: 24px; display: grid; place-items: center; background: var(--stage-light); transition: background .1s; }
+.speed-stage { height: 220px; border-radius: 24px; display: grid; place-items: center; background: var(--neutral); }
 .speed-stage.dark { background: var(--stage-dark); }
 .speed-stim { font-family: var(--stimulus); font-weight: 700; font-size: 120px; line-height: 1; }
 .speed-stim.word { font-size: 46px; }
-.speed-stim.fix { font-size: 40px; color: var(--muted); font-weight: 400; }
+.speed-stim.fix { font-size: 40px; color: #2e2f33; font-weight: 400; }
 .speed-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .speed-btns .btn { padding: 18px 12px; }
 .howto { display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
@@ -216,6 +220,46 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 .space-map span.old { background: transparent; color: var(--muted); border: 1px dashed var(--muted); }
 .export { display: flex; flex-direction: column; gap: 8px; }
 .export textarea { min-height: 120px; font-family: var(--mono); font-size: 11px; }
+
+/* Time estimate, pause and resume */
+.meta { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; margin-top: 4px; }
+.meta .chip { margin-top: 0; }
+.est { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+.topbar .pause { padding: 6px 0 6px 6px; font-size: 14px; }
+.resume { display: flex; flex-direction: column; gap: 14px; border-color: var(--violet-line); background: color-mix(in srgb, var(--violet-soft) 60%, var(--card)); }
+.resume b { color: var(--navy); }
+
+/* About you */
+.form { display: flex; flex-direction: column; gap: 18px; }
+.fld { display: flex; flex-direction: column; gap: 8px; }
+.fld > .lbl { font-weight: 600; color: var(--navy); font-size: 15px; }
+.fld input { font: inherit; color: var(--ink); background: var(--page); border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; width: 100%; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { padding: 8px 14px; border-radius: 999px; background: var(--violet-soft); color: var(--navy); font-size: 14px; font-weight: 600; }
+.seg button[aria-pressed="true"] { background: var(--violet); color: var(--on-violet); }
+.hint { font-size: 13px; color: var(--muted); }
+
+/* Overall assessment */
+.verdict { border-radius: 16px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; background: var(--page); }
+.verdict .lvl { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.verdict .lvl b { color: var(--navy); font-size: 16px; }
+.verdict .lvl .chip { margin-top: 0; }
+.meter { display: flex; gap: 3px; }
+.meter i { width: 16px; height: 6px; border-radius: 3px; background: var(--line); }
+.meter i.on { background: var(--violet); }
+.sig { display: flex; gap: 8px; font-size: 14px; align-items: baseline; }
+.sig .m { width: 16px; font-weight: 700; flex: none; text-align: center; }
+.sig.ok .m { color: var(--teal); }
+.sig.no .m { color: #d0587e; }
+.sig.na .m { color: var(--muted); }
+
+/* What does it mean */
+.faq { display: flex; flex-direction: column; padding-block: 4px; }
+.faq details { border-top: 1px solid var(--line); padding: 12px 0; }
+.faq details:first-child { border-top: 0; }
+.faq summary { color: var(--navy); font-size: 16px; display: flex; justify-content: space-between; width: 100%; gap: 12px; }
+.faq details > div { font-size: 15px; gap: 8px; }
+.faq a { color: var(--violet); font-weight: 600; }
 
 /* Comparison over time */
 .cmp { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 8px; }
@@ -269,7 +313,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <div class="welcome-actions">
       <button class="btn primary" id="go-start">Börja</button>
       <button class="about-link" id="go-about">Om synestesi <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01" stroke-linecap="round"/></svg></button>
-      <label class="lang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><select id="lang" aria-label="Språk"><option>Svenska</option><option disabled>English (snart)</option></select></label>
+      <label class="lang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><select id="lang" aria-label="Språk"><option value="sv">Svenska</option><option value="en">English</option></select></label>
     </div>
     <div class="about" id="about" hidden>
       <button class="close" id="about-close" aria-label="Stäng">×</button>
@@ -277,6 +321,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       <p>Synestesi betyder att ett sinnesintryck automatiskt väcker ett annat. Siffran 7 kan till exempel alltid upplevas som grön, eller en ton kan ge en färg.</p>
       <p>Kopplingarna brukar vara stabila över lång tid. Därför ställer SynMap samma frågor flera gånger och ber dig komma tillbaka för en uppföljning.</p>
       <p class="muted small">SynMap är en konceptprototyp. Den är inte validerad och ställer ingen diagnos. Dina svar sparas bara i den här webbläsaren.</p>
+      <button class="text-btn" id="about-more" style="align-self:flex-start;padding-left:0">Läs mer om synestesi</button>
     </div>
   </section>
 
@@ -290,38 +335,58 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <div class="nav-row"><button class="btn soft" id="intro-prev">Föregående</button><button class="btn primary" id="intro-next" disabled>Nästa</button></div>
   </section>
 
+  <!-- Om dig: bakgrund, färgseende och skärm -->
+  <section class="screen" id="s-bg" hidden>
+    <div class="topbar"><button class="back" id="bg-back" aria-label="Tillbaka"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
+    <h1>Om dig</h1>
+    <p class="lead">Forskare behöver veta lite om vem som svarar. Allt är frivilligt och sparas bara i den här webbläsaren.</p>
+    <div class="form" id="bg-form">
+      <label class="fld"><span class="lbl">Ålder</span><input type="number" inputmode="numeric" id="bg-age" min="5" max="120" placeholder="År"></label>
+      <div class="fld"><span class="lbl">Kön</span><div class="seg" data-bg="gender"></div></div>
+      <div class="fld"><span class="lbl">Vilken hand skriver du med?</span><div class="seg" data-bg="hand"></div></div>
+      <label class="fld"><span class="lbl">Modersmål</span><input type="text" id="bg-lang" placeholder="Till exempel svenska" autocomplete="off"></label>
+      <div class="fld"><span class="lbl">Vilka skriftsystem kan du läsa?</span><span class="hint">Välj alla som stämmer.</span><div class="seg" data-bg="scripts"></div></div>
+      <div class="fld"><span class="lbl">Har du nedsatt färgseende, till exempel färgblindhet?</span><div class="seg" data-bg="cv"></div><span class="hint" id="cv-hint" hidden>Du kan göra testerna ändå. Bedömningen tar hänsyn till det.</span></div>
+      <div class="fld"><span class="lbl">Är nattläge eller blåljusfilter på för skärmen just nu?</span><div class="seg" data-bg="night"></div><span class="hint" id="night-hint" hidden>Stäng gärna av det under testerna. Det ändrar hur färgerna ser ut.</span></div>
+      <p class="hint">Vi sparar också skärmstorlek och om du svarar på mobil eller dator, så att forskare kan jämföra svaren.</p>
+    </div>
+    <div class="grow"></div>
+    <button class="btn primary" id="bg-done">Fortsätt</button>
+  </section>
+
   <!-- 3. Välj test -->
   <section class="screen has-foot" id="s-choose" hidden>
     <canvas class="ribbons foot-rib" aria-hidden="true"></canvas>
     <div class="topbar"><button class="back" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
     <h1>Välj test</h1>
     <p class="lead">Välj det område du vill utforska. Du kan göra flera.</p>
+    <div class="card resume" id="resume-card" hidden></div>
     <p class="sub-h" id="rec-h"></p>
     <div id="rec-list" class="stack" style="gap:12px"></div>
     <details id="more-tests"><summary>Fler tester</summary><div id="more-list"></div></details>
     <button class="card test-card" id="pick-sound">
       <span class="icon-disc" data-icon="sound"><svg viewBox="0 0 36 36" aria-hidden="true"><g stroke-linecap="round" stroke-width="3.4"><path d="M6 15v6" stroke="#4d8ef0"/><path d="M11 10v16" stroke="#7657d5"/><path d="M16 5v26" stroke="#ff6fa8"/><path d="M21 9v18" stroke="#ff8a3d"/><path d="M26 13v10" stroke="#47bdb1"/><path d="M31 16v4" stroke="#4d8ef0"/></g></svg></span>
-      <span class="txt"><b>Ljud → färg</b><span class="muted small">Undersök om ljud framkallar färgupplevelser.</span><span class="chip" id="chip-sound"></span></span>
+      <span class="txt"><b>Ljud → färg</b><span class="muted small">Undersök om ljud framkallar färgupplevelser.</span><span class="meta"><span class="chip" id="chip-sound"></span><span class="est" id="est-sound"></span></span></span>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
     </button>
     <button class="card test-card" id="pick-digits">
       <span class="icon-disc" data-icon="digits"><svg viewBox="0 0 36 36" aria-hidden="true"><text x="3" y="30" font-family="Arial" font-weight="700" font-size="17" fill="#ff4f8b">2</text><text x="13" y="17" font-family="Arial" font-weight="700" font-size="17" fill="#ff8a3d">1</text><text x="21" y="30" font-family="Arial" font-weight="700" font-size="17" fill="#47bdb1">3</text></svg></span>
-      <span class="txt"><b>Siffra → färg</b><span class="muted small">Undersök om siffror har bestämda färger.</span><span class="chip" id="chip-digits"></span></span>
+      <span class="txt"><b>Siffra → färg</b><span class="muted small">Undersök om siffror har bestämda färger.</span><span class="meta"><span class="chip" id="chip-digits"></span><span class="est" id="est-digits"></span></span></span>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
     </button>
     <button class="card test-card" id="pick-letters">
       <span class="icon-disc" data-icon="letters"><svg viewBox="0 0 36 36" aria-hidden="true"><text x="2" y="27" font-family="Arial" font-weight="700" font-size="19" fill="#4d8ef0">A</text><text x="16" y="27" font-family="Arial" font-weight="700" font-size="19" fill="#ff6fa8">b</text></svg></span>
-      <span class="txt"><b>Bokstav → färg</b><span class="muted small">Undersök om bokstäverna A–Ö har bestämda färger.</span><span class="chip" id="chip-letters"></span></span>
+      <span class="txt"><b>Bokstav → färg</b><span class="muted small">Undersök om bokstäverna A–Ö har bestämda färger.</span><span class="meta"><span class="chip" id="chip-letters"></span><span class="est" id="est-letters"></span></span></span>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
     </button>
     <button class="card test-card" id="pick-time">
       <span class="icon-disc" data-icon="time"><svg viewBox="0 0 36 36" aria-hidden="true"><rect x="5" y="8" width="26" height="22" rx="5" fill="none" stroke="#7657d5" stroke-width="2.2"/><path d="M5 14h26" stroke="#7657d5" stroke-width="2.2"/><circle cx="12" cy="21" r="2.6" fill="#ff6fa8"/><circle cx="18" cy="21" r="2.6" fill="#ffb56b"/><circle cx="24" cy="21" r="2.6" fill="#47bdb1"/><circle cx="12" cy="26.5" r="2.6" fill="#4d8ef0"/><circle cx="18" cy="26.5" r="2.6" fill="#9b6cf0"/></svg></span>
-      <span class="txt"><b>Veckodag och månad → färg</b><span class="muted small">Undersök om dagar och månader har bestämda färger.</span><span class="chip" id="chip-time"></span></span>
+      <span class="txt"><b>Veckodag och månad → färg</b><span class="muted small">Undersök om dagar och månader har bestämda färger.</span><span class="meta"><span class="chip" id="chip-time"></span><span class="est" id="est-time"></span></span></span>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
     </button>
     <button class="card test-card" id="pick-space">
       <span class="icon-disc" data-icon="space"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M5 26C10 12 22 8 31 12" fill="none" stroke="#c9c2ef" stroke-width="2" stroke-dasharray="2 3"/><circle cx="6" cy="25" r="3" fill="#4d8ef0"/><circle cx="12" cy="16" r="3" fill="#7657d5"/><circle cx="20" cy="11" r="3" fill="#ff6fa8"/><circle cx="29" cy="12" r="3" fill="#47bdb1"/></svg></span>
-      <span class="txt"><b>Tid i rummet</b><span class="muted small">Undersök om siffror, dagar och månader har bestämda platser runt dig.</span><span class="chip" id="chip-space"></span></span>
+      <span class="txt"><b>Tid i rummet</b><span class="muted small">Undersök om siffror, dagar och månader har bestämda platser runt dig.</span><span class="meta"><span class="chip" id="chip-space"></span><span class="est" id="est-space"></span></span></span>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
     </button>
     <div class="links-row"><button class="text-btn" id="to-results">Mina resultat</button><button class="text-btn" id="to-profile">Min profil</button><button class="text-btn" id="to-intro">Ändra mina svar</button></div>
@@ -329,7 +394,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 
   <!-- 4–5. Testskärm (ljud eller siffra) -->
   <section class="screen" id="s-test" hidden>
-    <div class="topbar"><button class="back" id="test-quit" aria-label="Avbryt testet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="track"><span id="test-bar"></span></div><span class="count" id="test-count"></span></div>
+    <div class="topbar"><button class="back" id="test-quit" aria-label="Pausa testet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="track"><span id="test-bar"></span></div><span class="count" id="test-count"></span><button class="text-btn pause" id="test-pause">Pausa</button></div>
     <div class="stack" style="gap:6px"><h1 id="test-title"></h1><p class="muted small" id="test-lead"></p></div>
 
     <div id="sound-block" class="stack" hidden>
@@ -365,8 +430,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 
   <!-- Tid i rummet (sequence-space, Rothen m.fl. 2016) -->
   <section class="screen" id="s-space" hidden>
-    <div class="topbar"><button class="back" id="space-quit" aria-label="Avbryt testet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="track"><span id="space-bar"></span></div><span class="count" id="space-count"></span></div>
-    <div class="stack" style="gap:6px"><h1>Tid i rummet</h1><p class="muted small">Tryck där du upplever att det här ligger, med skärmen som rummet framför dig. Mitten är du.</p></div>
+    <div class="topbar"><button class="back" id="space-quit" aria-label="Pausa testet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="track"><span id="space-bar"></span></div><span class="count" id="space-count"></span><button class="text-btn pause" id="space-pause">Pausa</button></div>
+    <div class="stack" style="gap:6px"><h1>Tid i rummet</h1><p class="muted small">Tryck där du upplever att det här ligger, med skärmen som rummet framför dig. Mitten är du.</p><p class="muted small">Du kan pausa när du vill. Svaren sparas.</p></div>
     <div class="space-item" id="space-item" aria-live="polite"></div>
     <div class="space-field" id="space-field" role="application" aria-label="Rummet runt dig"><span class="you">du</span></div>
     <button class="nocolor" id="space-none"><span class="o"></span>Har ingen plats</button>
@@ -382,7 +447,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       <p class="lead" style="margin-top:-6px">Nu visas tecknen i olika färger. Ibland är det din färg, ibland inte.</p>
       <div class="card howto">
         <p>Ett tecken blinkar fram i en färg i en sekund.</p>
-        <p>Tryck <b>Stämmer</b> om det är din färg för tecknet, annars <b>Stämmer inte</b>.</p>
+        <p data-en="Tap &lt;b&gt;Match&lt;/b&gt; if it is your colour for the character, otherwise &lt;b&gt;No match&lt;/b&gt;.">Tryck <b>Stämmer</b> om det är din färg för tecknet, annars <b>Stämmer inte</b>.</p>
         <p>Svara så snabbt du kan och gå på känsla. På dator kan du använda piltangenterna ← och →.</p>
       </div>
       <p class="muted small" id="speed-n"></p>
@@ -426,6 +491,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       <div class="nav-row" style="grid-template-columns:1fr 1fr"><button class="btn soft" id="copy-csv">Kopiera CSV</button><button class="btn soft" id="copy-json">Kopiera allt (JSON)</button></div>
       <textarea id="export-text" readonly aria-label="Exporterade data" hidden></textarea>
     </div></details>
+    <button class="btn soft" id="res-meaning">Vad betyder resultatet?</button>
     <button class="btn soft" id="res-profile">Visa min profil</button>
     <button class="btn primary" id="res-continue">Fortsätt</button>
   </section>
@@ -462,7 +528,51 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <div class="card kind" id="profile-kind" hidden></div>
     <div class="card" id="profile-list" style="padding-block:6px"></div>
     <div class="grow"></div>
+    <div class="links-row"><button class="text-btn" id="profile-meaning">Vad betyder det?</button></div>
     <button class="btn primary" id="profile-choose">Gör fler tester</button>
+  </section>
+
+  <!-- Vad betyder det? -->
+  <section class="screen" id="s-meaning" hidden>
+    <div class="topbar"><button class="back" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
+    <div data-lang="sv" class="stack" style="gap:16px">
+      <h1>Vad betyder det?</h1>
+      <p class="lead" style="margin-top:-6px">Det här behöver du veta för att förstå dina resultat.</p>
+      <div class="card faq">
+        <details open><summary>Vad är synestesi?</summary><div><p>Synestesi betyder att ett sinnesintryck automatiskt väcker en extra upplevelse. En bokstav kan ha en färg, en ton kan synas eller veckodagar kan ha en plats runt kroppen. Upplevelsen kommer av sig själv och är oftast densamma år efter år.</p></div></details>
+        <details><summary>Hur vanligt är det?</summary><div><p>Ungefär 4 av 100 personer har någon form av synestesi. Färgade bokstäver och siffror finns hos ungefär 1 av 100. Det är vanligt att ha flera former samtidigt, och det går ofta i släkten.</p></div></details>
+        <details><summary>Är det en sjukdom?</summary><div><p>Nej. Synestesi är en variation i hur hjärnan kopplar ihop sinnena, inte en sjukdom. Den ställs inte som diagnos i vården och behöver ingen behandling. Många upplever den som en tillgång, till exempel för minnet.</p></div></details>
+        <details><summary>Hur läser jag bedömningen?</summary><div><p>SynMap väger ihop flera saker: om du själv beskriver upplevelsen, om du valde samma färger eller platser varje gång, hur det gick i snabbtestet och om svaren är desamma vid en uppföljning.</p><p><b>Starkt stöd</b> betyder att nästan allt pekar åt samma håll. <b>Måttligt stöd</b> betyder att flera saker gör det. <b>Svagt stöd</b> betyder att mönstret inte syns i testet.</p><p>Bedömningen är preliminär tills du har gjort en uppföljning, eftersom stabilitet över tid är det viktigaste kännetecknet.</p></div></details>
+        <details><summary>Kan testet ha fel?</summary><div><p>Ja, åt båda hållen. Den som väljer samma färg för allt, eller bara svart, vitt och grått, kan få en låg poäng utan synestesi. Därför säger SynMap "Kan inte bedömas" i de fallen.</p><p>Den som har svaga färger, nedsatt färgseende eller nattläge på skärmen kan få svagt stöd fast upplevelsen är verklig. Ett svagt resultat utesluter alltså inte synestesi.</p></div></details>
+        <details><summary>Ute i världen eller inne i huvudet?</summary><div><p>En del ser färgen ute på själva bokstaven. Andra ser den inne i huvudet eller bara vet vilken färg det är. Båda räknas som synestesi. Dina svar på följdfrågorna syns i din profil.</p></div></details>
+        <details><summary>Läs mer eller delta i forskning</summary><div><p>Du kan kopiera dina data från resultatsidan och skicka dem till en forskargrupp själv. Här finns mer att läsa:</p>
+          <a href="https://www.sussex.ac.uk/synaesthesia/" target="_blank" rel="noopener">Synestesiforskning vid University of Sussex</a>
+          <a href="https://synesthete.ircn.jp/home" target="_blank" rel="noopener">The Synesthesia Battery</a>
+          <a href="https://www.uksynaesthesia.com" target="_blank" rel="noopener">UK Synaesthesia Association</a>
+          <a href="https://www.synesthesia.info" target="_blank" rel="noopener">American Synesthesia Association</a>
+          <a href="https://sv.wikipedia.org/wiki/Synestesi" target="_blank" rel="noopener">Synestesi på Wikipedia</a></div></details>
+      </div>
+      <p class="muted small">SynMap ställer ingen diagnos. Om du är orolig för något som gäller dina sinnen eller din hälsa, prata med vården.</p>
+    </div>
+    <div data-lang="en" class="stack" style="gap:16px" hidden>
+      <h1>What does it mean?</h1>
+      <p class="lead" style="margin-top:-6px">What you need to know to understand your results.</p>
+      <div class="card faq">
+        <details open><summary>What is synesthesia?</summary><div><p>Synesthesia means that one sensory impression automatically triggers an extra experience. A letter can have a colour, a tone can be seen, or weekdays can have a place around the body. The experience comes by itself and usually stays the same year after year.</p></div></details>
+        <details><summary>How common is it?</summary><div><p>About 4 in 100 people have some form of synesthesia. Coloured letters and digits occur in about 1 in 100. It is common to have several forms at once, and it often runs in families.</p></div></details>
+        <details><summary>Is it an illness?</summary><div><p>No. Synesthesia is a variation in how the brain links the senses, not an illness. It is not diagnosed in healthcare and needs no treatment. Many people find it an asset, for example for memory.</p></div></details>
+        <details><summary>How do I read the assessment?</summary><div><p>SynMap weighs several things together: whether you describe the experience yourself, whether you chose the same colours or places each time, how the speed test went, and whether your answers stay the same at a follow-up.</p><p><b>Strong support</b> means almost everything points the same way. <b>Moderate support</b> means several things do. <b>Weak support</b> means the pattern does not show in the test.</p><p>The assessment is preliminary until you have done a follow-up, because stability over time is the most important sign.</p></div></details>
+        <details><summary>Can the test be wrong?</summary><div><p>Yes, both ways. Someone who picks the same colour for everything, or only black, white and grey, can get a low score without synesthesia. That is why SynMap says "Can't be assessed" in those cases.</p><p>Someone with faint colours, reduced colour vision or night mode on the screen can get weak support even though the experience is real. A weak result does not rule out synesthesia.</p></div></details>
+        <details><summary>Out in the world or in the mind?</summary><div><p>Some people see the colour out on the letter itself. Others see it in their mind's eye or just know which colour it is. Both count as synesthesia. Your answers to the follow-up questions are shown in your profile.</p></div></details>
+        <details><summary>Read more or take part in research</summary><div><p>You can copy your data from the results page and send it to a research group yourself. More to read:</p>
+          <a href="https://www.sussex.ac.uk/synaesthesia/" target="_blank" rel="noopener">Synaesthesia research at the University of Sussex</a>
+          <a href="https://synesthete.ircn.jp/home" target="_blank" rel="noopener">The Synesthesia Battery</a>
+          <a href="https://www.uksynaesthesia.com" target="_blank" rel="noopener">UK Synaesthesia Association</a>
+          <a href="https://www.synesthesia.info" target="_blank" rel="noopener">American Synesthesia Association</a>
+          <a href="https://en.wikipedia.org/wiki/Synesthesia" target="_blank" rel="noopener">Synesthesia on Wikipedia</a></div></details>
+      </div>
+      <p class="muted small">SynMap does not give a diagnosis. If you are worried about anything to do with your senses or your health, talk to a doctor.</p>
+    </div>
   </section>
   <p class="foot">Prototyp · dina svar sparas bara i den här webbläsaren</p>
 </div>
@@ -473,6 +583,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   const REPS = 3, RETEST_DAYS = 7, KEY = "synmap-v2";
   const DIGITS = "0123456789".split("");
   const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ".split("");
+  const APP_V = "2026-10-09";
+  const DAYS_EN = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const DAYS = ["Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag", "Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"];
   // Eight tones across two octaves; labels are never shown, so note names cannot cue a colour.
   const TONES = [131, 165, 196, 247, 294, 392, 523, 659].map((f, i) => ({ id: "t" + (i + 1), f }));
@@ -483,7 +595,12 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     time: { title: "Veckodag och månad → färg", lead: "Gå på känsla och svara utan att försöka minnas tidigare svar.", stimuli: DAYS, q: "Vilken färg förknippar du med ordet?", sub: "Färgassociationer registrerade", word: true }
   };
   TESTS.space = { title: "Tid i rummet", stimuli: DIGITS.concat(DAYS), sub: "Platser registrerade", kind: "space" };
-  const label = (key, s, i) => key === "sound" ? String(i + 1) : s.length > 2 ? s.slice(0, 3) : s;
+  // Stimuli are stored in Swedish; disp() shows them in the current language.
+  const disp = s => S.lang === "en" && DAYS.includes(s) ? DAYS_EN[DAYS.indexOf(s)] : s;
+  const label = (key, s, i) => key === "sound" ? String(i + 1) : disp(s).length > 2 ? disp(s).slice(0, 3) : disp(s);
+  // English letters are A–Z; a session keeps whatever letters it was run with.
+  const stimFor = key => key === "letters" && S.lang === "en" ? LETTERS.slice(0, 26) : TESTS[key].stimuli;
+  const orderFor = (key, sess) => TESTS[key].stimuli.filter(x => stimFor(key).includes(x) || (sess && sess.responses.some(r => r.s === x)));
   const SPACE_LIMIT = 0.2029; // % of the field; Rothen m.fl. (2016)
   // Screening questions, modelled on the Synesthesia Battery pretest (Eagleman m.fl. 2007).
   const YES = ["Ja, tydligt", "Ibland", "Nej", "Vet inte"];
@@ -512,15 +629,323 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   const ASKED = { sound: "sound", digits: "graph", letters: "graph", time: "timecol", space: "space" };
 
   // ---------- state ----------
-  const blank = () => ({ intro: [], sessions: { sound: [], digits: [], letters: [], time: [], space: [] }, answers: {}, offsetDays: 0, remind: null });
+  const blank = () => ({ intro: [], sessions: { sound: [], digits: [], letters: [], time: [], space: [] }, answers: {}, bg: {}, paused: {}, lang: "sv", offsetDays: 0, remind: null });
   let S = blank();
   try { S = Object.assign(blank(), JSON.parse(localStorage.getItem(KEY) || "{}")); } catch {}
   S.sessions = Object.assign(blank().sessions, S.sessions || {});
   S.answers ||= {};
+  S.bg ||= {};
+  S.paused ||= {};
+  S.lang ||= "sv";
   S.pid ||= "synmap-" + Math.random().toString(36).slice(2, 10);
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
   const now = () => Date.now() + S.offsetDays * 864e5;
-  const fmtDate = t => new Date(t).toLocaleDateString("sv-SE", { day: "numeric", month: "long" });
+  const fmtDate = d => new Date(d).toLocaleDateString(S.lang === "en" ? "en-GB" : "sv-SE", { day: "numeric", month: "long" });
+  const dec = (x, d = 1) => S.lang === "en" ? x.toFixed(d) : x.toFixed(d).replace(".", ",");
+
+  // ---------- language ----------
+  // Swedish is the source text; EN maps it to English. t() also fills {placeholders}.
+  const EN = {
+ "Upptäck hur dina sinnen kan vara sammankopplade.": "Discover how your senses may be connected.",
+ "Börja": "Start",
+ "Om synestesi": "About synesthesia",
+ "Språk": "Language",
+ "Stäng": "Close",
+ "Synestesi betyder att ett sinnesintryck automatiskt väcker ett annat. Siffran 7 kan till exempel alltid upplevas som grön, eller en ton kan ge en färg.": "Synesthesia means that one sensory impression automatically triggers another. The digit 7 might always look green, for example, or a tone might bring a colour.",
+ "Kopplingarna brukar vara stabila över lång tid. Därför ställer SynMap samma frågor flera gånger och ber dig komma tillbaka för en uppföljning.": "These links tend to stay stable for a long time. That is why SynMap asks the same questions several times and asks you to come back for a follow-up.",
+ "SynMap är en konceptprototyp. Den är inte validerad och ställer ingen diagnos. Dina svar sparas bara i den här webbläsaren.": "SynMap is a concept prototype. It is not validated and does not give a diagnosis. Your answers are stored only in this browser.",
+ "Läs mer om synestesi": "Read more about synesthesia",
+ "Föregående fråga": "Previous question",
+ "Inledande frågor": "Opening questions",
+ "Föregående": "Previous",
+ "Nästa": "Next",
+ "Klar": "Done",
+ "Tillbaka": "Back",
+ "Om dig": "About you",
+ "Forskare behöver veta lite om vem som svarar. Allt är frivilligt och sparas bara i den här webbläsaren.": "Researchers need to know a little about who is answering. Everything is optional and stored only in this browser.",
+ "Ålder": "Age",
+ "År": "Years",
+ "Kön": "Gender",
+ "Kvinna": "Woman",
+ "Man": "Man",
+ "Annat": "Other",
+ "Vill inte svara": "Prefer not to say",
+ "Vilken hand skriver du med?": "Which hand do you write with?",
+ "Höger": "Right",
+ "Vänster": "Left",
+ "Båda": "Both",
+ "Modersmål": "Native language",
+ "Till exempel svenska": "For example English",
+ "Vilka skriftsystem kan du läsa?": "Which writing systems can you read?",
+ "Välj alla som stämmer.": "Choose all that apply.",
+ "Latinskt (a, b, c)": "Latin (a, b, c)",
+ "Kyrilliskt (а, б, в)": "Cyrillic (а, б, в)",
+ "Grekiskt (α, β, γ)": "Greek (α, β, γ)",
+ "Arabiskt": "Arabic",
+ "Hebreiskt": "Hebrew",
+ "Kinesiska tecken": "Chinese characters",
+ "Japanskt": "Japanese",
+ "Koreanskt": "Korean",
+ "Har du nedsatt färgseende, till exempel färgblindhet?": "Do you have reduced colour vision, such as colour blindness?",
+ "Du kan göra testerna ändå. Bedömningen tar hänsyn till det.": "You can still do the tests. The assessment takes it into account.",
+ "Är nattläge eller blåljusfilter på för skärmen just nu?": "Is night mode or a blue-light filter on for the screen right now?",
+ "Stäng gärna av det under testerna. Det ändrar hur färgerna ser ut.": "Please turn it off during the tests. It changes how colours look.",
+ "Vi sparar också skärmstorlek och om du svarar på mobil eller dator, så att forskare kan jämföra svaren.": "We also store the screen size and whether you answer on a phone or a computer, so researchers can compare answers.",
+ "Fortsätt": "Continue",
+ "Välj test": "Choose a test",
+ "Välj det område du vill utforska. Du kan göra flera.": "Choose the area you want to explore. You can do several.",
+ "Fler tester": "More tests",
+ "Ljud → färg": "Sound → colour",
+ "Undersök om ljud framkallar färgupplevelser.": "Explore whether sounds bring colour experiences.",
+ "Siffra → färg": "Digit → colour",
+ "Undersök om siffror har bestämda färger.": "Explore whether digits have fixed colours.",
+ "Bokstav → färg": "Letter → colour",
+ "Undersök om bokstäverna A–Ö har bestämda färger.": "Explore whether the letters A–Z have fixed colours.",
+ "Veckodag och månad → färg": "Weekday and month → colour",
+ "Undersök om dagar och månader har bestämda färger.": "Explore whether days and months have fixed colours.",
+ "Tid i rummet": "Time in space",
+ "Undersök om siffror, dagar och månader har bestämda platser runt dig.": "Explore whether digits, days and months have fixed places around you.",
+ "Mina resultat": "My results",
+ "Min profil": "My profile",
+ "Ändra mina svar": "Change my answers",
+ "Pausa testet": "Pause the test",
+ "Pausa": "Pause",
+ "Spela ljudet": "Play the sound",
+ "Tryck för att lyssna": "Tap to listen",
+ "Du kan lyssna igen": "You can listen again",
+ "1. Upplevde du en färg automatiskt?": "1. Did you experience a colour automatically?",
+ "Ja": "Yes",
+ "Nej": "No",
+ "Vet inte": "Don't know",
+ "Vald färg": "Chosen colour",
+ "Färgfält: nyans åt sidan, ljushet uppåt och nedåt": "Colour field: hue left to right, lightness up and down",
+ "Mättnad": "Saturation",
+ "Ingen färg": "No colour",
+ "Tryck där du upplever att det här ligger, med skärmen som rummet framför dig. Mitten är du.": "Tap where you feel this is located, with the screen as the space in front of you. The centre is you.",
+ "Du kan pausa när du vill. Svaren sparas.": "You can pause whenever you like. Your answers are saved.",
+ "Rummet runt dig": "The space around you",
+ "du": "you",
+ "Har ingen plats": "Has no place",
+ "Del 2: Snabbtest": "Part 2: Speed test",
+ "Nu visas tecknen i olika färger. Ibland är det din färg, ibland inte.": "Now the characters appear in different colours. Sometimes it is your colour, sometimes not.",
+ "Ett tecken blinkar fram i en färg i en sekund.": "A character flashes in a colour for one second.",
+ "Svara så snabbt du kan och gå på känsla. På dator kan du använda piltangenterna ← och →.": "Answer as fast as you can and go with your gut. On a computer you can use the arrow keys ← and →.",
+ "← Stämmer inte": "← No match",
+ "Stämmer →": "Match →",
+ "Starta snabbtestet": "Start the speed test",
+ "Hoppa över": "Skip",
+ "Bra jobbat": "Well done",
+ "Två sista frågor om testet du nyss gjorde.": "Two last questions about the test you just did.",
+ "Hur tydliga var upplevelserna?": "How vivid were the experiences?",
+ "1 = mycket otydliga, 5 = mycket tydliga. Det här är din egen skattning och ingen poäng.": "1 = very faint, 5 = very vivid. This is your own rating, not a score.",
+ "Beskriv gärna med egna ord": "Describe it in your own words if you like",
+ "Frivilligt. Till exempel: färgerna känns som ljus som ligger framför siffran.": "Optional. For example: the colours feel like light lying in front of the digit.",
+ "Visa sammanfattning": "Show summary",
+ "Dina resultat": "Your results",
+ "Här ser du en sammanställning av dina svar. Inga diagnostiska slutsatser dras.": "Here is a summary of your answers. No diagnostic conclusions are drawn.",
+ "Kopiera mina data": "Copy my data",
+ "Alla dina svar som text. CSV-formatet kan läsas av forskarnas verktyg synr. Inget skickas någonstans, du kopierar och delar själv.": "All your answers as text. The CSV format can be read by the research tool synr. Nothing is sent anywhere; you copy and share it yourself.",
+ "Kopiera CSV": "Copy CSV",
+ "Kopiera allt (JSON)": "Copy everything (JSON)",
+ "Kopierat": "Copied",
+ "Exporterade data": "Exported data",
+ "Vad betyder resultatet?": "What does the result mean?",
+ "Visa min profil": "Show my profile",
+ "Uppföljning": "Follow-up",
+ "För att undersöka stabilitet över tid kan du upprepa testet om 7 dagar. Du får inte se dina tidigare svar under testet.": "To check stability over time you can repeat the test in 7 days. You will not see your earlier answers during the test.",
+ "Nästa test": "Next test",
+ "Påminn mig": "Remind me",
+ "Jag vill inte upprepa nu": "I don't want to repeat now",
+ "Demoläge": "Demo mode",
+ "För att prova uppföljningen direkt kan du låtsas att en vecka har gått.": "To try the follow-up right away, you can pretend a week has passed.",
+ "Hoppa fram 7 dagar": "Skip ahead 7 days",
+ "Din synestesiprofil": "Your synesthesia profile",
+ "Alla dina tester och svar samlade i en bild. Profilen är preliminär och ingen diagnos.": "All your tests and answers in one picture. The profile is preliminary and not a diagnosis.",
+ "Karta över dina synestesityper": "Map of your synesthesia types",
+ "Ringarna runt testade typer visar färgerna du valde. Siffran i mitten är hur stor andel av tecknen eller ljuden som gav en färg. Streckade cirklar är typer du bara har svarat på i de inledande frågorna.": "The rings around tested types show the colours you chose. The number in the middle is the share of characters or sounds that gave a colour. Dashed circles are types you have only answered in the opening questions.",
+ "Vad betyder det?": "What does it mean?",
+ "Gör fler tester": "Do more tests",
+ "Prototyp · dina svar sparas bara i den här webbläsaren": "Prototype · your answers are stored only in this browser",
+
+ "Lyssna på ljudet och svara på frågorna om du upplever en färg.": "Listen to the sound and answer the questions about whether you experience a colour.",
+ "Gå på känsla och svara utan att försöka minnas tidigare svar.": "Go with your gut and answer without trying to remember earlier answers.",
+ "2. Vilken färg upplevde du?": "2. Which colour did you experience?",
+ "Vilken färg förknippar du med siffran?": "Which colour do you link with the digit?",
+ "Vilken färg förknippar du med bokstaven?": "Which colour do you link with the letter?",
+ "Vilken färg förknippar du med ordet?": "Which colour do you link with the word?",
+ "Färgupplevelser rapporterade": "Colour experiences reported",
+ "Färgassociationer registrerade": "Colour associations recorded",
+ "Platser registrerade": "Places recorded",
+ "Ja, tydligt": "Yes, clearly",
+ "Ibland": "Sometimes",
+ "Upplever du att musik eller ljud ger upphov till färger?": "Do music or sounds give rise to colours for you?",
+ "Har siffror eller bokstäver egna färger för dig?": "Do digits or letters have their own colours for you?",
+ "Har veckodagar eller månader egna färger?": "Do weekdays or months have their own colours?",
+ "Har veckodagar, månader eller år en bestämd plats i rummet runt dig?": "Do weekdays, months or years have a fixed place in the space around you?",
+ "Händer det att ord ger en smak i munnen?": "Do words ever give you a taste in your mouth?",
+ "Känns det som att siffror eller bokstäver har en personlighet eller ett kön?": "Do digits or letters feel like they have a personality or a gender?",
+ "Känner du beröring på din egen kropp när du ser någon annan bli berörd?": "Do you feel touch on your own body when you see someone else being touched?",
+ "Ger dofter eller smaker dig upplevelser av färg eller form?": "Do smells or tastes give you experiences of colour or shape?",
+ "Tror du att du har någon annan ovanlig blandning av sinnen?": "Do you think you have some other unusual mixing of the senses?",
+ "När du upplever en färg, var finns den?": "When you experience a colour, where is it?",
+ "Ute i världen, på själva tecknet eller ljudet": "Out in the world, on the character or sound itself",
+ "Inne i huvudet, som en inre bild": "In my head, like an inner image",
+ "Jag bara vet vilken färg det är": "I just know which colour it is",
+ "Finns färgen kvar om du blundar och tänker på tecknet?": "Is the colour still there if you close your eyes and think of the character?",
+ "Kommer färgen av sig själv, utan att du försöker?": "Does the colour come by itself, without you trying?",
+ "Ja, alltid": "Yes, always",
+ "Oftast": "Mostly",
+ "Nej, jag måste tänka efter": "No, I have to think about it",
+ "Hur länge har du haft de här upplevelserna?": "How long have you had these experiences?",
+ "Så länge jag kan minnas": "As long as I can remember",
+ "De började senare i livet": "They started later in life",
+ "Ljud": "Sounds",
+ "Siffror": "Digits",
+ "Bokstäver": "Letters",
+ "Dagar och månader": "Days and months",
+ "Tecken": "Characters",
+
+ "Pausat vid {i} av {n}": "Paused at {i} of {n}",
+ "Ej påbörjat": "Not started",
+ "Uppföljning {n} kan göras nu": "Follow-up {n} can be done now",
+ "Uppföljning öppnar {d}": "Follow-up opens {d}",
+ "Du svarade nej på alla färgfrågor, men du kan ändå prova ett test:": "You answered no to all colour questions, but you can still try a test:",
+ "Alla tester": "All tests",
+ "Utvalda för dig utifrån dina svar": "Picked for you from your answers",
+ "ca {m} min": "about {m} min",
+ "Pausat test: {x}": "Paused test: {x}",
+ "{i} av {n} svar sparade. Du fortsätter där du slutade.": "{i} of {n} answers saved. You continue where you left off.",
+ "Börja om": "Start over",
+
+ "Bara {n} tecken fick en färg alla tre gångerna. Det behövs minst fyra.": "Only {n} characters got a colour all three times. At least four are needed.",
+ "Nästan alla svar hade samma eller nästan samma färg. Då går det inte att skilja konsekvens från att man valt en enda färg.": "Almost all answers had the same or nearly the same colour. Then consistency can't be told apart from choosing a single colour.",
+ "{p} % av svaren var samma färg. Då blir poängen låg även utan synestesi.": "{p}% of the answers were the same colour. That gives a low score even without synesthesia.",
+ "Nästan alla svar var svart, vitt eller grått. Sådana svar ger en låg poäng även utan synestesi.": "Almost all answers were black, white or grey. Such answers give a low score even without synesthesia.",
+ "{n} snabba frågor, ungefär {m} min.": "{n} quick questions, about {m} min.",
+
+ "Du beskriver upplevelsen själv": "You describe the experience yourself",
+ "inte besvarat": "not answered",
+ "Samma platser varje gång i testet": "Same places each time in the test",
+ "Samma färger varje gång i testet": "Same colours each time in the test",
+ "kan inte bedömas": "can't be assessed",
+ "Över 80 % rätt i snabbtestet": "Over 80% correct in the speed test",
+ "inte gjort": "not done",
+ "Samma svar vid uppföljning": "Same answers at follow-up",
+ "återstår": "still to do",
+ "Färgerna kommer av sig själva och har funnits länge": "The colours come by themselves and have been there a long time",
+ "Du har angett nedsatt färgseende, vilket kan påverka färgtesterna.": "You reported reduced colour vision, which can affect the colour tests.",
+ "Du har angett att nattläge eller blåljusfilter är på, vilket ändrar hur färgerna ser ut.": "You reported night mode or a blue-light filter, which changes how colours look.",
+ "Starkt stöd": "Strong support",
+ "Måttligt stöd": "Moderate support",
+ "Svagt stöd": "Weak support",
+ "Kan inte bedömas": "Can't be assessed",
+ "Dina svar visar ett tydligt och stabilt mönster som stämmer med synestesi.": "Your answers show a clear and stable pattern consistent with synesthesia.",
+ "Flera delar av dina svar stämmer med synestesi, men inte alla.": "Several parts of your answers are consistent with synesthesia, but not all.",
+ "Testet visar inget tydligt synestetiskt mönster. Det utesluter inte synestesi.": "The test shows no clear synesthetic pattern. That does not rule out synesthesia.",
+ "Svaren räcker inte för en bedömning. Se förklaringen ovan.": "The answers are not enough for an assessment. See the explanation above.",
+ "Samlad bedömning": "Overall assessment",
+ "Preliminärt": "Preliminary",
+ "preliminärt": "preliminary",
+ "En bedömning av mönstret i dina svar, ingen diagnos.": "An assessment of the pattern in your answers, not a diagnosis.",
+
+ "Sessioner gjorda": "Sessions done",
+ "{x} med färgupplevelse": "{x} with a colour experience",
+ "{a} av {b}": "{a} of {b}",
+ "Din skattning av tydlighet": "Your rating of vividness",
+ "Konsistens inom sessionen": "Consistency within the session",
+ "för få färgsvar": "too few colour answers",
+ "Skillnad mot första sessionen": "Difference from the first session",
+ "Lägre värde betyder att du valde mer lika färger varje gång.": "A lower value means you chose more similar colours each time.",
+ "För ljud finns ingen etablerad gräns ännu.": "There is no established limit for sound yet.",
+ "Som jämförelse har forskning om bokstäver och siffror använt gränsen {l} (Rothen m.fl., 2013).": "For comparison, research on letters and digits has used the limit {l} (Rothen et al., 2013).",
+ "För dagar och månader går den bara att använda som en grov jämförelse.": "For days and months it can only serve as a rough comparison.",
+ "Värdet är ingen bedömning av dig.": "The value is not a judgement of you.",
+ "Snabbtest, rätt svar": "Speed test, correct answers",
+ "{a} av {b} ({p} %)": "{a} of {b} ({p}%)",
+ "Snabbtest, typisk svarstid": "Speed test, typical response time",
+ "I snabbtestet i Eaglemans studie (2007) svarade personer med synestesi rätt på i snitt 94 % och övriga på 67 %. Det är en jämförelse, ingen gräns för dig.": "In the speed test in Eagleman's study (2007), people with synesthesia answered 94% correctly on average and others 67%. It is a comparison, not a limit for you.",
+ "Första och senaste sessionen": "First and latest session",
+ "Ljud {n}": "Sound {n}",
+ "Första och senaste sessionen, tecken för tecken": "First and latest session, character by character",
+ "Vänster prick är din färg vid första tillfället ({d}), höger prick vid det senaste. Siffran är avståndet mellan dem: lägre betyder mer lika.": "The left dot is your colour the first time ({d}), the right dot the latest time. The number is the distance between them: lower means more alike.",
+ "Dina färger i senaste sessionen": "Your colours in the latest session",
+ "Visa detaljer": "Show details",
+ "Senaste session {d}": "Latest session {d}",
+ "Din beskrivning:": "Your description:",
+ "Inga resultat än": "No results yet",
+ "När du har gjort ett test visas dina svar här, med en färgprick för varje ljud eller siffra.": "Once you have done a test, your answers appear here, with a colour dot for each sound or digit.",
+ "Konsistens": "Consistency",
+ "Uppföljning gjord. Resultatet är fortfarande preliminärt tills forskare har bestämt kriterierna.": "Follow-up done. The result is still preliminary until researchers have settled the criteria.",
+ "Ännu inte utvärderad. Den bedöms först när du har gjort en uppföljning.": "Not evaluated yet. It is assessed once you have done a follow-up.",
+ "Tecken med en plats": "Characters with a place",
+ "Konsistens (yta mellan trycken)": "Consistency (area between taps)",
+ "Flytt sedan första sessionen": "Shift since the first session",
+ "Alla tryck låg nästan på samma vågräta linje. Då går det inte att bedöma konsekvensen.": "All taps lay almost on the same horizontal line. Then consistency can't be assessed.",
+ "Det behövs minst fyra tecken med en plats alla tre gångerna.": "At least four characters with a place all three times are needed.",
+ "Dina platser": "Your places",
+ "Streckade etiketter visar var du placerade tecknen första gången ({d}).": "Dashed labels show where you placed the characters the first time ({d}).",
+ "Värdet är den genomsnittliga ytan mellan dina tre tryck för varje tecken, i procent av rutan. Lägre betyder att du tryckte på samma ställe. Som jämförelse använde Rothen m.fl. (2016) gränsen {l} %. Det är ingen bedömning av dig.": "The value is the average area between your three taps for each character, as a percentage of the box. Lower means you tapped the same spot. For comparison, Rothen et al. (2016) used the limit {l}%. It is not a judgement of you.",
+
+ "Ord → smak": "Word → taste",
+ "Personlighet": "Personality",
+ "Spegelberöring": "Mirror-touch",
+ "Doft → färg": "Smell → colour",
+ "Dag/månad → färg": "Day/month → colour",
+ "Du": "You",
+ "Inget svar": "No answer",
+ "Så beskriver du dina färger": "How you describe your colours",
+ "Var:": "Where:",
+ "Kvar när du blundar:": "Still there with eyes closed:",
+ "Kommer av sig själv:": "Comes by itself:",
+ "Hur länge:": "How long:",
+ "Forskare skiljer på färger som syns ute i världen och färger som finns inne i huvudet. Båda räknas som synestesi.": "Researchers distinguish colours seen out in the world from colours in the mind's eye. Both count as synesthesia.",
+ "Plats för {a} av {b}": "Place for {a} of {b}",
+ "Färg för {a} av {b}": "Colour for {a} of {b}",
+ "{n} session": "{n} session",
+ "{n} sessioner": "{n} sessions",
+ "snabbtest {p} % rätt": "speed test {p}% correct",
+ "skillnad över tid {x}": "difference over time {x}",
+ "uppföljning återstår": "follow-up still to do",
+ "Inte testat än · du svarade \"{a}\" i de inledande frågorna": "Not tested yet · you answered \"{a}\" in the opening questions",
+ "Inget test än · du svarade \"{a}\"": "No test yet · you answered \"{a}\"",
+ "inget": "nothing",
+
+ "{n} dag": "{n} day",
+ "{n} dagar": "{n} days",
+ "Nu": "Now",
+ "Öppnar {d}": "Opens {d}",
+ "Du kan göra uppföljningen direkt.": "You can do the follow-up right away.",
+ "Gör uppföljningen": "Do the follow-up",
+ "Prototypen kan inte skicka aviseringar än. Skriv in {d} i din kalender så länge.": "The prototype can't send notifications yet. Put {d} in your calendar for now."
+};
+  function t(str, vars) {
+    let out = S.lang === "en" ? (EN[str] ?? str) : str;
+    if (vars) for (const k in vars) out = out.split("{" + k + "}").join(vars[k]);
+    return out;
+  }
+  // Static text is collected once, before anything is rendered, so it can be switched back and forth.
+  const STATIC = [], ATTRS = [], HTMLS = [];
+  (() => {
+    const root = document.querySelector(".app");
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let n;
+    while ((n = w.nextNode())) {
+      if (!n.nodeValue.trim() || n.parentElement.closest("[data-lang],[data-en],script,style")) continue;
+      STATIC.push([n, n.nodeValue]);
+    }
+    root.querySelectorAll("[aria-label],[placeholder]").forEach(el => ["aria-label", "placeholder"].forEach(a => { if (el.hasAttribute(a)) ATTRS.push([el, a, el.getAttribute(a)]); }));
+    root.querySelectorAll("[data-en]").forEach(el => HTMLS.push([el, el.innerHTML]));
+  })();
+  function applyLang() {
+    const en = S.lang === "en";
+    document.documentElement.lang = S.lang;
+    document.title = en ? "SynMap Prototype" : "SynMap Prototyp";
+    for (const [n, o] of STATIC) n.nodeValue = o.replace(o.trim(), t(o.trim()));
+    for (const [el, a, o] of ATTRS) el.setAttribute(a, t(o));
+    for (const [el, o] of HTMLS) el.innerHTML = en ? el.dataset.en : o;
+    document.querySelectorAll("[data-lang]").forEach(el => el.hidden = el.dataset.lang !== S.lang);
+    $("lang").value = S.lang;
+  }
 
   // ---------- ribbons ----------
   // Silky ribbons: a bundle of thin strokes that follow one cubic curve, twisting as the width oscillates.
@@ -596,13 +1021,20 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     if (id === "s-results") renderResults();
     if (id === "s-follow") renderFollow();
     if (id === "s-profile") renderProfile();
+    if (id === "s-bg") renderBg();
     requestAnimationFrame(drawRibbons);
   }
   document.querySelectorAll("[data-back]").forEach(b => b.addEventListener("click", () => go(history.pop() || "s-welcome", false)));
 
   $("go-about").addEventListener("click", () => { $("about").hidden = false; });
   $("about-close").addEventListener("click", () => { $("about").hidden = true; });
-  $("go-start").addEventListener("click", () => { if (introList().every(q => S.answers[q.id])) go("s-choose"); else { qi = 0; showIntro(); go("s-intro"); } });
+  $("about-more").addEventListener("click", () => { $("about").hidden = true; go("s-meaning"); });
+  // Starts where the person left off: the first unanswered question, then About you, then the test list.
+  $("go-start").addEventListener("click", () => {
+    const k = introList().findIndex(q => !S.answers[q.id]);
+    if (k >= 0) { qi = k; showIntro(); go("s-intro"); } else if (!S.bg.done) go("s-bg"); else go("s-choose");
+  });
+  $("lang").addEventListener("change", e => { S.lang = e.target.value; save(); applyLang(); drawRibbons(); });
 
   // ---------- intro questions ----------
   let qi = 0;
@@ -610,24 +1042,55 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const list = introList(), q = list[qi];
     $("intro-dots").innerHTML = list.map((_, i) => (i ? `<b class="${i <= qi ? "on" : ""}"></b>` : "") + `<i class="${i <= qi ? "on" : ""}${i === qi ? " cur" : ""}"></i>`).join("");
     $("intro-count").textContent = `${qi + 1} / ${list.length}`;
-    $("intro-q").textContent = q.q;
-    $("intro-opts").innerHTML = q.opts.map(o => `<button class="opt" role="radio" aria-checked="${S.answers[q.id] === o}"><span class="r"></span>${o}</button>`).join("");
+    $("intro-q").textContent = t(q.q);
+    $("intro-opts").innerHTML = q.opts.map(o => `<button class="opt" role="radio" aria-checked="${S.answers[q.id] === o}"><span class="r"></span>${t(o)}</button>`).join("");
     $("intro-opts").querySelectorAll(".opt").forEach((b, i) => b.addEventListener("click", () => { S.answers[q.id] = q.opts[i]; save(); showIntro(); }));
     $("intro-next").disabled = !S.answers[q.id];
-    $("intro-next").textContent = qi === list.length - 1 ? "Klar" : "Nästa";
+    $("intro-next").textContent = t(qi === list.length - 1 ? "Klar" : "Nästa");
     $("intro-prev").disabled = qi === 0;
   }
   $("intro-prev").addEventListener("click", () => { if (qi > 0) { qi--; showIntro(); } });
   $("intro-back").addEventListener("click", () => { if (qi > 0) { qi--; showIntro(); } else go(history.pop() || "s-welcome", false); });
-  $("intro-next").addEventListener("click", () => { if (qi < introList().length - 1) { qi++; showIntro(); } else go("s-choose"); });
+  $("intro-next").addEventListener("click", () => { if (qi < introList().length - 1) { qi++; showIntro(); } else go("s-bg"); });
+
+  // ---------- about you ----------
+  const BG = {
+    gender: ["Kvinna", "Man", "Annat", "Vill inte svara"],
+    hand: ["Höger", "Vänster", "Båda"],
+    scripts: ["Latinskt (a, b, c)", "Kyrilliskt (а, б, в)", "Grekiskt (α, β, γ)", "Arabiskt", "Hebreiskt", "Kinesiska tecken", "Japanskt", "Koreanskt", "Annat"],
+    cv: ["Nej", "Ja", "Vet inte"],
+    night: ["Nej", "Ja", "Vet inte"]
+  };
+  function renderBg() {
+    $("bg-age").value = S.bg.age ?? "";
+    $("bg-lang").value = S.bg.lang ?? "";
+    document.querySelectorAll("#bg-form [data-bg]").forEach(box => {
+      const id = box.dataset.bg, multi = id === "scripts";
+      box.innerHTML = BG[id].map(o => `<button aria-pressed="${multi ? (S.bg.scripts || []).includes(o) : S.bg[id] === o}">${t(o)}</button>`).join("");
+      box.querySelectorAll("button").forEach((b, i) => b.addEventListener("click", () => {
+        const o = BG[id][i];
+        if (multi) { const l = S.bg.scripts ||= []; l.includes(o) ? l.splice(l.indexOf(o), 1) : l.push(o); }
+        else S.bg[id] = S.bg[id] === o ? undefined : o;
+        save(); renderBg();
+      }));
+    });
+    $("cv-hint").hidden = S.bg.cv !== "Ja";
+    $("night-hint").hidden = S.bg.night !== "Ja";
+  }
+  $("bg-age").addEventListener("input", e => { const v = parseInt(e.target.value, 10); S.bg.age = v >= 5 && v <= 120 ? v : undefined; save(); });
+  $("bg-lang").addEventListener("input", e => { S.bg.lang = e.target.value.trim() || undefined; save(); });
+  $("bg-back").addEventListener("click", () => { qi = introList().length - 1; showIntro(); go("s-intro", false); });
+  $("bg-done").addEventListener("click", () => { S.bg.done = true; save(); go("s-choose"); });
 
   // ---------- choose ----------
   function testState(key) {
     const ss = S.sessions[key];
-    if (!ss.length) return { label: "Ej påbörjat", cls: "", open: true };
+    const p = S.paused[key];
+    if (p) return { label: t("Pausat vid {i} av {n}", { i: Math.min(p.i, p.list.length), n: p.list.length }), cls: "teal", open: true };
+    if (!ss.length) return { label: t("Ej påbörjat"), cls: "", open: true };
     const due = ss[ss.length - 1].date + RETEST_DAYS * 864e5;
-    if (now() >= due) return { label: `Uppföljning ${ss.length + 1} kan göras nu`, cls: "teal", open: true };
-    return { label: `Uppföljning öppnar ${fmtDate(due)}`, cls: "orange", open: false, due };
+    if (now() >= due) return { label: t("Uppföljning {n} kan göras nu", { n: ss.length + 1 }), cls: "teal", open: true };
+    return { label: t("Uppföljning öppnar {d}", { d: fmtDate(due) }), cls: "orange", open: false, due };
   }
   function renderChoose() {
     // Tests are picked from the intro answers: everything not answered "Nej" is suggested, the rest sits under "Fler tester".
@@ -636,13 +1099,32 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const all = !rec.length;
     for (const k of KEYS) (all || rec.includes(k) ? $("rec-list") : $("more-list")).appendChild($("pick-" + k));
     $("more-tests").hidden = all || rec.length === KEYS.length;
-    $("rec-h").textContent = all
+    $("rec-h").textContent = t(all
       ? (answered.length ? "Du svarade nej på alla färgfrågor, men du kan ändå prova ett test:" : "Alla tester")
-      : "Utvalda för dig utifrån dina svar";
+      : "Utvalda för dig utifrån dina svar");
     for (const key of KEYS) {
       const st = testState(key), chip = $("chip-" + key);
       chip.textContent = st.label; chip.className = "chip " + st.cls;
+      $("est-" + key).textContent = st.open ? t("ca {m} min", { m: estMin(key) }) : "";
     }
+    renderResume();
+  }
+  // Rough minutes per test, from seconds per item; the colour tests add about a minute for the speed test.
+  const EST_SEC = { sound: 12, digits: 5, letters: 5, time: 5, space: 3 };
+  function estMin(key) {
+    const p = S.paused[key], left = p ? p.list.length - p.i : stimFor(key).length * REPS;
+    return Math.max(1, Math.round(left * EST_SEC[key] / 60) + (key === "sound" || key === "space" ? 0 : 1));
+  }
+  function renderResume() {
+    const ks = KEYS.filter(k => S.paused[k]), box = $("resume-card");
+    box.hidden = !ks.length;
+    box.innerHTML = ks.map(k => {
+      const p = S.paused[k];
+      return `<div class="stack" style="gap:4px"><b>${t("Pausat test: {x}", { x: t(TESTS[k].title) })}</b><span class="muted small">${t("{i} av {n} svar sparade. Du fortsätter där du slutade.", { i: Math.min(p.i, p.list.length), n: p.list.length })}</span></div>
+        <div class="nav-row" style="grid-template-columns:1fr 1fr"><button class="btn soft" data-drop="${k}">${t("Börja om")}</button><button class="btn primary" data-resume="${k}">${t("Fortsätt")}</button></div>`;
+    }).join("");
+    box.querySelectorAll("[data-resume]").forEach(b => b.addEventListener("click", () => startTest(b.dataset.resume)));
+    box.querySelectorAll("[data-drop]").forEach(b => b.addEventListener("click", () => { delete S.paused[b.dataset.drop]; save(); renderChoose(); }));
   }
   $("pick-sound").addEventListener("click", () => startTest("sound"));
   $("pick-digits").addEventListener("click", () => startTest("digits"));
@@ -771,17 +1253,22 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     }
     return list;
   }
+  // Answers are saved after every item, so a paused or reloaded test continues where it stopped.
+  function persist() { if (T) { S.paused[T.key] = { list: T.list, i: T.i, responses: T.responses }; save(); } }
+  function pauseTest() { persist(); T = null; go("s-choose", false); }
   function startTest(key) {
-    if (!testState(key).open) { go("s-follow"); return; }
-    T = { key, list: shuffled(TESTS[key].stimuli), i: 0, responses: [] };
-    if (key === "space") { go("s-space"); showSpace(); return; }
-    $("test-title").textContent = TESTS[key].title;
-    $("test-lead").textContent = TESTS[key].lead;
-    $("picker-q").textContent = TESTS[key].q;
+    const p = S.paused[key];
+    if (!p && !testState(key).open) { go("s-follow"); return; }
+    T = p ? { key, list: p.list.slice(), i: p.i, responses: p.responses.slice() } : { key, list: shuffled(stimFor(key)), i: 0, responses: [] };
+    if (key === "space") { go("s-space"); if (T.i >= T.list.length) { T.speed = null; toAfter(); } else showSpace(); return; }
+    $("test-title").textContent = t(TESTS[key].title);
+    $("test-lead").textContent = t(TESTS[key].lead) + " " + t("Du kan pausa när du vill. Svaren sparas.");
+    $("picker-q").textContent = t(TESTS[key].q);
     $("sound-block").hidden = key !== "sound";
     $("stim-row").hidden = key === "sound";
     $("stim").classList.toggle("word", !!TESTS[key].word);
     go("s-test");
+    if (T.i >= T.list.length) { if (key !== "sound" && prepSpeed()) go("s-speed"); else toAfter(); return; }
     requestAnimationFrame(showTrial);
   }
   function showTrial() {
@@ -789,8 +1276,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     T.played = false; T.auto = null; pick = null; $("sat").value = 100;
     $("test-count").textContent = `${T.i + 1} / ${T.list.length}`;
     $("test-bar").style.width = `${Math.max(T.i / T.list.length * 100, 2)}%`;
-    $("play-hint").textContent = "Tryck för att lyssna";
-    if (T.key !== "sound") $("stim").textContent = s;
+    $("play-hint").textContent = t("Tryck för att lyssna");
+    if (T.key !== "sound") $("stim").textContent = disp(s);
     $("auto-opts").querySelectorAll(".opt").forEach(b => b.setAttribute("aria-checked", "false"));
     $("test-prev").disabled = T.i === 0;
     T.shown = performance.now();
@@ -814,7 +1301,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   }
   $("play").addEventListener("click", () => {
     playTone(TONES.find(t => t.id === T.list[T.i]).f);
-    $("play-hint").textContent = "Du kan lyssna igen";
+    $("play-hint").textContent = t("Du kan lyssna igen");
     if (!T.played) { T.played = true; refreshTrial(); }
   });
   $("auto-opts").querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => {
@@ -824,7 +1311,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   }));
   function answer(rgb) {
     T.responses.push({ s: T.list[T.i], rgb, auto: T.key === "sound" ? T.auto : null, ms: Math.round(performance.now() - (T.shown || 0)) });
-    T.i++;
+    T.i++; persist();
     if (T.i < T.list.length) showTrial(); else if (T.key !== "sound" && prepSpeed()) go("s-speed"); else toAfter();
   }
   $("test-next").addEventListener("click", () => {
@@ -832,8 +1319,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   });
   $("nocolor").addEventListener("click", () => answer(null));
   // Going back drops the previous answer and shows that item again, so a mis-tap can be fixed.
-  $("test-prev").addEventListener("click", () => { if (!T || T.i === 0) return; T.i--; T.responses.pop(); showTrial(); });
-  $("test-quit").addEventListener("click", () => { T = null; go("s-choose", false); });
+  $("test-prev").addEventListener("click", () => { if (!T || T.i === 0) return; T.i--; T.responses.pop(); persist(); showTrial(); });
+  $("test-quit").addEventListener("click", pauseTest);
+  $("test-pause").addEventListener("click", pauseTest);
   document.addEventListener("keydown", e => { if (!$("s-test").hidden && e.key === "Enter" && !$("test-next").disabled) { e.preventDefault(); $("test-next").click(); } });
 
   // ---------- time in space ----------
@@ -841,7 +1329,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   function showSpace() {
     spot = null;
     $("space-field").querySelector(".space-mark")?.remove();
-    $("space-item").textContent = T.list[T.i];
+    $("space-item").textContent = disp(T.list[T.i]);
     $("space-count").textContent = `${T.i + 1} / ${T.list.length}`;
     $("space-bar").style.width = `${Math.max(T.i / T.list.length * 100, 2)}%`;
     $("space-prev").disabled = T.i === 0;
@@ -858,13 +1346,14 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   });
   function spaceAnswer(pos) {
     T.responses.push({ s: T.list[T.i], pos, ms: Math.round(performance.now() - T.shown) });
-    T.i++;
+    T.i++; persist();
     if (T.i < T.list.length) showSpace(); else { T.speed = null; toAfter(); }
   }
   $("space-next").addEventListener("click", () => { if (spot) spaceAnswer(spot); });
   $("space-none").addEventListener("click", () => spaceAnswer(null));
-  $("space-prev").addEventListener("click", () => { if (T.i === 0) return; T.i--; T.responses.pop(); showSpace(); });
-  $("space-quit").addEventListener("click", () => { T = null; go("s-choose", false); });
+  $("space-prev").addEventListener("click", () => { if (T.i === 0) return; T.i--; T.responses.pop(); persist(); showSpace(); });
+  $("space-quit").addEventListener("click", pauseTest);
+  $("space-pause").addEventListener("click", pauseTest);
   // Consistency = mean area of the triangle spanned by the three taps, as % of the field.
   function spaceScore(session) {
     const by = {};
@@ -892,10 +1381,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     for (const c of cols) { const g = groups.find(g => dist(g.c, c) < 30); if (g) g.n++; else groups.push({ c, n: 1 }); }
     const top = cols.length ? Math.max(...groups.map(g => g.n)) / cols.length : 0;
     const grey = cols.length ? cols.filter(c => Math.hypot(c[1], c[2]) < 20 || c[0] < 12 || c[0] > 96).length / cols.length : 0;
-    if (full < 4) return { ok: false, why: `Bara ${full} ${full === 1 ? "tecken" : "tecken"} fick en färg alla tre gångerna. Det behövs minst fyra.` };
-    if (groups.length < 3) return { ok: false, why: "Nästan alla svar hade samma eller nästan samma färg. Då går det inte att skilja konsekvens från att man valt en enda färg." };
-    if (top >= .6) return { ok: false, why: `${Math.round(top * 100)} % av svaren var samma färg. Då blir poängen låg även utan synestesi.` };
-    if (grey >= .8) return { ok: false, why: "Nästan alla svar var svart, vitt eller grått. Sådana svar ger en låg poäng även utan synestesi." };
+    if (full < 4) return { ok: false, why: t("Bara {n} tecken fick en färg alla tre gångerna. Det behövs minst fyra.", { n: full }) };
+    if (groups.length < 3) return { ok: false, why: t("Nästan alla svar hade samma eller nästan samma färg. Då går det inte att skilja konsekvens från att man valt en enda färg.") };
+    if (top >= .6) return { ok: false, why: t("{p} % av svaren var samma färg. Då blir poängen låg även utan synestesi.", { p: Math.round(top * 100) }) };
+    if (grey >= .8) return { ok: false, why: t("Nästan alla svar var svart, vitt eller grått. Sådana svar ger en låg poäng även utan synestesi.") };
     return { ok: true };
   }
 
@@ -915,8 +1404,12 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     try { navigator.clipboard.writeText(text).then(() => { ta.value = text; }, sel); } catch { sel(); }
     return ta;
   }
-  $("copy-csv").addEventListener("click", e => { copyOut(exportCsv()); e.target.textContent = "Kopierat"; setTimeout(() => e.target.textContent = "Kopiera CSV", 1600); });
-  $("copy-json").addEventListener("click", e => { copyOut(JSON.stringify({ app: "SynMap", version: 1, participant_id: S.pid, exported: new Date().toISOString(), answers: S.answers, sessions: S.sessions }, null, 1)); e.target.textContent = "Kopierat"; setTimeout(() => e.target.textContent = "Kopiera allt (JSON)", 1600); });
+  $("copy-csv").addEventListener("click", e => { copyOut(exportCsv()); e.target.textContent = t("Kopierat"); setTimeout(() => e.target.textContent = t("Kopiera CSV"), 1600); });
+  $("copy-json").addEventListener("click", e => {
+    const { done, ...background } = S.bg;
+    copyOut(JSON.stringify({ app: "SynMap", version: 2, app_version: APP_V, participant_id: S.pid, exported: new Date().toISOString(), background, answers: S.answers, sessions: S.sessions }, null, 1));
+    e.target.textContent = t("Kopierat"); setTimeout(() => e.target.textContent = t("Kopiera allt (JSON)"), 1600);
+  });
 
   // ---------- speeded match test ----------
   // Each item flashes for 1 s in the person's own colour (half the trials) or a clearly different one; they answer match / no match.
@@ -938,7 +1431,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     }
     for (let i = trials.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [trials[i], trials[j]] = [trials[j], trials[i]]; }
     SP = { trials, i: 0, out: [], live: false };
-    $("speed-n").textContent = `${trials.length} snabba frågor, ungefär ${Math.ceil(trials.length * 2.2 / 60)} minut${trials.length > 27 ? "er" : ""}.`;
+    $("speed-n").textContent = t("{n} snabba frågor, ungefär {m} min.", { n: trials.length, m: Math.ceil(trials.length * 2.2 / 60) });
     for (const id of ["speed-intro", "speed-start", "speed-skip"]) $(id).hidden = false;
     for (const id of ["speed-stage", "speed-btns"]) $(id).hidden = true;
     $("speed-bar").style.width = "2%"; $("speed-count").textContent = "";
@@ -949,13 +1442,12 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   function spTrial() {
     spClear();
     if (SP.i >= SP.trials.length) return spDone();
-    const t = SP.trials[SP.i], st = $("speed-stim"), stage = $("speed-stage");
+    const t = SP.trials[SP.i], st = $("speed-stim");
     $("speed-count").textContent = `${SP.i + 1} / ${SP.trials.length}`;
     $("speed-bar").style.width = `${Math.max(SP.i / SP.trials.length * 100, 2)}%`;
-    stage.classList.remove("dark"); st.className = "speed-stim fix"; st.textContent = "+"; st.style.color = ""; SP.live = false;
+    st.className = "speed-stim fix"; st.textContent = "+"; st.style.color = ""; SP.live = false;
     spTimers.push(setTimeout(() => {
-      stage.classList.toggle("dark", rgbToLuv(t.rgb)[0] > 70);
-      st.className = "speed-stim" + (TESTS[T.key].word ? " word" : ""); st.textContent = t.s; st.style.color = css(t.rgb);
+      st.className = "speed-stim" + (TESTS[T.key].word ? " word" : ""); st.textContent = disp(t.s); st.style.color = css(t.rgb);
       SP.t0 = performance.now(); SP.live = true;
       spTimers.push(setTimeout(() => { st.textContent = ""; }, 1000));
       spTimers.push(setTimeout(() => spAnswer(null), 3000));
@@ -995,14 +1487,73 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   function renderClarity() { $("clarity").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.v === clarity)); }
   $("clarity").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { clarity = +b.dataset.v; renderClarity(); }));
   $("after-done").addEventListener("click", () => {
-    S.sessions[T.key].push({ date: now(), responses: T.responses, clarity, note: $("note").value.trim(), speed: T.speed || null });
+    S.sessions[T.key].push({ date: now(), responses: T.responses, clarity, note: $("note").value.trim(), speed: T.speed || null, env: env() });
+    delete S.paused[T.key];
     save(); T = null; history.length = 0; history.push("s-choose"); go("s-results", false);
   });
 
+  // Screen and settings at the time of the test, so researchers can tell phone from computer answers.
+  const env = () => ({ lang: S.lang, app: APP_V, w: innerWidth, h: innerHeight, dpr: window.devicePixelRatio || 1, touch: matchMedia("(pointer: coarse)").matches, dark: matchMedia("(prefers-color-scheme: dark)").matches, ua: navigator.userAgent });
+
+  // ---------- overall assessment ----------
+  // Combines self-report, consistency, speed test and follow-up into one level. Never a diagnosis.
+  const LIM_LUV = 135.3;   // Rothen m.fl. 2013, sum of three pairwise distances
+  const LIM_FOLLOW = 45;   // the same limit per pair (135,3 / 3), for mean colour first vs latest session
+  const LIM_SPEED = .8;    // between Eagleman's 94 % (synesthetes) and 67 % (controls)
+  const LIM_MOVE = 10;     // space: mean shift of a place between sessions, % of the field
+  const COLOUR = ["sound", "digits", "letters", "time"];
+  function assess(key) {
+    const ss = S.sessions[key]; if (!ss.length) return null;
+    const first = ss[0], last = ss[ss.length - 1], A = S.answers, self = A[ASKED[key]];
+    let valid, cons, follow = null;
+    if (key === "space") {
+      const sc = spaceScore(last); valid = sc.n >= 4 && !sc.flat; cons = valid ? sc.mean < SPACE_LIMIT : null;
+      if (ss.length > 1) {
+        const f = spaceScore(first);
+        const d = sc.per.filter(p => p.mean).map(p => { const o = f.per.find(q => q.s === p.s && q.mean); return o ? Math.hypot(p.mean[0] - o.mean[0], p.mean[1] - o.mean[1]) * 100 : null; }).filter(x => x !== null);
+        follow = d.length ? d.reduce((a, x) => a + x, 0) / d.length < LIM_MOVE : null;
+      }
+    } else {
+      const w = within(last); valid = validity(last).ok; cons = valid && w.n >= 3 ? w.mean < LIM_LUV : null;
+      if (ss.length > 1) { const b = between(first, last); follow = b ? b.mean < LIM_FOLLOW : null; }
+    }
+    const selfOk = self ? isYes(self) : null;
+    const sp = ss.slice().reverse().find(x => x.speed)?.speed;
+    const speedOk = sp ? sp.acc >= LIM_SPEED : null;
+    const sig = [{ label: "Du beskriver upplevelsen själv", ok: selfOk, wait: "inte besvarat" },
+      { label: key === "space" ? "Samma platser varje gång i testet" : "Samma färger varje gång i testet", ok: cons, wait: "kan inte bedömas" }];
+    if (key !== "sound" && key !== "space") sig.push({ label: "Över 80 % rätt i snabbtestet", ok: speedOk, wait: "inte gjort" });
+    sig.push({ label: "Samma svar vid uppföljning", ok: follow, wait: "återstår" });
+    if (COLOUR.includes(key) && A.auto && A.since) sig.push({ label: "Färgerna kommer av sig själva och har funnits länge", ok: (A.auto === "Ja, alltid" || A.auto === "Oftast") && A.since === "Så länge jag kan minnas" });
+    let level;
+    if (!valid || cons === null) level = "na";
+    else if (follow === false || !cons) level = "weak";
+    else if (follow && (selfOk || speedOk)) level = "strong";
+    else if (selfOk || speedOk || follow) level = "moderate";
+    else level = "weak";
+    const notes = [];
+    if (COLOUR.includes(key) && S.bg.cv === "Ja") notes.push("Du har angett nedsatt färgseende, vilket kan påverka färgtesterna.");
+    if (COLOUR.includes(key) && S.bg.night === "Ja") notes.push("Du har angett att nattläge eller blåljusfilter är på, vilket ändrar hur färgerna ser ut.");
+    return { level, prelim: follow === null, sig, notes };
+  }
+  const LEVEL = { strong: ["Starkt stöd", 3], moderate: ["Måttligt stöd", 2], weak: ["Svagt stöd", 1], na: ["Kan inte bedömas", 0] };
+  const LEVEL_TXT = {
+    strong: "Dina svar visar ett tydligt och stabilt mönster som stämmer med synestesi.",
+    moderate: "Flera delar av dina svar stämmer med synestesi, men inte alla.",
+    weak: "Testet visar inget tydligt synestetiskt mönster. Det utesluter inte synestesi.",
+    na: "Svaren räcker inte för en bedömning. Se förklaringen ovan."
+  };
+  function verdictHtml(a) {
+    const [name, n] = LEVEL[a.level];
+    const sig = a.sig.map(x => `<div class="sig ${x.ok === true ? "ok" : x.ok === false ? "no" : "na"}"><span class="m" aria-hidden="true">${x.ok === true ? "✓" : x.ok === false ? "✗" : "–"}</span><span>${t(x.label)}${x.ok === null ? ` <span class="muted">(${t(x.wait)})</span>` : ""}</span></div>`).join("");
+    return `<div class="verdict"><span class="sub-h">${t("Samlad bedömning")}</span><div class="lvl"><span class="meter" aria-hidden="true">${[1, 2, 3].map(i => `<i class="${i <= n ? "on" : ""}"></i>`).join("")}</span><b>${t(name)}</b>${a.prelim && a.level !== "na" ? `<span class="chip orange">${t("Preliminärt")}</span>` : ""}</div>
+      <p class="small">${t(LEVEL_TXT[a.level])}</p>${sig}${a.notes.map(x => `<p class="small muted">${t(x)}</p>`).join("")}<p class="muted small">${t("En bedömning av mönstret i dina svar, ingen diagnos.")}</p></div>`;
+  }
+
   // ---------- results ----------
   const ICONS = { sound: document.querySelector('[data-icon="sound"]').innerHTML, digits: document.querySelector('[data-icon="digits"]').innerHTML, letters: document.querySelector('[data-icon="letters"]').innerHTML, time: document.querySelector('[data-icon="time"]').innerHTML, space: document.querySelector('[data-icon="space"]').innerHTML };
-  const secs = ms => (ms / 1000).toFixed(2).replace(".", ",") + " s";
-  const n1 = x => x.toFixed(1).replace(".", ",");
+  const secs = ms => dec(ms / 1000, 2) + " s";
+  const n1 = x => dec(x);
   function renderResults() {
     const list = $("res-list"); list.innerHTML = "";
     let any = false, followed = false;
@@ -1011,23 +1562,25 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       if (ss.length > 1) followed = true;
       if (key === "space") { list.appendChild(spaceCard(ss)); continue; }
       const last = ss[ss.length - 1], w = within(last), v = validity(last);
-      const order = TESTS[key].stimuli;
+      const order = orderFor(key, last);
       const means = order.map(s => { const cols = last.responses.filter(r => r.s === s && r.rgb).map(r => r.rgb); return cols.length ? meanRgb(cols) : null; });
       const dots = means.filter(Boolean).map(c => `<span style="background:${css(c)}"></span>`).join("") || `<span class="nc"></span>`;
       const legend = order.map((s, i) => `<div><span class="${means[i] ? "" : "nc"}" style="${means[i] ? "background:" + css(means[i]) : ""}"></span>${label(key, s, i)}</div>`).join("");
       const coloured = means.filter(Boolean).length;
-      let rows = `<div class="kv"><span>Sessioner gjorda</span><span>${ss.length}</span></div>`;
-      rows += `<div class="kv"><span>${NOUN[key]} med färgupplevelse</span><span>${coloured} av ${order.length}</span></div>`;
-      if (last.clarity) rows += `<div class="kv"><span>Din skattning av tydlighet</span><span>${last.clarity} av 5</span></div>`;
-      rows += `<div class="kv"><span>Konsistens inom sessionen</span><span>${!v.ok ? "kan inte bedömas" : w.n >= 3 ? n1(w.mean) : "för få färgsvar"}</span></div>`;
-      if (ss.length > 1) { const b = between(ss[0], last); rows += `<div class="kv"><span>Skillnad mot första sessionen</span><span>${b ? n1(b.mean) : "–"}</span></div>`; }
-      let note = key === "sound" || w.n < 3
-        ? `<p class="muted small">Lägre värde betyder att du valde mer lika färger varje gång.${key === "sound" ? " För ljud finns ingen etablerad gräns ännu." : ""}</p>`
-        : `<p class="muted small">Lägre värde betyder att du valde mer lika färger varje gång. Som jämförelse har forskning om ${key === "time" ? "bokstäver och siffror använt gränsen 135,3 (Rothen m.fl., 2013). För dagar och månader går den bara att använda som en grov jämförelse." : "bokstäver och siffror använt gränsen 135,3 (Rothen m.fl., 2013)."} Värdet är ingen bedömning av dig.</p>`;
+      const kv = (a, b) => `<div class="kv"><span>${a}</span><span>${b}</span></div>`;
+      let rows = kv(t("Sessioner gjorda"), ss.length);
+      rows += kv(t("{x} med färgupplevelse", { x: t(NOUN[key]) }), t("{a} av {b}", { a: coloured, b: order.length }));
+      if (last.clarity) rows += kv(t("Din skattning av tydlighet"), t("{a} av {b}", { a: last.clarity, b: 5 }));
+      rows += kv(t("Konsistens inom sessionen"), !v.ok ? t("kan inte bedömas") : w.n >= 3 ? n1(w.mean) : t("för få färgsvar"));
+      if (ss.length > 1) { const b = between(ss[0], last); rows += kv(t("Skillnad mot första sessionen"), b ? n1(b.mean) : "–"); }
+      let note = `<p class="muted small">${t("Lägre värde betyder att du valde mer lika färger varje gång.")}`;
+      if (key === "sound") note += " " + t("För ljud finns ingen etablerad gräns ännu.");
+      else if (w.n >= 3) note += " " + t("Som jämförelse har forskning om bokstäver och siffror använt gränsen {l} (Rothen m.fl., 2013).", { l: dec(LIM_LUV) }) + (key === "time" ? " " + t("För dagar och månader går den bara att använda som en grov jämförelse.") : "") + " " + t("Värdet är ingen bedömning av dig.");
+      note += "</p>";
       if (last.speed) {
-        rows += `<div class="kv"><span>Snabbtest, rätt svar</span><span>${last.speed.correct} av ${last.speed.n} (${Math.round(last.speed.acc * 100)} %)</span></div>`;
-        if (last.speed.rt) rows += `<div class="kv"><span>Snabbtest, typisk svarstid</span><span>${secs(last.speed.rt)}</span></div>`;
-        note += `<p class="muted small">I snabbtestet i Eaglemans studie (2007) svarade personer med synestesi rätt på i snitt 94 % och övriga på 67 %. Det är en jämförelse, ingen gräns för dig.</p>`;
+        rows += kv(t("Snabbtest, rätt svar"), t("{a} av {b} ({p} %)", { a: last.speed.correct, b: last.speed.n, p: Math.round(last.speed.acc * 100) }));
+        if (last.speed.rt) rows += kv(t("Snabbtest, typisk svarstid"), secs(last.speed.rt));
+        note += `<p class="muted small">${t("I snabbtestet i Eaglemans studie (2007) svarade personer med synestesi rätt på i snitt 94 % och övriga på 67 %. Det är en jämförelse, ingen gräns för dig.")}</p>`;
       }
       let cmp = "";
       if (ss.length > 1) {
@@ -1037,22 +1590,23 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
           const a = meanOf(first, s), b = meanOf(last, s);
           const dot = c => c ? `<span style="background:${css(meanRgb(c))}"></span>` : `<span class="nc"></span>`;
           const d = a && b ? Math.round(dist(meanLuv(a), meanLuv(b))) : null;
-          return `<div title="Första och senaste sessionen"><b>${key === "sound" ? "Ljud " + (i + 1) : label(key, s, i)}</b><span class="pair">${dot(a)}${dot(b)}</span><small>${d === null ? "–" : d}</small></div>`;
+          return `<div title="${t("Första och senaste sessionen")}"><b>${key === "sound" ? t("Ljud {n}", { n: i + 1 }) : label(key, s, i)}</b><span class="pair">${dot(a)}${dot(b)}</span><small>${d === null ? "–" : d}</small></div>`;
         }).join("");
-        cmp = `<p class="sub-h">Första och senaste sessionen, tecken för tecken</p><p class="muted small">Vänster prick är din färg vid första tillfället (${fmtDate(first.date)}), höger prick vid det senaste. Siffran är avståndet mellan dem: lägre betyder mer lika.</p><div class="cmp">${cells}</div>`;
+        cmp = `<p class="sub-h">${t("Första och senaste sessionen, tecken för tecken")}</p><p class="muted small">${t("Vänster prick är din färg vid första tillfället ({d}), höger prick vid det senaste. Siffran är avståndet mellan dem: lägre betyder mer lika.", { d: fmtDate(first.date) })}</p><div class="cmp">${cells}</div>`;
       }
       const card = document.createElement("div"); card.className = "card res-card";
-      card.innerHTML = `<div class="res-head"><span class="icon-disc">${ICONS[key]}</span><div><b>${TESTS[key].title}</b><div class="muted small">${TESTS[key].sub}</div></div></div>
-        <div class="dotsrow" aria-label="Dina färger i senaste sessionen">${dots}</div>
-        ${v.ok ? "" : `<div class="warnbox"><span><b>Kan inte bedömas</b>${v.why}</span></div>`}
-        <details${ss.length > 1 ? " open" : ""}><summary>Visa detaljer</summary><div><p class="muted small">Senaste session ${fmtDate(last.date)}</p><div class="legend">${legend}</div>${rows}${note}${cmp}${last.note ? `<p class="small"><span class="muted">Din beskrivning:</span> ${last.note.replace(/</g, "&lt;")}</p>` : ""}</div></details>`;
+      card.innerHTML = `<div class="res-head"><span class="icon-disc">${ICONS[key]}</span><div><b>${t(TESTS[key].title)}</b><div class="muted small">${t(TESTS[key].sub)}</div></div></div>
+        <div class="dotsrow" aria-label="${t("Dina färger i senaste sessionen")}">${dots}</div>
+        ${v.ok ? "" : `<div class="warnbox"><span><b>${t("Kan inte bedömas")}</b>${v.why}</span></div>`}
+        ${verdictHtml(assess(key))}
+        <details${ss.length > 1 ? " open" : ""}><summary>${t("Visa detaljer")}</summary><div><p class="muted small">${t("Senaste session {d}", { d: fmtDate(last.date) })}</p><div class="legend">${legend}</div>${rows}${note}${cmp}${last.note ? `<p class="small"><span class="muted">${t("Din beskrivning:")}</span> ${last.note.replace(/</g, "&lt;")}</p>` : ""}</div></details>`;
       list.appendChild(card);
     }
-    if (!any) list.innerHTML = `<div class="card"><h2>Inga resultat än</h2><p class="muted small">När du har gjort ett test visas dina svar här, med en färgprick för varje ljud eller siffra.</p></div>`;
+    if (!any) list.innerHTML = `<div class="card"><h2>${t("Inga resultat än")}</h2><p class="muted small">${t("När du har gjort ett test visas dina svar här, med en färgprick för varje ljud eller siffra.")}</p></div>`;
     const info = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01" stroke-linecap="round"/></svg>`;
     $("consist").innerHTML = followed
-      ? `${info}<div><b>Konsistens</b><span class="muted small">Uppföljning gjord. Resultatet är fortfarande preliminärt tills forskare har bestämt kriterierna.</span></div>`
-      : `${info}<div><b>Konsistens</b><span class="muted small">Ännu inte utvärderad. Den bedöms först när du har gjort en uppföljning.</span></div>`;
+      ? `${info}<div><b>${t("Konsistens")}</b><span class="muted small">${t("Uppföljning gjord. Resultatet är fortfarande preliminärt tills forskare har bestämt kriterierna.")}</span></div>`
+      : `${info}<div><b>${t("Konsistens")}</b><span class="muted small">${t("Ännu inte utvärderad. Den bedöms först när du har gjort en uppföljning.")}</span></div>`;
   }
   function spaceCard(ss) {
     const last = ss[ss.length - 1], sc = spaceScore(last), first = ss.length > 1 ? spaceScore(ss[0]) : null;
@@ -1060,24 +1614,26 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const map = (first ? first.per.filter(p => p.mean).map(p => `<span class="old" style="left:${p.mean[0] * 100}%;top:${p.mean[1] * 100}%">${label("space", p.s)}</span>`).join("") : "")
       + placed.map(p => `<span style="left:${p.mean[0] * 100}%;top:${p.mean[1] * 100}%">${label("space", p.s)}</span>`).join("");
     const ok = sc.n >= 4 && !sc.flat;
-    let rows = `<div class="kv"><span>Sessioner gjorda</span><span>${ss.length}</span></div>`;
-    rows += `<div class="kv"><span>Tecken med en plats</span><span>${placed.length} av ${TESTS.space.stimuli.length}</span></div>`;
-    rows += `<div class="kv"><span>Konsistens (yta mellan trycken)</span><span>${ok ? sc.mean.toFixed(3).replace(".", ",") + " %" : "kan inte bedömas"}</span></div>`;
+    let rows = `<div class="kv"><span>${t("Sessioner gjorda")}</span><span>${ss.length}</span></div>`;
+    rows += `<div class="kv"><span>${t("Tecken med en plats")}</span><span>${t("{a} av {b}", { a: placed.length, b: TESTS.space.stimuli.length })}</span></div>`;
+    rows += `<div class="kv"><span>${t("Konsistens (yta mellan trycken)")}</span><span>${ok ? dec(sc.mean, 3) + (S.lang === "en" ? "%" : " %") : t("kan inte bedömas")}</span></div>`;
     if (first) {
       const d = sc.per.filter(p => p.mean).map(p => { const o = first.per.find(q => q.s === p.s && q.mean); return o ? Math.hypot(p.mean[0] - o.mean[0], p.mean[1] - o.mean[1]) * 100 : null; }).filter(x => x !== null);
-      if (d.length) rows += `<div class="kv"><span>Flytt sedan första sessionen</span><span>${n1(d.reduce((t, x) => t + x, 0) / d.length)} %</span></div>`;
+      if (d.length) rows += `<div class="kv"><span>${t("Flytt sedan första sessionen")}</span><span>${n1(d.reduce((a, x) => a + x, 0) / d.length)}${S.lang === "en" ? "%" : " %"}</span></div>`;
     }
-    const why = sc.flat ? "Alla tryck låg nästan på samma vågräta linje. Då går det inte att bedöma konsekvensen." : sc.n < 4 ? "Det behövs minst fyra tecken med en plats alla tre gångerna." : "";
+    const why = t(sc.flat ? "Alla tryck låg nästan på samma vågräta linje. Då går det inte att bedöma konsekvensen." : sc.n < 4 ? "Det behövs minst fyra tecken med en plats alla tre gångerna." : "");
     const card = document.createElement("div"); card.className = "card res-card";
-    card.innerHTML = `<div class="res-head"><span class="icon-disc">${ICONS.space}</span><div><b>Tid i rummet</b><div class="muted small">${TESTS.space.sub}</div></div></div>
-      <div class="space-map" aria-label="Dina platser">${map}</div>
-      ${first ? `<p class="muted small">Streckade etiketter visar var du placerade tecknen första gången (${fmtDate(ss[0].date)}).</p>` : ""}
-      ${ok ? "" : `<div class="warnbox"><span><b>Kan inte bedömas</b>${why}</span></div>`}
-      <details${ss.length > 1 ? " open" : ""}><summary>Visa detaljer</summary><div>${rows}<p class="muted small">Värdet är den genomsnittliga ytan mellan dina tre tryck för varje tecken, i procent av rutan. Lägre betyder att du tryckte på samma ställe. Som jämförelse använde Rothen m.fl. (2016) gränsen ${String(SPACE_LIMIT).replace(".", ",")} %. Det är ingen bedömning av dig.</p></div></details>`;
+    card.innerHTML = `<div class="res-head"><span class="icon-disc">${ICONS.space}</span><div><b>${t("Tid i rummet")}</b><div class="muted small">${t(TESTS.space.sub)}</div></div></div>
+      <div class="space-map" aria-label="${t("Dina platser")}">${map}</div>
+      ${first ? `<p class="muted small">${t("Streckade etiketter visar var du placerade tecknen första gången ({d}).", { d: fmtDate(ss[0].date) })}</p>` : ""}
+      ${ok ? "" : `<div class="warnbox"><span><b>${t("Kan inte bedömas")}</b>${why}</span></div>`}
+      ${verdictHtml(assess("space"))}
+      <details${ss.length > 1 ? " open" : ""}><summary>${t("Visa detaljer")}</summary><div>${rows}<p class="muted small">${t("Värdet är den genomsnittliga ytan mellan dina tre tryck för varje tecken, i procent av rutan. Lägre betyder att du tryckte på samma ställe. Som jämförelse använde Rothen m.fl. (2016) gränsen {l} %. Det är ingen bedömning av dig.", { l: dec(SPACE_LIMIT, 4) })}</p></div></details>`;
     return card;
   }
   $("res-continue").addEventListener("click", () => go("s-follow"));
   $("res-profile").addEventListener("click", () => go("s-profile"));
+  $("res-meaning").addEventListener("click", () => go("s-meaning"));
 
   // ---------- profile ----------
   // Tested types come from the sessions; the rest only from the intro self-report, so they are drawn dashed.
@@ -1095,7 +1651,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       const means = TESTS.space.stimuli.map(s => sc.per.find(p => p.s === s && p.mean) ? [118, 87, 213] : null);
       return { ss, means, share: means.filter(Boolean).length / means.length, b: null };
     }
-    const last = ss[ss.length - 1], order = TESTS[key].stimuli;
+    const last = ss[ss.length - 1], order = orderFor(key, last);
     const means = order.map(s => { const c = last.responses.filter(r => r.s === s && r.rgb).map(r => r.rgb); return c.length ? meanRgb(c) : null; });
     const share = means.filter(Boolean).length / order.length;
     const b = ss.length > 1 ? between(ss[0], last) : null;
@@ -1105,8 +1661,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const cx = 180, cy = 188, R = 128;
     const SHORT = { sound: "Ljud → färg", digits: "Siffra → färg", letters: "Bokstav → färg", time: "Dag/månad → färg", space: "Tid i rummet" };
     const nodes = [
-      ...KEYS.map(k => ({ key: k, name: SHORT[k], sum: testSummary(k), self: S.answers[ASKED[k]] })),
-      ...SELF.map(x => ({ name: x.name, self: S.answers[x.q] }))
+      ...KEYS.map(k => ({ key: k, name: t(SHORT[k]), sum: testSummary(k), self: S.answers[ASKED[k]], a: assess(k) })),
+      ...SELF.map(x => ({ name: t(x.name), self: S.answers[x.q] }))
     ];
     const NS = "http://www.w3.org/2000/svg";
     let out = "";
@@ -1116,7 +1672,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       const [x, y] = pts[i];
       out += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="var(--violet)" stroke-opacity="${.15 + w * .55}" stroke-width="${1 + w * 4}" ${n.sum ? "" : 'stroke-dasharray="4 4"'}/>`;
     });
-    out += `<circle cx="${cx}" cy="${cy}" r="30" fill="var(--violet-soft)" stroke="var(--violet)" stroke-width="1.5"/><text class="tc" x="${cx}" y="${cy + 5}" text-anchor="middle">Du</text>`;
+    out += `<circle cx="${cx}" cy="${cy}" r="30" fill="var(--violet-soft)" stroke="var(--violet)" stroke-width="1.5"/><text class="tc" x="${cx}" y="${cy + 5}" text-anchor="middle">${t("Du")}</text>`;
     nodes.forEach((n, i) => {
       const [x, y] = pts[i];
       if (n.sum) {
@@ -1131,28 +1687,34 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
         out += `<circle cx="${x}" cy="${y}" r="16" fill="var(--card)" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="3 3"/>`;
       }
       const top = y < cy - 20, ly = y + (top ? (n.sum ? -32 : -36) : (n.sum ? 40 : 32));
-      out += `<text class="t" x="${x}" y="${ly}" text-anchor="middle">${n.name}</text>`;
-      if (!n.sum) out += `<text class="ts" x="${x}" y="${ly + 14}" text-anchor="middle">${n.self ? n.self : "Inget svar"}</text>`;
+      // The two bottom labels sit close together, so they are pushed apart from the middle.
+      const near = !top && y > cy && Math.abs(x - cx) < 70, anc = near ? (x < cx ? "end" : "start") : "middle", lx = near ? x + (x < cx ? 18 : -18) : x;
+      out += `<text class="t" x="${lx}" y="${ly}" text-anchor="${anc}">${n.name}</text>`;
+      if (!n.sum) out += `<text class="ts" x="${lx}" y="${ly + 14}" text-anchor="${anc}">${n.self ? t(n.self) : t("Inget svar")}</text>`;
     });
     $("profile-map").innerHTML = out;
     const A = S.answers, kind = $("profile-kind");
     kind.hidden = !A.where;
-    if (A.where) kind.innerHTML = `<b>Så beskriver du dina färger</b><span class="small">Var: ${A.where.toLowerCase()}</span>${A.eyes ? `<span class="small">Kvar när du blundar: ${A.eyes.toLowerCase()}</span>` : ""}${A.auto ? `<span class="small">Kommer av sig själv: ${A.auto.toLowerCase()}</span>` : ""}${A.since ? `<span class="small">Hur länge: ${A.since.toLowerCase()}</span>` : ""}<span class="muted small">Forskare skiljer på färger som syns ute i världen och färger som finns inne i huvudet. Båda räknas som synestesi.</span>`;
+    const low = x => S.lang === "en" ? t(x).replace(/^Yes|^No/, m => m.toLowerCase()) : t(x).toLowerCase();
+    if (A.where) kind.innerHTML = `<b>${t("Så beskriver du dina färger")}</b><span class="small">${t("Var:")} ${low(A.where)}</span>${A.eyes ? `<span class="small">${t("Kvar när du blundar:")} ${low(A.eyes)}</span>` : ""}${A.auto ? `<span class="small">${t("Kommer av sig själv:")} ${low(A.auto)}</span>` : ""}${A.since ? `<span class="small">${t("Hur länge:")} ${low(A.since)}</span>` : ""}<span class="muted small">${t("Forskare skiljer på färger som syns ute i världen och färger som finns inne i huvudet. Båda räknas som synestesi.")}</span>`;
 
     const disc = k => `<span class="icon-disc">${ICONS[k]}</span>`;
     const blankDisc = `<span class="icon-disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--muted)" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke-dasharray="3 3"/></svg></span>`;
     $("profile-list").innerHTML = nodes.map(n => {
       let line;
       if (n.sum) {
-        const t = n.sum, cnt = t.means.filter(Boolean).length, tot = t.means.length;
-        const sp = t.ss[t.ss.length - 1].speed;
-        line = `${n.key === "space" ? "Plats" : "Färg"} för ${cnt} av ${tot} · ${t.ss.length} ${t.ss.length === 1 ? "session" : "sessioner"}` + (sp ? ` · snabbtest ${Math.round(sp.acc * 100)} % rätt` : "") + (t.b ? ` · skillnad över tid ${n1(t.b.mean)}` : " · uppföljning återstår");
-      } else if (n.key) line = `Inte testat än · du svarade "${n.self || "inget"}" i de inledande frågorna`;
-      else line = `Inget test än · du svarade "${n.self || "inget"}"`;
+        const m = n.sum, cnt = m.means.filter(Boolean).length, tot = m.means.length;
+        const sp = m.ss[m.ss.length - 1].speed;
+        line = (n.a ? t(LEVEL[n.a.level][0]) + (n.a.prelim && n.a.level !== "na" ? ", " + t("preliminärt") : "") + " · " : "")
+          + t(n.key === "space" ? "Plats för {a} av {b}" : "Färg för {a} av {b}", { a: cnt, b: tot }) + " · " + t(m.ss.length === 1 ? "{n} session" : "{n} sessioner", { n: m.ss.length })
+          + (sp ? " · " + t("snabbtest {p} % rätt", { p: Math.round(sp.acc * 100) }) : "") + (m.b ? " · " + t("skillnad över tid {x}", { x: n1(m.b.mean) }) : " · " + t("uppföljning återstår"));
+      } else if (n.key) line = t("Inte testat än · du svarade \"{a}\" i de inledande frågorna", { a: n.self ? t(n.self) : t("inget") });
+      else line = t("Inget test än · du svarade \"{a}\"", { a: n.self ? t(n.self) : t("inget") });
       return `<div class="prow">${n.key ? disc(n.key) : blankDisc}<div class="txt"><b>${n.name}</b><span class="muted small">${line}</span></div></div>`;
     }).join("");
   }
   $("profile-choose").addEventListener("click", () => go("s-choose"));
+  $("profile-meaning").addEventListener("click", () => go("s-meaning"));
 
   // ---------- follow-up ----------
   function nextDue() {
@@ -1162,11 +1724,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   function renderFollow() {
     const due = nextDue();
     const days = due ? Math.ceil((due - now()) / 864e5) : 0;
-    $("follow-days").textContent = days > 0 ? `${days} ${days === 1 ? "dag" : "dagar"}` : "Nu";
-    $("follow-date").textContent = days > 0 ? `Öppnar ${fmtDate(due)}` : "Du kan göra uppföljningen direkt.";
-    $("remind").textContent = days > 0 ? "Påminn mig" : "Gör uppföljningen";
+    $("follow-days").textContent = days > 0 ? t(days === 1 ? "{n} dag" : "{n} dagar", { n: days }) : t("Nu");
+    $("follow-date").textContent = days > 0 ? t("Öppnar {d}", { d: fmtDate(due) }) : t("Du kan göra uppföljningen direkt.");
+    $("remind").textContent = t(days > 0 ? "Påminn mig" : "Gör uppföljningen");
     $("remind-msg").hidden = !S.remind;
-    if (S.remind) $("remind-msg").textContent = `Prototypen kan inte skicka aviseringar än. Skriv in ${fmtDate(S.remind)} i din kalender så länge.`;
+    if (S.remind) $("remind-msg").textContent = t("Prototypen kan inte skicka aviseringar än. Skriv in {d} i din kalender så länge.", { d: fmtDate(S.remind) });
   }
   $("remind").addEventListener("click", () => {
     const due = nextDue();
@@ -1176,6 +1738,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   $("skip-follow").addEventListener("click", () => go("s-welcome"));
   $("demo-skip").addEventListener("click", () => { S.offsetDays += RETEST_DAYS; S.remind = null; save(); renderFollow(); });
 
+  applyLang();
   drawRibbons();
 })();
 </script>

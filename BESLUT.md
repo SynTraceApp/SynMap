@@ -10,3 +10,6 @@ Kort logg över beslut som påverkar framtida arbete. Nyast överst. Format: `- 
 - 2026-10-09 – Färger: marinblå #28365B (text), violett #7657D5 (knappar), turkos #47BDB1, varm orange #FFB56B, ljus neutral bakgrund. Mobil först, svenska först. – Rickard
 - 2026-10-09 – Appen är en enda HTML-fil utan byggsteg. Svar sparas bara lokalt i webbläsaren. – Rickard
 - 2026-10-09 – Inga betalda utvecklingskostnader eller åtaganden innan forskare eller ett universitet är med. – Rickard
+- 2026-10-09 – Samlad bedömning per test i fyra nivåer (Starkt/Måttligt/Svagt stöd, Kan inte bedömas). Starkt stöd kräver godkänd uppföljning. Gränser: konsistens 135,3, uppföljning 45 (135,3/3), snabbtest 80 % rätt, Tid i rummet 0,2029 % och flytt under 10 %. Ordet diagnos används aldrig. – Rickard
+- 2026-10-09 – Testytan är alltid neutral grå #8a8a8a, oberoende av ljust eller mörkt läge. – Rickard
+- 2026-10-09 – Appen är tvåspråkig (svenska och engelska). Stimuli sparas alltid på svenska; engelska bokstavstestet är A–Z. – Rickard
