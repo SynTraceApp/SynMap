@@ -678,6 +678,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // ---------- language ----------
   // Swedish is the source text; EN maps it to English. t() also fills {placeholders}.
   const EN = {
+"ca {m} min, med snabbtest": "about {m} min, with speed test",
+"Gör snabbtestet (del 2)": "Do the speed test (part 2)",
+"Snabbtestet hoppades över eftersom svaren inte gick att bedöma. Det behöver färger som går att skilja åt.": "The speed test was skipped because the answers could not be assessed. It needs colours that can be told apart.",
 "Enkät: Så upplever du färgerna": "Questionnaire: how you experience the colours",
 "16 frågor från forskningen (CLaN) om var färgerna syns och hur de kommer.": "16 research questions (CLaN) about where the colours appear and how they come.",
 "Så upplever du färgerna": "How you experience the colours",
@@ -1183,7 +1186,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     for (const key of KEYS) {
       const st = testState(key), chip = $("chip-" + key);
       chip.textContent = st.label; chip.className = "chip " + st.cls;
-      $("est-" + key).textContent = st.open ? t("ca {m} min", { m: estMin(key) }) : "";
+      $("est-" + key).textContent = st.open ? t(SPEEDABLE.includes(key) ? "ca {m} min, med snabbtest" : "ca {m} min", { m: estMin(key) }) : "";
     }
     const cs = clanState();
     $("chip-clan").textContent = cs.label; $("chip-clan").className = "chip " + cs.cls;
@@ -1636,18 +1639,23 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     SP.i++; $("speed-stim").textContent = "";
     spClear(); spTimers.push(setTimeout(spTrial, 250));
   }
+  // A speed test started from the results page belongs to the latest session of that test, not a new one.
+  function afterSpeed() {
+    if (T && T.retro) { const ss = S.sessions[T.key]; ss[ss.length - 1].speed = T.speed || null; save(); T = null; history.length = 0; history.push("s-choose"); go("s-results", false); }
+    else toAfter();
+  }
   function spDone() {
     const n = SP.out.length, ok = SP.out.filter(o => o.correct);
     const rts = ok.map(o => o.rt).sort((a, b) => a - b);
     T.speed = { n, correct: ok.length, acc: n ? ok.length / n : 0, rt: rts.length ? rts[Math.floor(rts.length / 2)] : null, trials: SP.out };
-    SP = null; toAfter();
+    SP = null; afterSpeed();
   }
   $("speed-start").addEventListener("click", () => {
     for (const id of ["speed-intro", "speed-start", "speed-skip"]) $(id).hidden = true;
     for (const id of ["speed-stage", "speed-btns"]) $(id).hidden = false;
     spTrial();
   });
-  $("speed-skip").addEventListener("click", () => { SP = null; T.speed = null; toAfter(); });
+  $("speed-skip").addEventListener("click", () => { spClear(); SP = null; if (T.retro) { T = null; go("s-results", false); } else { T.speed = null; toAfter(); } });
   $("sp-yes").addEventListener("click", () => spAnswer(true));
   $("sp-no").addEventListener("click", () => spAnswer(false));
   document.addEventListener("keydown", e => {
@@ -1677,6 +1685,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   const LIM_SPEED = .8;    // between Eagleman's 94 % (synesthetes) and 67 % (controls)
   const LIM_MOVE = 10;     // space: mean shift of a place between sessions, % of the field
   const COLOUR = ["sound", "digits", "letters", "time"];
+  const SPEEDABLE = ["digits", "letters", "time"];
   function assess(key) {
     const ss = S.sessions[key]; if (!ss.length) return null;
     const first = ss[0], last = ss[ss.length - 1], A = S.answers, self = A[ASKED[key]];
@@ -1773,11 +1782,17 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       card.innerHTML = `<div class="res-head"><span class="icon-disc">${ICONS[key]}</span><div><b>${t(TESTS[key].title)}</b><div class="muted small">${t(TESTS[key].sub)}</div></div></div>
         <div class="dotsrow" aria-label="${t("Dina färger i senaste sessionen")}">${dots}</div>
         ${v.ok ? "" : `<div class="warnbox"><span><b>${t("Kan inte bedömas")}</b>${v.why}</span></div>`}
+        ${SPEEDABLE.includes(key) && !last.speed ? (v.ok ? `<button class="btn soft" data-speed="${key}">${t("Gör snabbtestet (del 2)")}</button>` : `<p class="muted small">${t("Snabbtestet hoppades över eftersom svaren inte gick att bedöma. Det behöver färger som går att skilja åt.")}</p>`) : ""}
         ${verdictHtml(assess(key))}
         <details${ss.length > 1 ? " open" : ""}><summary>${t("Visa detaljer")}</summary><div><p class="muted small">${t("Senaste session {d}", { d: fmtDate(last.date) })}</p><div class="legend">${legend}</div>${rows}${note}${cmp}${last.note ? `<p class="small"><span class="muted">${t("Din beskrivning:")}</span> ${last.note.replace(/</g, "&lt;")}</p>` : ""}</div></details>`;
       list.appendChild(card);
     }
     if (S.clan.done) { any = true; list.appendChild(clanCard()); }
+    list.querySelectorAll("[data-speed]").forEach(b => b.addEventListener("click", () => {
+      const key = b.dataset.speed, ss = S.sessions[key];
+      T = { key, list: [], i: 0, responses: ss[ss.length - 1].responses, retro: true };
+      if (prepSpeed()) go("s-speed"); else T = null;
+    }));
     if (!any) list.innerHTML = `<div class="card"><h2>${t("Inga resultat än")}</h2><p class="muted small">${t("När du har gjort ett test visas dina svar här, med en färgprick för varje ljud eller siffra.")}</p></div>`;
     const info = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01" stroke-linecap="round"/></svg>`;
     $("consist").innerHTML = followed
