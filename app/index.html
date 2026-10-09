@@ -146,8 +146,9 @@ canvas.foot-rib { left: 0; right: 0; bottom: 0; width: 100%; height: 190px; }
 .pick-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .nocolor { display: inline-flex; align-items: center; gap: 10px; font-weight: 500; color: var(--ink); padding: 6px 0; }
 .nocolor .o { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--muted); }
-.mini-swatch { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
-.mini-swatch span { width: 30px; height: 30px; border-radius: 50%; border: 1.5px dashed var(--line); }
+.q-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pv { width: 34px; height: 34px; border-radius: 50%; border: 1.5px dashed var(--line); flex: none; }
+.stim { transition: color .12s; -webkit-text-stroke: 1px color-mix(in srgb, var(--stim-ink) 14%, transparent); }
 
 /* After test */
 .scale { display: flex; gap: 8px; }
@@ -270,12 +271,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <div class="stim-row" id="stim-row" hidden><div class="stim" id="stim" aria-live="polite"></div></div>
 
     <div id="picker-block" class="picker">
-      <p class="q" id="picker-q"></p>
+      <div class="q-row"><p class="q" id="picker-q"></p><span class="pv" id="swatch" role="img" aria-label="Vald färg"></span></div>
       <canvas id="plane" tabindex="0" aria-label="Färgfält: nyans åt sidan, ljushet uppåt och nedåt"></canvas>
       <div class="slider-row"><label for="sat">Mättnad</label><input type="range" id="sat" min="0" max="100" value="100"></div>
       <div class="pick-row">
         <button class="nocolor" id="nocolor"><span class="o"></span>Ingen färg</button>
-        <span class="mini-swatch">Vald färg <span id="swatch"></span></span>
       </div>
     </div>
     <div class="grow"></div>
@@ -623,7 +623,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("picker-block").hidden = !showPicker;
     if (showPicker && sound) requestAnimationFrame(drawPlane);
     const rgb = curRgb();
+    // Digits: the digit itself takes the chosen colour, so the answer sits right where the eye already is.
+    $("stim").style.color = !sound && rgb ? css(rgb) : "";
     const sw = $("swatch");
+    sw.hidden = !sound;
     sw.style.background = rgb && showPicker ? css(rgb) : "";
     sw.style.borderStyle = rgb && showPicker ? "solid" : "";
     $("test-next").disabled = sound ? !(T.auto && (T.auto !== "ja" || rgb)) : !rgb;
