@@ -28,6 +28,8 @@
   --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
   --stimulus: Arial, Helvetica, sans-serif;
   --stim-ink: #111318;
+  --stage-light: #f4f4f7;
+  --stage-dark: #1c1e27;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -180,6 +182,20 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 .consist svg { width: 22px; height: 22px; color: var(--navy); flex: none; margin-top: 1px; }
 .consist b { color: var(--navy); font-weight: 600; display: block; }
 
+.stim.word { font-size: 46px; font-weight: 700; letter-spacing: -0.01em; }
+
+/* Speeded match test */
+.speed-stage { height: 220px; border-radius: 24px; display: grid; place-items: center; background: var(--stage-light); transition: background .1s; }
+.speed-stage.dark { background: var(--stage-dark); }
+.speed-stim { font-family: var(--stimulus); font-weight: 700; font-size: 120px; line-height: 1; }
+.speed-stim.word { font-size: 46px; }
+.speed-stim.fix { font-size: 40px; color: var(--muted); font-weight: 400; }
+.speed-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.speed-btns .btn { padding: 18px 12px; }
+.howto { display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+.kind { display: flex; flex-direction: column; gap: 4px; }
+.kind b { color: var(--navy); }
+
 /* Comparison over time */
 .cmp { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 8px; }
 .cmp div { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; border-radius: 12px; background: var(--page); }
@@ -194,8 +210,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 /* Profile */
 .map-card { padding: 8px; }
 #profile-map { width: 100%; height: auto; display: block; }
-#profile-map .t { fill: var(--ink); font-family: var(--font); font-size: 12px; font-weight: 600; }
-#profile-map .ts { fill: var(--muted); font-family: var(--font); font-size: 11px; }
+#profile-map .t { fill: var(--ink); font-family: var(--font); font-size: 13.5px; font-weight: 600; }
+#profile-map .ts { fill: var(--muted); font-family: var(--font); font-size: 12px; }
 #profile-map .tc { fill: var(--navy); font-family: var(--font); font-size: 15px; font-weight: 800; }
 #profile-map .pc { fill: var(--navy); font-family: var(--mono); font-size: 12px; font-weight: 500; }
 .prow { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
@@ -274,6 +290,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       <span class="txt"><b>Bokstav → färg</b><span class="muted small">Undersök om bokstäverna A–Ö har bestämda färger.</span><span class="chip" id="chip-letters"></span></span>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
     </button>
+    <button class="card test-card" id="pick-time">
+      <span class="icon-disc" data-icon="time"><svg viewBox="0 0 36 36" aria-hidden="true"><rect x="5" y="8" width="26" height="22" rx="5" fill="none" stroke="#7657d5" stroke-width="2.2"/><path d="M5 14h26" stroke="#7657d5" stroke-width="2.2"/><circle cx="12" cy="21" r="2.6" fill="#ff6fa8"/><circle cx="18" cy="21" r="2.6" fill="#ffb56b"/><circle cx="24" cy="21" r="2.6" fill="#47bdb1"/><circle cx="12" cy="26.5" r="2.6" fill="#4d8ef0"/><circle cx="18" cy="26.5" r="2.6" fill="#9b6cf0"/></svg></span>
+      <span class="txt"><b>Veckodag och månad → färg</b><span class="muted small">Undersök om dagar och månader har bestämda färger.</span><span class="chip" id="chip-time"></span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
     <div class="links-row"><button class="text-btn" id="to-results">Visa mina resultat</button><button class="text-btn" id="to-profile">Min profil</button></div>
   </section>
 
@@ -311,6 +332,26 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     </div>
     <div class="grow"></div>
     <button class="btn primary" id="test-next" disabled>Nästa</button>
+  </section>
+
+  <!-- Del 2: snabbtest (speeded congruency, Eagleman m.fl. 2007) -->
+  <section class="screen" id="s-speed" hidden>
+    <div class="topbar"><div class="track"><span id="speed-bar"></span></div><span class="count" id="speed-count"></span></div>
+    <div id="speed-intro" class="stack" style="gap:14px">
+      <h1>Del 2: Snabbtest</h1>
+      <p class="lead" style="margin-top:-6px">Nu visas tecknen i olika färger. Ibland är det din färg, ibland inte.</p>
+      <div class="card howto">
+        <p>Ett tecken blinkar fram i en färg i en sekund.</p>
+        <p>Tryck <b>Stämmer</b> om det är din färg för tecknet, annars <b>Stämmer inte</b>.</p>
+        <p>Svara så snabbt du kan och gå på känsla. På dator kan du använda piltangenterna ← och →.</p>
+      </div>
+      <p class="muted small" id="speed-n"></p>
+    </div>
+    <div class="speed-stage" id="speed-stage" hidden><div class="speed-stim" id="speed-stim" aria-live="polite"></div></div>
+    <div class="grow"></div>
+    <div class="speed-btns" id="speed-btns" hidden><button class="btn soft" id="sp-no">← Stämmer inte</button><button class="btn primary" id="sp-yes">Stämmer →</button></div>
+    <button class="btn primary" id="speed-start">Starta snabbtestet</button>
+    <button class="text-btn" id="speed-skip">Hoppa över</button>
   </section>
 
   <!-- Efter testet: tydlighet -->
@@ -371,8 +412,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <div class="topbar"><button class="back" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
     <h1>Din synestesiprofil</h1>
     <p class="lead">Alla dina tester och svar samlade i en bild. Profilen är preliminär och ingen diagnos.</p>
-    <div class="card map-card"><svg id="profile-map" viewBox="0 0 340 326" role="img" aria-label="Karta över dina synestesityper"></svg></div>
+    <div class="card map-card"><svg id="profile-map" viewBox="-10 -6 380 384" role="img" aria-label="Karta över dina synestesityper"></svg></div>
     <p class="muted small">Ringarna runt testade typer visar färgerna du valde. Siffran i mitten är hur stor andel av tecknen eller ljuden som gav en färg. Streckade cirklar är typer du bara har svarat på i de inledande frågorna.</p>
+    <div class="card kind" id="profile-kind" hidden></div>
     <div class="card" id="profile-list" style="padding-block:6px"></div>
     <div class="grow"></div>
     <button class="btn primary" id="profile-choose">Gör fler tester</button>
@@ -386,29 +428,48 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   const REPS = 3, RETEST_DAYS = 7, KEY = "synmap-v2";
   const DIGITS = "0123456789".split("");
   const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ".split("");
+  const DAYS = ["Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag", "Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"];
   // Eight tones across two octaves; labels are never shown, so note names cannot cue a colour.
   const TONES = [131, 165, 196, 247, 294, 392, 523, 659].map((f, i) => ({ id: "t" + (i + 1), f }));
   const TESTS = {
     sound: { title: "Ljud → färg", lead: "Lyssna på ljudet och svara på frågorna om du upplever en färg.", stimuli: TONES.map(t => t.id), q: "2. Vilken färg upplevde du?", sub: "Färgupplevelser rapporterade" },
     digits: { title: "Siffra → färg", lead: "Gå på känsla och svara utan att försöka minnas tidigare svar.", stimuli: DIGITS, q: "Vilken färg förknippar du med siffran?", sub: "Färgassociationer registrerade" },
-    letters: { title: "Bokstav → färg", lead: "Gå på känsla och svara utan att försöka minnas tidigare svar.", stimuli: LETTERS, q: "Vilken färg förknippar du med bokstaven?", sub: "Färgassociationer registrerade" }
+    letters: { title: "Bokstav → färg", lead: "Gå på känsla och svara utan att försöka minnas tidigare svar.", stimuli: LETTERS, q: "Vilken färg förknippar du med bokstaven?", sub: "Färgassociationer registrerade" },
+    time: { title: "Veckodag och månad → färg", lead: "Gå på känsla och svara utan att försöka minnas tidigare svar.", stimuli: DAYS, q: "Vilken färg förknippar du med ordet?", sub: "Färgassociationer registrerade", word: true }
   };
+  const label = (key, s, i) => key === "sound" ? String(i + 1) : key === "time" ? s.slice(0, 3) : s;
+  // Screening questions, modelled on the Synesthesia Battery pretest (Eagleman m.fl. 2007).
+  const YES = ["Ja, tydligt", "Ibland", "Nej", "Vet inte"];
   const INTRO = [
-    "Upplever du ibland att musik eller ljud ger upphov till färger?",
-    "Har siffror eller bokstäver egna färger för dig?",
-    "Har veckodagar eller månader en egen plats i rummet runt dig?",
-    "Händer det att ord har en smak eller en lukt för dig?",
-    "Känns det som att siffror eller bokstäver har en personlighet?"
+    { id: "sound", q: "Upplever du att musik eller ljud ger upphov till färger?", opts: YES },
+    { id: "graph", q: "Har siffror eller bokstäver egna färger för dig?", opts: YES },
+    { id: "timecol", q: "Har veckodagar eller månader egna färger?", opts: YES },
+    { id: "space", q: "Har veckodagar, månader eller år en bestämd plats i rummet runt dig?", opts: YES },
+    { id: "taste", q: "Händer det att ord ger en smak i munnen?", opts: YES },
+    { id: "pers", q: "Känns det som att siffror eller bokstäver har en personlighet eller ett kön?", opts: YES },
+    { id: "touch", q: "Känner du beröring på din egen kropp när du ser någon annan bli berörd?", opts: YES },
+    { id: "smell", q: "Ger dofter eller smaker dig upplevelser av färg eller form?", opts: YES },
+    { id: "other", q: "Tror du att du har någon annan ovanlig blandning av sinnen?", opts: YES }
   ];
-  const INTRO_OPTS = ["Ja, tydligt", "Ibland", "Nej", "Vet inte"];
+  // Asked only when a colour type got a yes: where the colour appears, and whether it is automatic and lifelong.
+  const INTRO_COLOUR = [
+    { id: "where", q: "När du upplever en färg, var finns den?", opts: ["Ute i världen, på själva tecknet eller ljudet", "Inne i huvudet, som en inre bild", "Jag bara vet vilken färg det är", "Vet inte"] },
+    { id: "eyes", q: "Finns färgen kvar om du blundar och tänker på tecknet?", opts: ["Ja", "Nej", "Vet inte"] },
+    { id: "auto", q: "Kommer färgen av sig själv, utan att du försöker?", opts: ["Ja, alltid", "Oftast", "Nej, jag måste tänka efter", "Vet inte"] },
+    { id: "since", q: "Hur länge har du haft de här upplevelserna?", opts: ["Så länge jag kan minnas", "De började senare i livet", "Vet inte"] }
+  ];
+  const isYes = a => a === "Ja, tydligt" || a === "Ibland";
+  const introList = () => ["sound", "graph", "timecol"].some(k => isYes(S.answers[k])) ? INTRO.concat(INTRO_COLOUR) : INTRO;
   const KEYS = Object.keys(TESTS);
-  const NOUN = { sound: "Ljud", digits: "Siffror", letters: "Bokstäver" };
+  const NOUN = { sound: "Ljud", digits: "Siffror", letters: "Bokstäver", time: "Dagar och månader" };
+  const ASKED = { sound: "sound", digits: "graph", letters: "graph", time: "timecol" };
 
   // ---------- state ----------
-  const blank = () => ({ intro: [], sessions: { sound: [], digits: [], letters: [] }, offsetDays: 0, remind: null });
+  const blank = () => ({ intro: [], sessions: { sound: [], digits: [], letters: [], time: [] }, answers: {}, offsetDays: 0, remind: null });
   let S = blank();
   try { S = Object.assign(blank(), JSON.parse(localStorage.getItem(KEY) || "{}")); } catch {}
   S.sessions = Object.assign(blank().sessions, S.sessions || {});
+  S.answers ||= {};
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
   const now = () => Date.now() + S.offsetDays * 864e5;
   const fmtDate = t => new Date(t).toLocaleDateString("sv-SE", { day: "numeric", month: "long" });
@@ -493,19 +554,20 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 
   $("go-about").addEventListener("click", () => { $("about").hidden = false; });
   $("about-close").addEventListener("click", () => { $("about").hidden = true; });
-  $("go-start").addEventListener("click", () => { if (S.intro.length === INTRO.length && S.intro.every(Boolean)) go("s-choose"); else { qi = 0; showIntro(); go("s-intro"); } });
+  $("go-start").addEventListener("click", () => { if (introList().every(q => S.answers[q.id])) go("s-choose"); else { qi = 0; showIntro(); go("s-intro"); } });
 
   // ---------- intro questions ----------
   let qi = 0;
   function showIntro() {
-    $("intro-dots").innerHTML = INTRO.map((_, i) => (i ? `<b class="${i <= qi ? "on" : ""}"></b>` : "") + `<i class="${i <= qi ? "on" : ""}${i === qi ? " cur" : ""}"></i>`).join("");
-    $("intro-count").textContent = `${qi + 1} / ${INTRO.length}`;
-    $("intro-q").textContent = INTRO[qi];
-    $("intro-opts").innerHTML = INTRO_OPTS.map(o => `<button class="opt" role="radio" aria-checked="${S.intro[qi] === o}"><span class="r"></span>${o}</button>`).join("");
-    $("intro-opts").querySelectorAll(".opt").forEach((b, i) => b.addEventListener("click", () => { S.intro[qi] = INTRO_OPTS[i]; save(); showIntro(); }));
-    $("intro-next").disabled = !S.intro[qi];
+    const list = introList(), q = list[qi];
+    $("intro-dots").innerHTML = list.map((_, i) => (i ? `<b class="${i <= qi ? "on" : ""}"></b>` : "") + `<i class="${i <= qi ? "on" : ""}${i === qi ? " cur" : ""}"></i>`).join("");
+    $("intro-count").textContent = `${qi + 1} / ${list.length}`;
+    $("intro-q").textContent = q.q;
+    $("intro-opts").innerHTML = q.opts.map(o => `<button class="opt" role="radio" aria-checked="${S.answers[q.id] === o}"><span class="r"></span>${o}</button>`).join("");
+    $("intro-opts").querySelectorAll(".opt").forEach((b, i) => b.addEventListener("click", () => { S.answers[q.id] = q.opts[i]; save(); showIntro(); }));
+    $("intro-next").disabled = !S.answers[q.id];
   }
-  $("intro-next").addEventListener("click", () => { if (qi < INTRO.length - 1) { qi++; showIntro(); } else go("s-choose"); });
+  $("intro-next").addEventListener("click", () => { if (qi < introList().length - 1) { qi++; showIntro(); } else go("s-choose"); });
 
   // ---------- choose ----------
   function testState(key) {
@@ -524,6 +586,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   $("pick-sound").addEventListener("click", () => startTest("sound"));
   $("pick-digits").addEventListener("click", () => startTest("digits"));
   $("pick-letters").addEventListener("click", () => startTest("letters"));
+  $("pick-time").addEventListener("click", () => startTest("time"));
   $("to-profile").addEventListener("click", () => go("s-profile"));
   $("to-results").addEventListener("click", () => go("s-results"));
 
@@ -653,6 +716,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("picker-q").textContent = TESTS[key].q;
     $("sound-block").hidden = key !== "sound";
     $("stim-row").hidden = key === "sound";
+    $("stim").classList.toggle("word", !!TESTS[key].word);
     go("s-test");
     requestAnimationFrame(showTrial);
   }
@@ -695,7 +759,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   function answer(rgb) {
     T.responses.push({ s: T.list[T.i], rgb, auto: T.key === "sound" ? T.auto : null });
     T.i++;
-    if (T.i < T.list.length) showTrial(); else { clarity = null; $("note").value = ""; renderClarity(); go("s-after"); }
+    if (T.i < T.list.length) showTrial(); else if (T.key !== "sound" && prepSpeed()) go("s-speed"); else toAfter();
   }
   $("test-next").addEventListener("click", () => {
     if (T.key === "sound" && T.auto !== "ja") answer(null); else answer(curRgb());
@@ -704,17 +768,90 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   $("test-quit").addEventListener("click", () => { T = null; go("s-choose", false); });
   document.addEventListener("keydown", e => { if (!$("s-test").hidden && e.key === "Enter" && !$("test-next").disabled) { e.preventDefault(); $("test-next").click(); } });
 
+  // ---------- speeded match test ----------
+  // Each item flashes for 1 s in the person's own colour (half the trials) or a clearly different one; they answer match / no match.
+  const FAR = [[229, 57, 53], [30, 136, 229], [67, 160, 71], [253, 216, 53], [142, 36, 170], [251, 140, 0], [0, 172, 193], [109, 76, 65], [240, 240, 240], [30, 30, 30]];
+  let SP = null;
+  function prepSpeed() {
+    const by = {};
+    for (const r of T.responses) if (r.rgb) (by[r.s] ||= []).push(r.rgb);
+    const own = Object.entries(by).map(([s, c]) => ({ s, rgb: meanRgb(c) }));
+    if (own.length < 4) return false;
+    for (let i = own.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [own[i], own[j]] = [own[j], own[i]]; }
+    const items = own.slice(0, 18), pool = own.map(o => o.rgb).concat(FAR);
+    let trials = [];
+    for (const it of items) {
+      const l = rgbToLuv(it.rgb);
+      const far = pool.filter(c => dist(rgbToLuv(c), l) >= 60);
+      trials.push({ s: it.s, rgb: it.rgb, cong: true });
+      trials.push({ s: it.s, rgb: far[Math.floor(Math.random() * far.length)] || [255 - it.rgb[0], 255 - it.rgb[1], 255 - it.rgb[2]], cong: false });
+    }
+    for (let i = trials.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [trials[i], trials[j]] = [trials[j], trials[i]]; }
+    SP = { trials, i: 0, out: [], live: false };
+    $("speed-n").textContent = `${trials.length} snabba frågor, ungefär ${Math.ceil(trials.length * 2.2 / 60)} minut${trials.length > 27 ? "er" : ""}.`;
+    for (const id of ["speed-intro", "speed-start", "speed-skip"]) $(id).hidden = false;
+    for (const id of ["speed-stage", "speed-btns"]) $(id).hidden = true;
+    $("speed-bar").style.width = "2%"; $("speed-count").textContent = "";
+    return true;
+  }
+  let spTimers = [];
+  const spClear = () => { spTimers.forEach(clearTimeout); spTimers = []; };
+  function spTrial() {
+    spClear();
+    if (SP.i >= SP.trials.length) return spDone();
+    const t = SP.trials[SP.i], st = $("speed-stim"), stage = $("speed-stage");
+    $("speed-count").textContent = `${SP.i + 1} / ${SP.trials.length}`;
+    $("speed-bar").style.width = `${Math.max(SP.i / SP.trials.length * 100, 2)}%`;
+    stage.classList.remove("dark"); st.className = "speed-stim fix"; st.textContent = "+"; st.style.color = ""; SP.live = false;
+    spTimers.push(setTimeout(() => {
+      stage.classList.toggle("dark", rgbToLuv(t.rgb)[0] > 70);
+      st.className = "speed-stim" + (TESTS[T.key].word ? " word" : ""); st.textContent = t.s; st.style.color = css(t.rgb);
+      SP.t0 = performance.now(); SP.live = true;
+      spTimers.push(setTimeout(() => { st.textContent = ""; }, 1000));
+      spTimers.push(setTimeout(() => spAnswer(null), 3000));
+    }, 500));
+  }
+  function spAnswer(yes) {
+    if (!SP || !SP.live) return;
+    SP.live = false;
+    const t = SP.trials[SP.i];
+    SP.out.push({ s: t.s, cong: t.cong, yes, correct: yes === t.cong, rt: yes === null ? null : Math.round(performance.now() - SP.t0) });
+    SP.i++; $("speed-stim").textContent = "";
+    spClear(); spTimers.push(setTimeout(spTrial, 250));
+  }
+  function spDone() {
+    const n = SP.out.length, ok = SP.out.filter(o => o.correct);
+    const rts = ok.map(o => o.rt).sort((a, b) => a - b);
+    T.speed = { n, correct: ok.length, acc: n ? ok.length / n : 0, rt: rts.length ? rts[Math.floor(rts.length / 2)] : null, trials: SP.out };
+    SP = null; toAfter();
+  }
+  $("speed-start").addEventListener("click", () => {
+    for (const id of ["speed-intro", "speed-start", "speed-skip"]) $(id).hidden = true;
+    for (const id of ["speed-stage", "speed-btns"]) $(id).hidden = false;
+    spTrial();
+  });
+  $("speed-skip").addEventListener("click", () => { SP = null; T.speed = null; toAfter(); });
+  $("sp-yes").addEventListener("click", () => spAnswer(true));
+  $("sp-no").addEventListener("click", () => spAnswer(false));
+  document.addEventListener("keydown", e => {
+    if ($("s-speed").hidden) return;
+    if (e.key === "ArrowRight") { e.preventDefault(); spAnswer(true); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); spAnswer(false); }
+  });
+  function toAfter() { spClear(); clarity = null; $("note").value = ""; renderClarity(); go("s-after"); }
+
   // ---------- after test ----------
   let clarity = null;
   function renderClarity() { $("clarity").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.v === clarity)); }
   $("clarity").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { clarity = +b.dataset.v; renderClarity(); }));
   $("after-done").addEventListener("click", () => {
-    S.sessions[T.key].push({ date: now(), responses: T.responses, clarity, note: $("note").value.trim() });
+    S.sessions[T.key].push({ date: now(), responses: T.responses, clarity, note: $("note").value.trim(), speed: T.speed || null });
     save(); T = null; history.length = 0; history.push("s-choose"); go("s-results", false);
   });
 
   // ---------- results ----------
-  const ICONS = { sound: document.querySelector('[data-icon="sound"]').innerHTML, digits: document.querySelector('[data-icon="digits"]').innerHTML, letters: document.querySelector('[data-icon="letters"]').innerHTML };
+  const ICONS = { sound: document.querySelector('[data-icon="sound"]').innerHTML, digits: document.querySelector('[data-icon="digits"]').innerHTML, letters: document.querySelector('[data-icon="letters"]').innerHTML, time: document.querySelector('[data-icon="time"]').innerHTML };
+  const secs = ms => (ms / 1000).toFixed(2).replace(".", ",") + " s";
   const n1 = x => x.toFixed(1).replace(".", ",");
   function renderResults() {
     const list = $("res-list"); list.innerHTML = "";
@@ -726,16 +863,21 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       const order = TESTS[key].stimuli;
       const means = order.map(s => { const cols = last.responses.filter(r => r.s === s && r.rgb).map(r => r.rgb); return cols.length ? meanRgb(cols) : null; });
       const dots = means.filter(Boolean).map(c => `<span style="background:${css(c)}"></span>`).join("") || `<span class="nc"></span>`;
-      const legend = order.map((s, i) => `<div><span class="${means[i] ? "" : "nc"}" style="${means[i] ? "background:" + css(means[i]) : ""}"></span>${key === "sound" ? i + 1 : s}</div>`).join("");
+      const legend = order.map((s, i) => `<div><span class="${means[i] ? "" : "nc"}" style="${means[i] ? "background:" + css(means[i]) : ""}"></span>${label(key, s, i)}</div>`).join("");
       const coloured = means.filter(Boolean).length;
       let rows = `<div class="kv"><span>Sessioner gjorda</span><span>${ss.length}</span></div>`;
       rows += `<div class="kv"><span>${NOUN[key]} med färgupplevelse</span><span>${coloured} av ${order.length}</span></div>`;
       if (last.clarity) rows += `<div class="kv"><span>Din skattning av tydlighet</span><span>${last.clarity} av 5</span></div>`;
       rows += `<div class="kv"><span>Konsistens inom sessionen</span><span>${w.n >= 3 ? n1(w.mean) : "för få färgsvar"}</span></div>`;
       if (ss.length > 1) { const b = between(ss[0], last); rows += `<div class="kv"><span>Skillnad mot första sessionen</span><span>${b ? n1(b.mean) : "–"}</span></div>`; }
-      const note = key !== "sound" && w.n >= 3
-        ? `<p class="muted small">Lägre värde betyder att du valde mer lika färger varje gång. Som jämförelse har forskning om bokstäver och siffror använt gränsen 135,3 (Rothen m.fl., 2013). Värdet är ingen bedömning av dig.</p>`
-        : `<p class="muted small">Lägre värde betyder att du valde mer lika färger varje gång. För ljud finns ingen etablerad gräns ännu.</p>`;
+      let note = key === "sound" || w.n < 3
+        ? `<p class="muted small">Lägre värde betyder att du valde mer lika färger varje gång.${key === "sound" ? " För ljud finns ingen etablerad gräns ännu." : ""}</p>`
+        : `<p class="muted small">Lägre värde betyder att du valde mer lika färger varje gång. Som jämförelse har forskning om ${key === "time" ? "bokstäver och siffror använt gränsen 135,3 (Rothen m.fl., 2013). För dagar och månader går den bara att använda som en grov jämförelse." : "bokstäver och siffror använt gränsen 135,3 (Rothen m.fl., 2013)."} Värdet är ingen bedömning av dig.</p>`;
+      if (last.speed) {
+        rows += `<div class="kv"><span>Snabbtest, rätt svar</span><span>${last.speed.correct} av ${last.speed.n} (${Math.round(last.speed.acc * 100)} %)</span></div>`;
+        if (last.speed.rt) rows += `<div class="kv"><span>Snabbtest, typisk svarstid</span><span>${secs(last.speed.rt)}</span></div>`;
+        note += `<p class="muted small">I snabbtestet i Eaglemans studie (2007) svarade personer med synestesi rätt på i snitt 94 % och övriga på 67 %. Det är en jämförelse, ingen gräns för dig.</p>`;
+      }
       let cmp = "";
       if (ss.length > 1) {
         const first = ss[0];
@@ -744,7 +886,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
           const a = meanOf(first, s), b = meanOf(last, s);
           const dot = c => c ? `<span style="background:${css(meanRgb(c))}"></span>` : `<span class="nc"></span>`;
           const d = a && b ? Math.round(dist(meanLuv(a), meanLuv(b))) : null;
-          return `<div title="Första och senaste sessionen"><b>${key === "sound" ? "Ljud " + (i + 1) : s}</b><span class="pair">${dot(a)}${dot(b)}</span><small>${d === null ? "–" : d}</small></div>`;
+          return `<div title="Första och senaste sessionen"><b>${key === "sound" ? "Ljud " + (i + 1) : label(key, s, i)}</b><span class="pair">${dot(a)}${dot(b)}</span><small>${d === null ? "–" : d}</small></div>`;
         }).join("");
         cmp = `<p class="sub-h">Första och senaste sessionen, tecken för tecken</p><p class="muted small">Vänster prick är din färg vid första tillfället (${fmtDate(first.date)}), höger prick vid det senaste. Siffran är avståndet mellan dem: lägre betyder mer lika.</p><div class="cmp">${cells}</div>`;
       }
@@ -766,9 +908,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // ---------- profile ----------
   // Tested types come from the sessions; the rest only from the intro self-report, so they are drawn dashed.
   const SELF = [
-    { name: "Tid och rum", q: 2, note: "Veckodagar eller månader har en plats" },
-    { name: "Ord → smak", q: 3, note: "Ord har smak eller lukt" },
-    { name: "Personlighet", q: 4, note: "Tecken har personlighet" }
+    { name: "Tid i rummet", q: "space" },
+    { name: "Ord → smak", q: "taste" },
+    { name: "Personlighet", q: "pers" },
+    { name: "Spegelberöring", q: "touch" },
+    { name: "Doft → färg", q: "smell" }
   ];
   const SELF_W = { "Ja, tydligt": 1, "Ibland": .55, "Vet inte": .25, "Nej": 0 };
   function testSummary(key) {
@@ -780,10 +924,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     return { ss, means, share, b };
   }
   function renderProfile() {
-    const cx = 170, cy = 166, R = 106;
+    const cx = 180, cy = 188, R = 128;
+    const SHORT = { sound: "Ljud → färg", digits: "Siffra → färg", letters: "Bokstav → färg", time: "Dag/månad → färg" };
     const nodes = [
-      ...KEYS.map(k => ({ key: k, name: TESTS[k].title, sum: testSummary(k), self: S.intro[k === "sound" ? 0 : 1] })),
-      ...SELF.map(x => ({ name: x.name, self: S.intro[x.q], note: x.note }))
+      ...KEYS.map(k => ({ key: k, name: SHORT[k], sum: testSummary(k), self: S.answers[ASKED[k]] })),
+      ...SELF.map(x => ({ name: x.name, self: S.answers[x.q] }))
     ];
     const NS = "http://www.w3.org/2000/svg";
     let out = "";
@@ -797,7 +942,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     nodes.forEach((n, i) => {
       const [x, y] = pts[i];
       if (n.sum) {
-        const r = 26, segs = n.sum.means, k = segs.length;
+        const r = 24, segs = n.sum.means, k = segs.length;
         segs.forEach((c, j) => {
           const a0 = -Math.PI / 2 + j * 2 * Math.PI / k, a1 = a0 + 2 * Math.PI / k;
           const p = (a, rr) => `${(x + Math.cos(a) * rr).toFixed(1)} ${(y + Math.sin(a) * rr).toFixed(1)}`;
@@ -805,13 +950,16 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
         });
         out += `<circle cx="${x}" cy="${y}" r="${r - 8}" fill="var(--card)"/><text class="pc" x="${x}" y="${y + 4}" text-anchor="middle">${Math.round(n.sum.share * 100)}%</text>`;
       } else {
-        out += `<circle cx="${x}" cy="${y}" r="20" fill="var(--card)" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="3 3"/>`;
+        out += `<circle cx="${x}" cy="${y}" r="16" fill="var(--card)" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="3 3"/>`;
       }
-      const top = y < cy - 20, ly = y + (top ? (n.sum ? -34 : -44) : 40);
+      const top = y < cy - 20, ly = y + (top ? (n.sum ? -32 : -36) : (n.sum ? 40 : 32));
       out += `<text class="t" x="${x}" y="${ly}" text-anchor="middle">${n.name}</text>`;
       if (!n.sum) out += `<text class="ts" x="${x}" y="${ly + 14}" text-anchor="middle">${n.self ? n.self : "Inget svar"}</text>`;
     });
     $("profile-map").innerHTML = out;
+    const A = S.answers, kind = $("profile-kind");
+    kind.hidden = !A.where;
+    if (A.where) kind.innerHTML = `<b>Så beskriver du dina färger</b><span class="small">Var: ${A.where.toLowerCase()}</span>${A.eyes ? `<span class="small">Kvar när du blundar: ${A.eyes.toLowerCase()}</span>` : ""}${A.auto ? `<span class="small">Kommer av sig själv: ${A.auto.toLowerCase()}</span>` : ""}${A.since ? `<span class="small">Hur länge: ${A.since.toLowerCase()}</span>` : ""}<span class="muted small">Forskare skiljer på färger som syns ute i världen och färger som finns inne i huvudet. Båda räknas som synestesi.</span>`;
 
     const disc = k => `<span class="icon-disc">${ICONS[k]}</span>`;
     const blankDisc = `<span class="icon-disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--muted)" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke-dasharray="3 3"/></svg></span>`;
@@ -819,7 +967,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       let line;
       if (n.sum) {
         const t = n.sum, cnt = t.means.filter(Boolean).length, tot = t.means.length;
-        line = `Färg för ${cnt} av ${tot} · ${t.ss.length} ${t.ss.length === 1 ? "session" : "sessioner"}` + (t.b ? ` · skillnad över tid ${n1(t.b.mean)}` : " · uppföljning återstår");
+        const sp = t.ss[t.ss.length - 1].speed;
+        line = `Färg för ${cnt} av ${tot} · ${t.ss.length} ${t.ss.length === 1 ? "session" : "sessioner"}` + (sp ? ` · snabbtest ${Math.round(sp.acc * 100)} % rätt` : "") + (t.b ? ` · skillnad över tid ${n1(t.b.mean)}` : " · uppföljning återstår");
       } else if (n.key) line = `Inte testat än · du svarade "${n.self || "inget"}" i de inledande frågorna`;
       else line = `Inget test än · du svarade "${n.self || "inget"}"`;
       return `<div class="prow">${n.key ? disc(n.key) : blankDisc}<div class="txt"><b>${n.name}</b><span class="muted small">${line}</span></div></div>`;

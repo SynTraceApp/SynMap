@@ -10,6 +10,10 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-09
+- **Test** – Nytt snabbtest (del 2) direkt efter siffror, bokstäver och dagar/månader, efter Eaglemans "speeded congruency"-test. Varje tecken blinkar i 1 sekund i ens egen färg eller i en tydligt annan, och man svarar Stämmer / Stämmer inte (eller piltangenterna). Högst 36 frågor. Resultatet visar andel rätt och typisk svarstid, med Eaglemans siffror (94 % mot 67 %) som jämförelse. Går att hoppa över. (Rickard)
+- **Test** – Nytt test Veckodag och månad → färg: måndag–söndag och januari–december, tre gånger var (57 frågor). (Rickard)
+- **Frågor** – De inledande frågorna är utökade från 5 till 9 typer, efter Synesthesia Battery: nu också färger för dagar/månader, spegelberöring, doft/smak → färg och "annat". Den som svarar ja på någon färgtyp får fyra följdfrågor: var färgen finns (ute i världen eller i huvudet), om den finns kvar när man blundar, om den kommer av sig själv och hur länge man haft den. Svaren sparas under en ny nyckel, så den som svarat förut får frågorna igen. (Rickard)
+- **Profil** – Kartan visar nu alla nio typer. Ny ruta "Så beskriver du dina färger" med svaren på följdfrågorna, och snabbtestets andel rätt syns per test. (Rickard)
 - **Test** – Nytt test Bokstav → färg med bokstäverna A–Ö, tre gånger var (87 frågor). Det fungerar som siffertestet: bokstaven får den färg man väljer. (Rickard)
 - **Resultat** – Efter en uppföljning visas första och senaste sessionen tecken för tecken: två färgprickar bredvid varandra och avståndet mellan dem (lägre = mer lika). Detaljerna fälls ut automatiskt när det finns en uppföljning. (Rickard)
 - **Profil** – Ny skärm "Din synestesiprofil" som samlar alla tester i en karta runt "Du". Testade typer visas som färgringar med andel tecken som gav färg. Typer man bara svarat på i de inledande frågorna (tid och rum, ord → smak, personlighet) visas streckade. Nås från Välj test och från resultatet. (Rickard)
