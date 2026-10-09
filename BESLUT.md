@@ -2,6 +2,7 @@
 
 Kort logg över beslut som påverkar framtida arbete. Nyast överst. Format: `- ÅÅÅÅ-MM-DD – beslut – vem`.
 
+- 2026-10-09 – Spärr mot falska träffar: minst 4 tecken med färg alla tre gånger, minst 3 olika färger, ingen färg över 60 % av svaren och högst 80 % svart/vitt/grått. Annars visas "Kan inte bedömas". – Rickard
 - 2026-10-09 – Båda pushar direkt till `main` utan pull requests. Alltid `git pull --rebase` före push, aldrig force push. – Rickard
 - 2026-10-09 – Resultat visas aldrig som diagnos, bara som sannolikhet och konsistens, och är preliminära tills uppföljningarna är gjorda. – Rickard
 - 2026-10-09 – Första prototypen följer konceptbildens sju skärmar: Välkommen, Inledande frågor, Välj test, Ljud→färg, Siffra→färg, Resultat, Uppföljning. – Rickard
