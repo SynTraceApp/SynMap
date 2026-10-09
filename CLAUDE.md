@@ -4,8 +4,9 @@ Två personer arbetar i det här repot, var och en med sin egen Claude. De här 
 
 ## Innan du börjar
 1. Hämta det senaste: `git pull --rebase origin main`. Gör det varje gång, även mitt i en session om det har gått en stund.
-2. Läs `ARBETE.md`. Där syns vad den andra håller på med just nu.
-3. Läs `BESLUT.md` innan du ändrar något som redan är bestämt.
+2. Läs de översta posterna i `CHANGELOG.md`. Där står vad som har hänt sedan sist.
+3. Läs `ARBETE.md`. Där syns vad den andra håller på med just nu.
+4. Läs `BESLUT.md` innan du ändrar något som redan är bestämt.
 
 ## Under arbetet
 - Ni arbetar båda direkt i `main`, utan pull requests.
@@ -14,12 +15,13 @@ Två personer arbetar i det här repot, var och en med sin egen Claude. De här 
 - Om en uppgift kräver ändringar i något som den andra håller på med: stanna och fråga din människa i stället för att gå vidare.
 
 ## När du pushar
-1. Kör alltid `git pull --rebase origin main` precis innan `git push origin main`.
-2. Om pushen nekas för att den andra har pushat: kör `git pull --rebase origin main` igen, lös konflikterna så att bådas ändringar finns kvar, testa och pusha igen.
-3. Använd aldrig `git push --force` och skriv aldrig om historiken på `main`. Det raderar den andras arbete.
-4. Om en konflikt gäller något du inte förstår eller inte äger: stanna och fråga din människa.
-5. Flytta uppgiften i `ARBETE.md` från "Pågår" till "Klart" när den är färdig.
-6. Har ni tagit ett beslut som påverkar framtida arbete (design, poängsättning, ordval, struktur)? Lägg till en rad i `BESLUT.md`.
+1. Skriv en post i `CHANGELOG.md` för det du har ändrat, enligt instruktionen överst i filen. Ingen push utan changelog-post.
+2. Kör alltid `git pull --rebase origin main` precis innan `git push origin main`.
+3. Om pushen nekas för att den andra har pushat: kör `git pull --rebase origin main` igen, lös konflikterna så att bådas ändringar finns kvar, testa och pusha igen.
+4. Använd aldrig `git push --force` och skriv aldrig om historiken på `main`. Det raderar den andras arbete.
+5. Om en konflikt gäller något du inte förstår eller inte äger: stanna och fråga din människa.
+6. Flytta uppgiften i `ARBETE.md` från "Pågår" till "Klart" när den är färdig.
+7. Har ni tagit ett beslut som påverkar framtida arbete (design, poängsättning, ordval, struktur)? Lägg till en rad i `BESLUT.md`.
 
 ## Om appen
 - `app/index.html` är prototypen: en enda självbärande HTML-fil som ska fungera direkt i webbläsaren. Lägg inte till något byggsteg eller ramverk utan ett beslut i `BESLUT.md`.
