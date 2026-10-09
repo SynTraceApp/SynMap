@@ -1,0 +1,337 @@
+SynMap
+
+Samlad projektbeskrivning
+
+Koncept för en digital plattform för att utforska synestesi
+
+  --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  Arbetsdokument – sammanfattar idén, funktionerna, testupplägget, designriktningen och möjliga nästa steg. Det är ett konceptunderlag, inte ett validerat testinstrument eller en färdig produkt.
+  --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. Projektidé och syfte
+
+SynMap är ett arbetsnamn för en mobilanpassad digital plattform där användare kan utforska och dokumentera möjliga synestetiska upplevelser. Tanken är att kombinera ett lättbegripligt gränssnitt med en strukturerad testprocess som kan utvecklas tillsammans med forskare.
+
+Målet är inte att appen på egen hand ska ställa diagnos. Den ska kunna samla in självrapporterade upplevelser, presentera stimuli på ett så kontrollerat sätt som möjligt och stödja upprepade mättillfällen enligt protokoll som forskare har utformat.
+
+Övergripande principer
+
+-   Forskningssamverkan från tidigt skede: forskare definierar protokoll, mätvariabler och kriterier.
+
+-   Tydlig skillnad mellan användarens egen upplevelse, självskattning och vetenskapligt validerade slutsatser.
+
+-   Tillgänglighet, begripligt språk och låg tröskel för deltagande.
+
+-   Integritet som grund: minimera insamlad data, förklara samtycke och erbjuda radering.
+
+-   Börja med en enkel klickbar prototyp innan någon dyr teknisk utveckling påbörjas.
+
+2. Målgrupp och möjlig användning
+
+-   Personer som upplever att sinnen, symboler, ljud, ord eller begrepp hänger ihop på ovanliga eller automatiska sätt.
+
+-   Forskare som vill undersöka hur digitala självrapporterings- och upprepningstest kan utformas.
+
+-   På längre sikt: forskningsprojekt som behöver strukturerade testflöden och uppföljning över tid.
+
+Målgruppen och användningsområdet behöver avgränsas tillsammans med forskare. Alla kombinationer av sinnen är inte lika väl studerade, och en digital självrapport ska inte automatiskt tolkas som bevis på synestesi.
+
+3. Föreslagna funktioner
+
+Konto och profil
+
+-   Skapa konto och logga in.
+
+-   Personlig profil med genomförda testtillfällen och planerade uppföljningar.
+
+-   Tydlig förklaring av vad som sparas, varför det sparas och vem som kan se uppgifterna.
+
+-   Separat samtycke till att delta i forskning och separat val för eventuell delning av data.
+
+-   Möjlighet att begära radering av konto och uppgifter, i enlighet med fastställda regler.
+
+En demoversion kan eventuellt användas utan konto, men forskningsdata bör hanteras enligt det protokoll och den etik- och dataskyddsbedömning som gäller för projektet.
+
+Upprepade testtillfällen
+
+Ett testområde ska inte markeras som färdigt eller bedömningsbart förrän det antal sessioner och de tidsintervall som forskargruppen har bestämt har genomförts. Appen bör därför stödja protokollstyrda uppföljningar och jämförelse av svar över tid.
+
+-   Session 1: första svarstillfället.
+
+-   Senare sessioner: samma eller jämförbara stimuli återkommer enligt forskningsprotokollet.
+
+-   Tidigare svar visas inte precis innan ett retest om det riskerar att påverka svaret.
+
+-   Appen visar om uppföljning återstår och undviker att kalla ett preliminärt resultat för en diagnos.
+
+-   Antal sessioner, intervall och kriterier bestäms av forskare – det finns inget universellt schema som passar alla testtyper.
+
+4. Testområden och möjliga sinneskopplingar
+
+Nedanstående är en idébank för design och diskussion med forskare. Den är inte en lista över validerade test eller ett påstående om att alla kombinationer är lika vanliga eller vetenskapligt etablerade.
+
+  --------------------------------------------------------------------------------------------------------------------------------------------
+  Stimulus / utlösare       Möjliga upplevelser att fråga om                       Viktiga metodfrågor
+  ------------------------- ------------------------------------------------------ -----------------------------------------------------------
+  Ljud och musik            Färg, form, rörelse/rum, smak, lukt, beröring          Ljudnivå, längd, hörlurar, ljudkvalitet, upprepning
+
+  Bokstäver, ord och text   Färg, form, personlighet/karaktär, smak eller lukt     Typsnitt, språk, bekantskap, neutral presentation
+
+  Tal och siffror           Färg, rumslig placering, form, personlighet/karaktär   Slumpad ordning, likvärdiga stimuli, kulturella faktorer
+
+  Smakstimuli               Färg, form, ljud eller lukt                            Standardiserade ämnen, koncentration, säkerhet, allergier
+
+  Luktstimuli               Färg, form, ljud eller smak                            Standardiserad doft, exponering, ventilation, känslighet
+
+  Beröring/textur           Färg, ljud, smak eller lukt                            Säkerhet, materialstandardisering, individuell variation
+  --------------------------------------------------------------------------------------------------------------------------------------------
+
+Frågor efter varje stimulus
+
+-   Uppstod upplevelsen automatiskt, utan att du försökte föreställa dig den?
+
+-   Vilken typ av upplevelse uppstod? Exempelvis färg, form/rum, smak, lukt, beröring eller annat.
+
+-   Beskriv gärna upplevelsen med egna ord – frivilligt fritextfält.
+
+-   Hur tydlig var upplevelsen? Exempelvis en självskattning från 1 till 5.
+
+-   Har du upplevt samma koppling tidigare? Frågan bör utformas så att den inte leder användaren till ett visst svar.
+
+Det är viktigt att skilja mellan en automatisk, ofrivillig upplevelse och en vanlig association, minnesbild eller avsiktlig fantasi. Frågeformuleringarna ska inte föreslå ett visst svar innan användaren har hunnit beskriva sin upplevelse.
+
+5. Smak och lukt: särskilda begränsningar
+
+En mobil kan visa text, bilder och spela upp ljud, men den kan inte på egen hand leverera en standardiserad fysisk smak eller lukt. Därför kan smak- och lukttester i en första version bygga på att andra stimuli (till exempel ljud, ord eller siffror) eventuellt utlöser smak- eller luktupplevelser hos användaren.
+
+Möjliga testupplägg
+
+-   Ljud → smak/lukt: spela upp kontrollerade ljud och fråga om en smak- eller luktupplevelse uppstod automatiskt.
+
+-   Bokstav/ord/siffra → smak/lukt: visa neutrala stimuli i varierad ordning och låt användaren svara innan exempel ges.
+
+-   Fysisk smak eller lukt → annan upplevelse: kan bli en senare forskningsmodul med standardiserade prov eller kit och tydliga säkerhetsrutiner.
+
+-   Om fysiska stimuli används behöver forskare hantera koncentration, dosering, allergier, hygien, miljö och skillnader mellan deltagare.
+
+6. Förslag på första prototyp: sju skärmar
+
+Välkommen
+
+SynMap – ”Utforska hur dina sinnen kan vara sammankopplade”. Knappar för logga in/skapa konto, information och språk.
+
+Introduktion och frågor
+
+Kort neutral introduktion och frågor om upplevelser utan att antyda att användaren måste ha synestesi.
+
+Välj test
+
+Exempelvis Ljud → färg och Siffra → färg. Senare kan fler forskningsgodkända testområden läggas till.
+
+Ljud → färg
+
+Spela kontrollerat ljud, fråga om en färgupplevelse uppstod automatiskt och låt användaren välja färg eller ”ingen upplevelse”.
+
+Siffra → färg
+
+Visa en siffra, låt användaren välja färg från en palett eller ange att ingen färg uppstod.
+
+Sammanfattning
+
+Visa användarens svar och tydlig status, exempelvis preliminärt. Undvik diagnostiska påståenden.
+
+Uppföljning
+
+Visa om fler sessioner krävs enligt det aktuella protokollet och när nästa session kan genomföras.
+
+Exempel på preliminär testsammanfattning
+
+-   Testområde: Ljud → färg
+
+-   Automatisk upplevelse: Ja
+
+-   Vald modalitet: Färg
+
+-   Fritextbeskrivning: Ingen angiven
+
+-   Tydlighet: 3 av 5
+
+-   Status: Preliminärt – fler sessioner kan behövas enligt forskningsprotokollet.
+
+Självskattningen 3 av 5 anger hur tydlig användaren tyckte att upplevelsen var; den är inte en sannolikhetspoäng eller ett mått på hur mycket synestesi personen har.
+
+7. Designriktning
+
+Vald riktning: en blandning av vetenskaplig tydlighet och färgstark, varm upplevelse.
+
+  -----------------------------------------------------------------------------------
+  Färg                                Användning
+  ----------------------------------- -----------------------------------------------
+  Djup marinblå #28365B               Rubriker, primär text och stabil grund
+
+  Violett #7657D5                     Primära knappar och aktiva lägen
+
+  Turkos #47BDB1                      Sekundära accenter och positiva interaktioner
+
+  Varm orange #FFB56B                 Små accenter och markeringar
+
+  Ljus neutral bakgrund               Kort, formulär och läsbara ytor
+  -----------------------------------------------------------------------------------
+
+Plattform: mobil för både Android och iPhone. Prototypens svenska grundspråk. Figma-ram: 393 × 852 px.
+
+Visuella principer
+
+-   Rundade kort och knappar, ren skandinavisk typografi och tydlig visuell hierarki.
+
+-   Hög kontrast, lättlästa texter och begränsat antal val per skärm.
+
+-   Färgpaletter ska vara valbara och tillgängliga; färg får inte vara enda sättet att förmedla status.
+
+-   Börja i Figma med välkomstskärm, val av test och siffra → färg.
+
+-   Koppla skärmar i Prototype-läget med On click → Navigate to och testa flödet i Present.
+
+8. Teknik och data – frågor att lösa senare
+
+-   Inloggning och kontohantering.
+
+-   Datamodell för användare, samtycke, protokollversion, stimuli, svar och sessionstidpunkter.
+
+-   Säker lagring och åtkomstkontroll; samla inte in mer persondata än nödvändigt.
+
+-   Möjlighet att ändra språk och att hålla stimuli och instruktioner jämförbara.
+
+-   Randomisering och loggning av stimulusordning där forskningsdesignen kräver det.
+
+-   Retestlogik som konfigureras utifrån forskarnas protokoll i stället för att hårdkodas som en universell regel.
+
+-   Export av data för forskningsanalys, med lämplig pseudonymisering och behörighetsstyrning.
+
+Dataskydd, etikprövning, samtyckestexter och eventuell hantering av känsliga personuppgifter måste bedömas med lärosätet eller ansvarig forskningsorganisation innan riktiga deltagardata samlas in.
+
+9. Forskningssamverkan och roll
+
+En möjlig roll är konceptutvecklare och testdesigner: att översätta forskningsfrågor till tydliga digitala flöden, stimuli, instruktioner, användarresor och prototyp. Rollen bör beskrivas ärligt och inte framställa prototypen eller testmetoden som validerad innan det finns evidens.
+
+Möjliga samarbeten
+
+-   Forskare inom synestesi, perception, kognitionsvetenskap, psykologi och psykometri.
+
+-   Universitet eller forskningsgrupper som kan bidra med metod, etik, validering och deltagarrekrytering.
+
+-   UX- och tillgänglighetskompetens för användartester.
+
+-   Teknisk utvecklare först när prototyp och krav har förankrats.
+
+Förslag på kort presentation
+
+”Jag utvecklar ett koncept för SynMap, en mobilanpassad plattform för att strukturerat utforska och dokumentera möjliga synestetiska upplevelser över upprepade sessioner. Jag vill gärna diskutera hur testflöden, stimuli och uppföljning kan utformas tillsammans med forskare. I det här skedet är det en konceptprototyp, inte ett validerat instrument, och jag söker forskningsmässig återkoppling på hur idén kan utvecklas ansvarsfullt.”
+
+10. Ekonomiskt försiktig väg framåt
+
+Utifrån önskemålet att undvika ekonomisk risk är det klokt att börja med arbete som inte kräver att en app byggs eller finansieras privat.
+
+-   Gör en kostnadsfri klickbar Figma-prototyp med några få skärmar.
+
+-   Skriv en kort projektbeskrivning och lista de forskningsfrågor som behöver besvaras.
+
+-   Kontakta forskare och be om återkoppling innan mer arbete läggs på utveckling.
+
+-   Undersök om ett lärosäte kan bära forskningsledning, etik, infrastruktur och eventuell finansieringsansökan.
+
+-   Diskutera skriftligt ägande, användning av koncept/material, ersättning och kreditering innan större samarbete.
+
+-   Undvik att köpa tjänster, starta kostsamma utvecklingsprojekt eller ta ekonomiska åtaganden innan ansvar och finansiering är tydliga.
+
+Eftersom juridiska och ekonomiska förutsättningar kan bero på individuella omständigheter bör eventuella avtal och ekonomiska beslut gås igenom med relevant rådgivare och, om det berör uppdraget, med hänsyn till omfattningen av en eventuell god mans uppdrag.
+
+11. Lärplan för projektägaren
+
+Figma och UX
+
+Lär dig frames, auto layout, komponenter, prototypkopplingar, användarflöden och enkel användbarhetstestning.
+
+Forskningsmetod och psykometri
+
+Lär dig grundbegrepp som reliabilitet, validitet, test–retest, randomisering, ordningseffekter och ledande frågor.
+
+Apparkitektur
+
+Förstå grunderna i konton, databaser, API:er, säkerhet, molnlagring och export.
+
+AI som stöd
+
+Använd AI för att strukturera krav, förklara kod, skriva testfall och förbättra språk – inte som ersättning för metodvalidering.
+
+Litteratur
+
+Läs aktuell forskning om synestesi, mätmetoder, perception och digitala test; låt forskare rekommendera relevanta översikter.
+
+Projektledning
+
+Lär dig kravspecifikation, prioritering, versionshantering, dokumentation och hur man avgränsar en första prototyp.
+
+12. Rekommenderad nästa arbetsordning
+
+1.  Skriv en ensidig projektöversikt med syfte, tänkt målgrupp och tydlig avgränsning.
+
+2.  Skapa tre Figma-skärmar: välkommen/inloggning, välj test och siffra → färg.
+
+3.  Skissa hur en testsession, retest och preliminär sammanfattning hänger ihop.
+
+4.  Markera vilka delar som är hypoteser och vilka frågor som kräver forskarbeslut.
+
+5.  Sök återkoppling från en relevant forskningsgrupp innan testet beskrivs som vetenskapligt giltigt.
+
+6.  Dokumentera samtycke, dataskydd och etik som öppna frågor att lösa med ansvarig organisation.
+
+13. Viktiga avgränsningar
+
+-   SynMap är i detta dokument ett koncept, inte en färdig app.
+
+-   Testflödena är exempel och har inte validerats.
+
+-   En konsekvent association över tid kan vara relevant data men är inte ensam ett bevis på synestesi.
+
+-   En mobil kan inte standardisera verkliga smak- eller luktstimuli utan extra material och procedurer.
+
+-   Forskningsprotokoll, kriterier, samtycke, dataskydd och eventuella etikkrav behöver fastställas av behöriga personer.
+
+Bilaga A. Bildmaterial
+
+I chatten har en konceptbild med flera SynMap-skärmar genererats. En separat PNG och ett ZIP-paket har tidigare presenterats i konversationen, men filernas åtkomst har inte kunnat verifieras vid skapandet av detta dokument. Lägg in originalbilden här eller bifoga den separat om den behövs i en presentation.
+
+Föreslaget filnamn för bild: synmap_utforska_sinnenas_färger.png
+
+Bilaga B. Ordlista
+
+Synestesi: En typ av upplevelse där ett stimulus eller begrepp kan vara förbundet med en ytterligare, ofta automatisk upplevelse; den exakta definitionen och avgränsningen beror på forskningssammanhanget.
+
+Stimulus: Det som presenteras i ett test, exempelvis en ton, bokstav, siffra eller doft.
+
+Reliabilitet: Hur tillförlitligt eller stabilt en mätning fungerar.
+
+Validitet: I vilken grad evidens stödjer den tolkning och användning man gör av testresultat.
+
+Test–retest: Att upprepa ett test vid senare tillfälle för att undersöka stabilitet över tid.
+
+Pseudonymisering: Att ersätta direkta identitetsuppgifter med en kod; det innebär inte automatiskt att data är anonym.
+
+Bilaga C. SynMap – bildskisser
+
+Här är den konceptbild med sju appskärmar som finns tillgänglig som separat bildfil i den här konversationen. Bilden är en visuell idé- och prototypskiss, inte en färdig eller validerad app.
+
+[]
+
+Separat bildfil: synmap_utforska_sinnenas_färger.png
+
+Bilaga C. SynMap – bildskisser
+
+Här är den konceptbild med sju appskärmar som finns tillgänglig som separat bildfil i den här konversationen. Bilden är en visuell idé- och prototypskiss, inte en färdig eller validerad app.
+
+[]
+
+Separat bildfil: synmap_utforska_sinnenas_färger.png

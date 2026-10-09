@@ -1,0 +1,596 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>SynMap Prototyp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one phone-width column (393px frame from the concept), rounded cards, brand colour in the shell only; test surfaces stay neutral grey so nothing primes a colour answer. */
+:root {
+  --navy: #28365b;
+  --violet: #7657d5;
+  --violet-soft: #ece7fb;
+  --teal: #47bdb1;
+  --orange: #ffb56b;
+  --bg: #f6f6fa;
+  --card: #ffffff;
+  --ink: #28365b;
+  --muted: #646d85;
+  --line: #e1e2ec;
+  --neutral: #ededef;
+  --neutral-ink: #1f2024;
+  --on-violet: #ffffff;
+  --font: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --stimulus: Arial, Helvetica, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --navy: #c9d3f2; --violet: #9d85f0; --violet-soft: #2c2547; --teal: #5fd0c4; --orange: #ffc68f;
+    --bg: #12141c; --card: #1b1e29; --ink: #e6e9f5; --muted: #9ba3ba; --line: #2d3142;
+    --neutral: #26272b; --neutral-ink: #f0f0f2; --on-violet: #12141c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --navy: #c9d3f2; --violet: #9d85f0; --violet-soft: #2c2547; --teal: #5fd0c4; --orange: #ffc68f;
+  --bg: #12141c; --card: #1b1e29; --ink: #e6e9f5; --muted: #9ba3ba; --line: #2d3142;
+  --neutral: #26272b; --neutral-ink: #f0f0f2; --on-violet: #12141c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.5; padding: 0 16px; }
+.app { max-width: 420px; margin: 0 auto; padding-block: 20px 48px; }
+.screen { display: flex; flex-direction: column; gap: 18px; }
+h1 { font-size: 30px; font-weight: 800; line-height: 1.12; margin: 0; letter-spacing: -0.02em; text-wrap: balance; color: var(--navy); }
+h2 { font-size: 20px; font-weight: 700; margin: 0; text-wrap: balance; color: var(--navy); }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+.stack { display: flex; flex-direction: column; gap: 10px; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+.btn { border-radius: 999px; padding: 13px 20px; font-weight: 700; text-align: center; width: 100%; }
+.btn.primary { background: var(--violet); color: var(--on-violet); }
+.btn.ghost { border: 1.5px solid var(--line); background: var(--card); color: var(--ink); font-weight: 600; }
+.btn.neutral { background: var(--neutral-ink); color: var(--neutral); }
+.btn:disabled { opacity: .35; cursor: not-allowed; }
+.link { color: var(--violet); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+button:focus-visible, input:focus-visible, canvas:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+
+.topbar { display: flex; align-items: center; gap: 12px; min-height: 36px; }
+.back { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-size: 22px; color: var(--navy); }
+.dots { display: flex; gap: 6px; align-items: center; flex: 1; }
+.dots i { height: 4px; flex: 1; border-radius: 2px; background: var(--line); }
+.dots i.on { background: var(--violet); }
+.count { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.options { display: flex; flex-direction: column; gap: 8px; }
+.opt { display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--card); text-align: left; width: 100%; }
+.opt .r { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--muted); flex: none; display: grid; place-items: center; }
+.opt[aria-checked="true"] { border-color: var(--violet); background: var(--violet-soft); }
+.opt[aria-checked="true"] .r { border-color: var(--violet); }
+.opt[aria-checked="true"] .r::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--violet); }
+
+/* Welcome */
+.hero { position: relative; border-radius: 28px; overflow: hidden; background: var(--card); border: 1px solid var(--line); padding: 36px 24px 28px; display: flex; flex-direction: column; gap: 14px; align-items: center; text-align: center; }
+.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .9; pointer-events: none; }
+.hero > *:not(canvas) { position: relative; }
+.hero .logo { font-size: 46px; font-weight: 800; letter-spacing: -0.03em; color: var(--navy); line-height: 1; margin-top: 8px; }
+.hero .tagline { font-size: 18px; color: var(--ink); max-width: 18em; margin-bottom: 150px; }
+.hero .btn { max-width: 260px; }
+.lang { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); background: var(--card); padding: 4px 10px; border-radius: 999px; }
+.about { font-size: 15px; display: flex; flex-direction: column; gap: 10px; }
+
+/* Choose test */
+.test-card { display: flex; flex-direction: row; gap: 14px; align-items: center; text-align: left; width: 100%; }
+.test-card .ico { width: 56px; height: 56px; border-radius: 16px; background: var(--violet-soft); display: grid; place-items: center; flex: none; }
+.test-card .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.test-card b { font-size: 17px; color: var(--navy); }
+.chip { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--violet-soft); color: var(--violet); align-self: flex-start; }
+.chip.teal { background: color-mix(in srgb, var(--teal) 18%, transparent); color: var(--ink); }
+.chip.orange { background: color-mix(in srgb, var(--orange) 30%, transparent); color: var(--ink); }
+.chev { color: var(--muted); font-size: 22px; }
+
+/* Test surfaces: neutral, no brand colour */
+.bench { background: var(--neutral); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 14px; color: var(--neutral-ink); }
+.stim-row { display: flex; align-items: center; justify-content: center; gap: 22px; min-height: 120px; }
+.stim { font-family: var(--stimulus); font-size: 112px; line-height: 1; min-width: 1ch; text-align: center; }
+.swatch { width: 84px; height: 84px; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--neutral-ink) 18%, transparent); background: repeating-linear-gradient(45deg, transparent 0 6px, color-mix(in srgb, var(--neutral-ink) 14%, transparent) 6px 7px); }
+.play { width: 84px; height: 84px; border-radius: 50%; background: var(--neutral-ink); color: var(--neutral); display: grid; place-items: center; }
+.play svg { width: 34px; height: 34px; fill: currentColor; }
+#plane { width: 100%; height: 180px; border-radius: 12px; touch-action: none; cursor: crosshair; display: block; }
+.slider-row { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.slider-row input { flex: 1; min-width: 0; accent-color: var(--neutral-ink); }
+.seg { display: flex; gap: 6px; }
+.seg button { flex: 1; padding: 10px 6px; border-radius: 10px; border: 1.5px solid color-mix(in srgb, var(--neutral-ink) 22%, transparent); font-weight: 600; color: var(--neutral-ink); }
+.seg button[aria-pressed="true"] { background: var(--neutral-ink); color: var(--neutral); border-color: var(--neutral-ink); }
+.nocolor { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--neutral-ink); align-self: flex-start; padding: 6px 0; }
+.nocolor .o { width: 26px; height: 26px; border-radius: 50%; border: 2px solid currentColor; }
+
+.scale { display: flex; gap: 6px; }
+.scale button { flex: 1; aspect-ratio: 1; max-width: 100%; border-radius: 12px; border: 1.5px solid var(--line); background: var(--card); font-weight: 700; font-size: 18px; color: var(--ink); }
+.scale button[aria-pressed="true"] { background: var(--violet); border-color: var(--violet); color: var(--on-violet); }
+textarea { width: 100%; min-height: 84px; font: inherit; font-size: 15px; background: var(--bg); color: var(--ink); border: 1.5px solid var(--line); border-radius: 12px; padding: 10px; }
+
+/* Results */
+.res-head { display: flex; gap: 12px; align-items: center; }
+.res-head .ico { width: 44px; height: 44px; border-radius: 12px; background: var(--violet-soft); display: grid; place-items: center; flex: none; }
+.res-head b { color: var(--navy); font-size: 17px; }
+.colours { display: grid; grid-template-columns: repeat(auto-fill, minmax(34px, 1fr)); gap: 6px; }
+.colours div { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; color: var(--muted); }
+.colours span { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line); }
+.colours span.nc { background: repeating-linear-gradient(45deg, transparent 0 4px, var(--line) 4px 5px); }
+.kv { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; border-top: 1px solid var(--line); padding-top: 10px; }
+.kv span:last-child { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.status { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; background: var(--bg); border-radius: 12px; padding: 10px 12px; }
+.status .dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 6px; flex: none; background: var(--orange); }
+.status.done .dot { background: var(--teal); }
+
+/* Follow-up */
+.cal { width: 72px; height: 72px; border-radius: 50%; background: var(--violet-soft); display: grid; place-items: center; align-self: center; }
+.next-box { text-align: center; align-items: center; }
+.next-box .days { font-size: 34px; font-weight: 800; color: var(--navy); line-height: 1.1; }
+.demo { border: 1.5px dashed var(--orange); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+.demo b { color: var(--ink); }
+.foot { font-size: 13px; color: var(--muted); text-align: center; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app">
+
+  <!-- 1. Välkommen -->
+  <section class="screen" id="s-welcome">
+    <div class="hero">
+      <canvas id="waves" aria-hidden="true"></canvas>
+      <div class="logo">SynMap</div>
+      <p class="tagline">Upptäck hur dina sinnen kan vara sammankopplade.</p>
+      <button class="btn primary" id="go-start">Börja</button>
+      <button class="link" id="go-about">Om synestesi</button>
+      <span class="lang">Språk: Svenska</span>
+    </div>
+    <div class="card about" id="about" hidden>
+      <h2>Om synestesi</h2>
+      <p>Synestesi betyder att ett sinnesintryck automatiskt väcker ett annat. Siffran 7 kan till exempel alltid upplevas som grön, eller en ton kan ge en färg.</p>
+      <p>Ett kännetecken är att kopplingarna brukar vara stabila över lång tid. Därför ställer SynMap samma frågor flera gånger och ber dig komma tillbaka för en uppföljning.</p>
+      <p class="muted small">SynMap är en konceptprototyp. Den är inte validerad och ställer ingen diagnos.</p>
+    </div>
+    <p class="foot">Prototyp · dina svar sparas bara i den här webbläsaren</p>
+  </section>
+
+  <!-- 2. Inledande frågor -->
+  <section class="screen" id="s-intro" hidden>
+    <div class="topbar"><button class="back" data-back aria-label="Tillbaka">‹</button><div class="dots" id="intro-dots"></div></div>
+    <h1>Inledande frågor</h1>
+    <p class="muted" id="intro-count"></p>
+    <h2 id="intro-q"></h2>
+    <div class="options" role="radiogroup" id="intro-opts"></div>
+    <button class="btn primary" id="intro-next" disabled>Nästa</button>
+  </section>
+
+  <!-- 3. Välj test -->
+  <section class="screen" id="s-choose" hidden>
+    <div class="topbar"><button class="back" data-back aria-label="Tillbaka">‹</button></div>
+    <h1>Välj test</h1>
+    <p class="muted">Välj det område du vill utforska. Du kan göra båda.</p>
+    <button class="card test-card" id="pick-sound">
+      <span class="ico"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><g stroke-linecap="round" stroke-width="3"><path d="M5 12v6" stroke="#47bdb1"/><path d="M10 7v16" stroke="#7657d5"/><path d="M15 4v22" stroke="#ff6fa8"/><path d="M20 8v14" stroke="#ffb56b"/><path d="M25 12v6" stroke="#4d8ef0"/></g></svg></span>
+      <span class="txt"><b>Ljud → färg</b><span class="muted small">Undersök om ljud framkallar färgupplevelser.</span><span class="chip" id="chip-sound"></span></span>
+      <span class="chev">›</span>
+    </button>
+    <button class="card test-card" id="pick-digits">
+      <span class="ico"><svg width="34" height="30" viewBox="0 0 34 30" aria-hidden="true"><text x="2" y="25" font-family="Arial" font-weight="700" font-size="18" fill="#7657d5">2</text><text x="12" y="15" font-family="Arial" font-weight="700" font-size="18" fill="#ff8a3d">1</text><text x="20" y="27" font-family="Arial" font-weight="700" font-size="18" fill="#47bdb1">3</text></svg></span>
+      <span class="txt"><b>Siffra → färg</b><span class="muted small">Undersök om siffror har bestämda färger.</span><span class="chip" id="chip-digits"></span></span>
+      <span class="chev">›</span>
+    </button>
+    <button class="btn ghost" id="to-results">Visa mina resultat</button>
+  </section>
+
+  <!-- 4 & 5. Testskärm (ljud eller siffra) -->
+  <section class="screen" id="s-test" hidden>
+    <div class="topbar"><button class="back" id="test-quit" aria-label="Avbryt testet">‹</button><div class="dots"><i class="on" id="test-bar" style="flex:none;width:0"></i><i></i></div><span class="count" id="test-count"></span></div>
+    <h1 id="test-title"></h1>
+    <p class="muted" id="test-lead"></p>
+    <div class="bench">
+      <div class="stim-row">
+        <div class="stim" id="stim" aria-live="polite"></div>
+        <button class="play" id="play" aria-label="Spela ljudet" hidden><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+        <div class="swatch" id="swatch" aria-label="Vald färg"></div>
+      </div>
+      <div id="auto-block" class="stack" hidden>
+        <p style="font-weight:600">Upplevde du en färg automatiskt?</p>
+        <div class="seg" id="auto-seg">
+          <button data-v="ja" aria-pressed="false">Ja</button>
+          <button data-v="nej" aria-pressed="false">Nej</button>
+          <button data-v="vet-inte" aria-pressed="false">Vet inte</button>
+        </div>
+      </div>
+      <div id="picker-block" class="stack" style="display:flex;flex-direction:column;gap:10px">
+        <p style="font-weight:600" id="picker-q"></p>
+        <canvas id="plane" tabindex="0" aria-label="Färgfält: nyans åt sidan, ljushet uppåt och nedåt"></canvas>
+        <div class="slider-row"><label for="sat">Mättnad</label><input type="range" id="sat" min="0" max="100" value="100"></div>
+        <button class="nocolor" id="nocolor"><span class="o"></span>Ingen färg</button>
+      </div>
+      <button class="btn neutral" id="test-next" disabled>Nästa</button>
+    </div>
+  </section>
+
+  <!-- Efter testet: tydlighet -->
+  <section class="screen" id="s-after" hidden>
+    <h1>Bra jobbat</h1>
+    <p class="muted">Två sista frågor om testet du nyss gjorde.</p>
+    <div class="card">
+      <h2>Hur tydliga var upplevelserna?</h2>
+      <p class="muted small">1 = mycket otydliga, 5 = mycket tydliga. Det här är din egen skattning och ingen poäng.</p>
+      <div class="scale" id="clarity">
+        <button aria-pressed="false" data-v="1">1</button><button aria-pressed="false" data-v="2">2</button><button aria-pressed="false" data-v="3">3</button><button aria-pressed="false" data-v="4">4</button><button aria-pressed="false" data-v="5">5</button>
+      </div>
+    </div>
+    <div class="card">
+      <label for="note"><h2>Beskriv gärna med egna ord</h2></label>
+      <p class="muted small">Frivilligt.</p>
+      <textarea id="note" placeholder="Till exempel: färgerna känns som ljus som ligger framför bokstaven."></textarea>
+    </div>
+    <button class="btn primary" id="after-done">Visa sammanfattning</button>
+  </section>
+
+  <!-- 6. Resultat -->
+  <section class="screen" id="s-results" hidden>
+    <div class="topbar"><button class="back" data-back aria-label="Tillbaka">‹</button></div>
+    <h1>Dina resultat</h1>
+    <p class="muted">Här ser du en sammanställning av dina svar. Inga diagnostiska slutsatser dras.</p>
+    <div id="res-list" class="screen" style="gap:14px"></div>
+    <button class="btn primary" id="res-continue">Fortsätt</button>
+  </section>
+
+  <!-- 7. Uppföljning -->
+  <section class="screen" id="s-follow" hidden>
+    <div class="topbar"><button class="back" data-back aria-label="Tillbaka">‹</button></div>
+    <span class="cal"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="color:var(--violet)" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><circle cx="9" cy="14.5" r="1.2" fill="currentColor"/><circle cx="15" cy="14.5" r="1.2" fill="currentColor"/></svg></span>
+    <h1 style="text-align:center">Uppföljning</h1>
+    <p class="muted" style="text-align:center">För att undersöka stabilitet över tid kan du göra testet igen. Du får inte se dina tidigare svar under testet.</p>
+    <div class="card next-box">
+      <span class="muted">Nästa test</span>
+      <span class="days" id="follow-days"></span>
+      <span class="muted small" id="follow-date"></span>
+      <button class="btn primary" id="remind">Påminn mig</button>
+      <p class="small" id="remind-msg" hidden></p>
+    </div>
+    <button class="btn ghost" id="skip-follow">Jag vill inte upprepa nu</button>
+    <div class="demo">
+      <b>Demoläge</b>
+      <span class="muted">För att prova uppföljningen direkt kan du låtsas att en vecka har gått.</span>
+      <button class="btn ghost" id="demo-skip">Hoppa fram 7 dagar</button>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const REPS = 3, RETEST_DAYS = 7, THRESHOLD = 135.3, KEY = "synmap-v2";
+  const DIGITS = "0123456789".split("");
+  // Eight tones across two octaves; labels are never shown, so note names cannot cue a colour.
+  const TONES = [131, 165, 196, 247, 294, 392, 523, 659].map((f, i) => ({ id: "t" + (i + 1), f }));
+  const TESTS = {
+    sound: { title: "Ljud → färg", lead: "Lyssna på ljudet och svara på frågorna om du upplever en färg.", stimuli: TONES.map(t => t.id), q: "Vilken färg upplevde du?" },
+    digits: { title: "Siffra → färg", lead: "Vilken färg förknippar du med siffran? Gå på känsla.", stimuli: DIGITS, q: "Välj färgen så exakt du kan." }
+  };
+  const INTRO = [
+    "Upplever du ibland att musik eller ljud ger upphov till färger?",
+    "Har siffror eller bokstäver egna färger för dig?",
+    "Har veckodagar eller månader en egen plats i rummet runt dig?",
+    "Händer det att ord har en smak eller en lukt för dig?",
+    "Känns det som att siffror eller bokstäver har en personlighet?"
+  ];
+  const INTRO_OPTS = ["Ja, tydligt", "Ibland", "Nej", "Vet inte"];
+
+  // ---------- state ----------
+  const blank = () => ({ intro: [], sessions: { sound: [], digits: [] }, offsetDays: 0, remind: null });
+  let S = blank();
+  try { S = Object.assign(blank(), JSON.parse(localStorage.getItem(KEY) || "{}")); } catch {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
+  const now = () => Date.now() + S.offsetDays * 864e5;
+  const fmtDate = t => new Date(t).toLocaleDateString("sv-SE", { day: "numeric", month: "long" });
+
+  // ---------- navigation ----------
+  const history = [];
+  function go(id, push = true) {
+    const cur = document.querySelector(".screen:not([hidden])[id^='s-']");
+    if (push && cur && cur.id !== id) history.push(cur.id);
+    document.querySelectorAll("section[id^='s-']").forEach(s => s.hidden = s.id !== id);
+    window.scrollTo(0, 0);
+    if (id === "s-choose") renderChoose();
+    if (id === "s-results") renderResults();
+    if (id === "s-follow") renderFollow();
+  }
+  document.querySelectorAll("[data-back]").forEach(b => b.addEventListener("click", () => go(history.pop() || "s-welcome", false)));
+
+  // ---------- welcome waves ----------
+  function drawWaves() {
+    const c = $("waves"), r = c.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+    if (!r.width) return;
+    c.width = r.width * d; c.height = r.height * d;
+    const g = c.getContext("2d"); g.scale(d, d);
+    const cols = ["#7657d5", "#47bdb1", "#ffb56b", "#ff6fa8", "#4d8ef0"];
+    const W = r.width, H = r.height;
+    for (let k = 0; k < 5; k++) {
+      const grad = g.createLinearGradient(0, H * .55, W, H);
+      grad.addColorStop(0, cols[k] + "00"); grad.addColorStop(.5, cols[k] + "88"); grad.addColorStop(1, cols[(k + 2) % 5] + "55");
+      g.fillStyle = grad; g.beginPath();
+      const base = H * (.62 + k * .05), amp = 26 + k * 6, ph = k * 1.3;
+      g.moveTo(0, H);
+      for (let x = 0; x <= W; x += 6) g.lineTo(x, base + Math.sin(x / W * Math.PI * 2 + ph) * amp - Math.cos(x / W * Math.PI * 3 + ph) * amp * .4);
+      g.lineTo(W, H); g.closePath(); g.fill();
+    }
+  }
+  drawWaves(); window.addEventListener("resize", drawWaves);
+  $("go-about").addEventListener("click", () => { $("about").hidden = !$("about").hidden; });
+  $("go-start").addEventListener("click", () => { if (S.intro.length === INTRO.length) go("s-choose"); else { qi = 0; showIntro(); go("s-intro"); } });
+
+  // ---------- intro questions ----------
+  let qi = 0;
+  function showIntro() {
+    $("intro-dots").innerHTML = INTRO.map((_, i) => `<i class="${i <= qi ? "on" : ""}"></i>`).join("");
+    $("intro-count").textContent = `Fråga ${qi + 1} av ${INTRO.length}`;
+    $("intro-q").textContent = INTRO[qi];
+    $("intro-opts").innerHTML = INTRO_OPTS.map(o => `<button class="opt" role="radio" aria-checked="${S.intro[qi] === o}"><span class="r"></span>${o}</button>`).join("");
+    $("intro-opts").querySelectorAll(".opt").forEach((b, i) => b.addEventListener("click", () => { S.intro[qi] = INTRO_OPTS[i]; save(); showIntro(); }));
+    $("intro-next").disabled = !S.intro[qi];
+  }
+  $("intro-next").addEventListener("click", () => { if (qi < INTRO.length - 1) { qi++; showIntro(); } else go("s-choose"); });
+
+  // ---------- choose ----------
+  function testState(key) {
+    const ss = S.sessions[key];
+    if (!ss.length) return { label: "Ej påbörjat", cls: "", open: true };
+    const due = ss[ss.length - 1].date + RETEST_DAYS * 864e5;
+    if (now() >= due) return { label: `Uppföljning ${ss.length + 1} kan göras nu`, cls: "teal", open: true };
+    return { label: `Uppföljning öppnar ${fmtDate(due)}`, cls: "orange", open: false, due };
+  }
+  function renderChoose() {
+    for (const key of ["sound", "digits"]) {
+      const st = testState(key), chip = $("chip-" + key);
+      chip.textContent = st.label; chip.className = "chip " + st.cls;
+    }
+  }
+  $("pick-sound").addEventListener("click", () => startTest("sound"));
+  $("pick-digits").addEventListener("click", () => startTest("digits"));
+  $("to-results").addEventListener("click", () => go("s-results"));
+
+  // ---------- audio ----------
+  let actx = null;
+  function playTone(f) {
+    actx ||= new (window.AudioContext || window.webkitAudioContext)();
+    const t = actx.currentTime, o = actx.createOscillator(), o2 = actx.createOscillator(), g = actx.createGain(), flt = actx.createBiquadFilter();
+    o.type = "triangle"; o.frequency.value = f; o2.type = "sine"; o2.frequency.value = f * 2;
+    flt.type = "lowpass"; flt.frequency.value = 2400;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.35, t + 0.03); g.gain.exponentialRampToValueAtTime(0.001, t + 1.4);
+    const g2 = actx.createGain(); g2.gain.value = 0.25;
+    o.connect(flt); o2.connect(g2); g2.connect(flt); flt.connect(g); g.connect(actx.destination);
+    o.start(t); o2.start(t); o.stop(t + 1.5); o2.stop(t + 1.5);
+  }
+
+  // ---------- colour maths ----------
+  function hslToRgb(h, s, l) {
+    s /= 100; l /= 100;
+    const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l);
+    const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    return [Math.round(f(0) * 255), Math.round(f(8) * 255), Math.round(f(4) * 255)];
+  }
+  function rgbToLuv([r, g, b]) {
+    const lin = c => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+    const R = lin(r), G = lin(g), B = lin(b);
+    const X = R * .4124 + G * .3576 + B * .1805, Y = R * .2126 + G * .7152 + B * .0722, Z = R * .0193 + G * .1192 + B * .9505;
+    const Xn = .95047, Yn = 1, Zn = 1.08883, yr = Y / Yn;
+    const L = yr > 216 / 24389 ? 116 * Math.cbrt(yr) - 16 : (24389 / 27) * yr;
+    const d = X + 15 * Y + 3 * Z, dn = Xn + 15 * Yn + 3 * Zn;
+    if (!d) return [0, 0, 0];
+    return [L, 13 * L * (4 * X / d - 4 * Xn / dn), 13 * L * (9 * Y / d - 9 * Yn / dn)];
+  }
+  const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+  const css = c => `rgb(${c[0]},${c[1]},${c[2]})`;
+  const meanLuv = cols => { const l = cols.map(rgbToLuv); return [0, 1, 2].map(i => l.reduce((t, v) => t + v[i], 0) / l.length); };
+  const meanRgb = cols => [0, 1, 2].map(i => Math.round(cols.reduce((t, v) => t + v[i], 0) / cols.length));
+
+  // Within a session: per stimulus, sum of pairwise CIELUV distances over its three answers (Rothen et al., 2013).
+  function within(session) {
+    const by = {};
+    for (const r of session.responses) (by[r.s] ||= []).push(r.rgb);
+    const per = Object.entries(by).map(([s, cols]) => {
+      const ok = cols.length === REPS && cols.every(Boolean);
+      const l = ok ? cols.map(rgbToLuv) : null;
+      return { s, cols, score: ok ? dist(l[0], l[1]) + dist(l[0], l[2]) + dist(l[1], l[2]) : null };
+    });
+    const v = per.filter(p => p.score !== null);
+    return { per, mean: v.length ? v.reduce((t, p) => t + p.score, 0) / v.length : null, n: v.length, total: per.length };
+  }
+  // Between sessions: distance between each stimulus' mean colour in the first and the latest session.
+  function between(a, b) {
+    const ma = {}, mb = {};
+    for (const r of a.responses) if (r.rgb) (ma[r.s] ||= []).push(r.rgb);
+    for (const r of b.responses) if (r.rgb) (mb[r.s] ||= []).push(r.rgb);
+    const ds = Object.keys(ma).filter(s => mb[s]).map(s => dist(meanLuv(ma[s]), meanLuv(mb[s])));
+    return ds.length ? { mean: ds.reduce((t, x) => t + x, 0) / ds.length, n: ds.length } : null;
+  }
+
+  // ---------- picker ----------
+  const plane = $("plane"), pctx = plane.getContext("2d");
+  let pick = null;
+  function drawPlane() {
+    const w = plane.clientWidth, h = plane.clientHeight, d = window.devicePixelRatio || 1;
+    if (!w || !h) return;
+    plane.width = Math.round(w * d); plane.height = Math.round(h * d);
+    const s = +$("sat").value, img = pctx.createImageData(plane.width, plane.height);
+    for (let y = 0; y < plane.height; y++) {
+      const l = 100 - y / (plane.height - 1) * 100;
+      for (let x = 0; x < plane.width; x++) {
+        const c = hslToRgb(x / (plane.width - 1) * 360, s, l), i = (y * plane.width + x) * 4;
+        img.data[i] = c[0]; img.data[i + 1] = c[1]; img.data[i + 2] = c[2]; img.data[i + 3] = 255;
+      }
+    }
+    pctx.putImageData(img, 0, 0);
+    if (pick) {
+      const px = pick.h / 360 * plane.width, py = (1 - pick.l / 100) * plane.height;
+      pctx.lineWidth = 2 * d;
+      pctx.strokeStyle = "#000"; pctx.beginPath(); pctx.arc(px, py, 8 * d, 0, 7); pctx.stroke();
+      pctx.strokeStyle = "#fff"; pctx.beginPath(); pctx.arc(px, py, 6 * d, 0, 7); pctx.stroke();
+    }
+  }
+  const curRgb = () => pick ? hslToRgb(pick.h, +$("sat").value, pick.l) : null;
+  function setPick(e) {
+    const r = plane.getBoundingClientRect();
+    const x = Math.min(Math.max(e.clientX - r.left, 0), r.width), y = Math.min(Math.max(e.clientY - r.top, 0), r.height);
+    pick = { h: x / r.width * 360, l: 100 - y / r.height * 100 };
+    drawPlane(); refreshTrial();
+  }
+  let drag = false;
+  plane.addEventListener("pointerdown", e => { drag = true; plane.setPointerCapture(e.pointerId); setPick(e); });
+  plane.addEventListener("pointermove", e => { if (drag) setPick(e); });
+  plane.addEventListener("pointerup", () => { drag = false; });
+  plane.addEventListener("keydown", e => {
+    const st = e.shiftKey ? 10 : 2; pick ||= { h: 0, l: 50 };
+    if (e.key === "ArrowLeft") pick.h = Math.max(0, pick.h - st * 1.8);
+    else if (e.key === "ArrowRight") pick.h = Math.min(360, pick.h + st * 1.8);
+    else if (e.key === "ArrowUp") pick.l = Math.min(100, pick.l + st);
+    else if (e.key === "ArrowDown") pick.l = Math.max(0, pick.l - st);
+    else return;
+    e.preventDefault(); drawPlane(); refreshTrial();
+  });
+  $("sat").addEventListener("input", () => { drawPlane(); refreshTrial(); });
+  window.addEventListener("resize", () => { if (!$("s-test").hidden) drawPlane(); });
+
+  // ---------- test flow ----------
+  let T = null; // { key, list, i, responses, played, auto }
+  function shuffled(stimuli) {
+    let list;
+    for (let k = 0; k < 200; k++) {
+      list = []; for (let r = 0; r < REPS; r++) list.push(...stimuli);
+      for (let i = list.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [list[i], list[j]] = [list[j], list[i]]; }
+      if (list.every((s, i) => !i || s !== list[i - 1])) break;
+    }
+    return list;
+  }
+  function startTest(key) {
+    if (!testState(key).open) { go("s-follow"); return; }
+    T = { key, list: shuffled(TESTS[key].stimuli), i: 0, responses: [] };
+    $("test-title").textContent = TESTS[key].title;
+    $("test-lead").textContent = TESTS[key].lead;
+    $("picker-q").textContent = TESTS[key].q;
+    $("stim").hidden = key === "sound";
+    $("play").hidden = key !== "sound";
+    go("s-test");
+    requestAnimationFrame(showTrial);
+  }
+  function showTrial() {
+    const s = T.list[T.i];
+    T.played = false; T.auto = null; pick = null; $("sat").value = 100;
+    $("test-count").textContent = `${T.i + 1} / ${T.list.length}`;
+    $("test-bar").style.width = `${T.i / T.list.length * 100}%`;
+    $("test-bar").parentElement.querySelector("i:last-child").style.flex = "1";
+    if (T.key === "digits") $("stim").textContent = s;
+    $("auto-seg").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", "false"));
+    refreshTrial(); drawPlane();
+  }
+  function refreshTrial() {
+    if (!T) return;
+    const sound = T.key === "sound";
+    $("auto-block").hidden = !sound || !T.played;
+    const showPicker = !sound || T.auto === "ja";
+    $("picker-block").style.display = showPicker ? "flex" : "none";
+    if (showPicker && sound) requestAnimationFrame(drawPlane);
+    const rgb = curRgb();
+    $("swatch").style.background = rgb && showPicker ? css(rgb) : "";
+    $("test-next").disabled = sound ? !(T.auto && (T.auto !== "ja" || rgb)) : !rgb;
+  }
+  $("play").addEventListener("click", () => {
+    playTone(TONES.find(t => t.id === T.list[T.i]).f);
+    if (!T.played) { T.played = true; refreshTrial(); }
+  });
+  $("auto-seg").querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    T.auto = b.dataset.v;
+    $("auto-seg").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
+    refreshTrial();
+  }));
+  function answer(rgb) {
+    T.responses.push({ s: T.list[T.i], rgb, auto: T.key === "sound" ? T.auto : null });
+    T.i++;
+    if (T.i < T.list.length) showTrial(); else { clarity = null; $("note").value = ""; renderClarity(); go("s-after"); }
+  }
+  $("test-next").addEventListener("click", () => {
+    if (T.key === "sound" && T.auto !== "ja") answer(null); else answer(curRgb());
+  });
+  $("nocolor").addEventListener("click", () => answer(null));
+  $("test-quit").addEventListener("click", () => { T = null; go("s-choose", false); });
+  document.addEventListener("keydown", e => { if (!$("s-test").hidden && e.key === "Enter" && !$("test-next").disabled) { e.preventDefault(); $("test-next").click(); } });
+
+  // ---------- after test ----------
+  let clarity = null;
+  function renderClarity() { $("clarity").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.v === clarity)); }
+  $("clarity").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { clarity = +b.dataset.v; renderClarity(); }));
+  $("after-done").addEventListener("click", () => {
+    S.sessions[T.key].push({ date: now(), responses: T.responses, clarity, note: $("note").value.trim() });
+    save(); T = null; history.length = 0; history.push("s-choose"); go("s-results", false);
+  });
+
+  // ---------- results ----------
+  const ICONS = { sound: $("pick-sound").querySelector(".ico").innerHTML, digits: $("pick-digits").querySelector(".ico").innerHTML };
+  const n1 = x => x.toFixed(1).replace(".", ",");
+  function renderResults() {
+    const list = $("res-list"); list.innerHTML = "";
+    let any = false;
+    for (const key of ["sound", "digits"]) {
+      const ss = S.sessions[key]; if (!ss.length) continue; any = true;
+      const last = ss[ss.length - 1], w = within(last);
+      const order = TESTS[key].stimuli;
+      const dots = order.map((s, i) => {
+        const cols = last.responses.filter(r => r.s === s && r.rgb).map(r => r.rgb);
+        const lab = key === "digits" ? s : i + 1;
+        return `<div><span class="${cols.length ? "" : "nc"}" style="${cols.length ? "background:" + css(meanRgb(cols)) : ""}"></span>${lab}</div>`;
+      }).join("");
+      const coloured = new Set(last.responses.filter(r => r.rgb).map(r => r.s)).size;
+      let rows = `<div class="kv"><span>Sessioner gjorda</span><span>${ss.length}</span></div>`;
+      rows += `<div class="kv"><span>${key === "sound" ? "Ljud" : "Siffror"} med färgupplevelse</span><span>${coloured} av ${order.length}</span></div>`;
+      if (last.clarity) rows += `<div class="kv"><span>Din skattning av tydlighet</span><span>${last.clarity} av 5</span></div>`;
+      rows += `<div class="kv"><span>Konsistens inom sessionen</span><span>${w.n >= 3 ? n1(w.mean) : "för få färgsvar"}</span></div>`;
+      if (ss.length > 1) { const b = between(ss[0], last); rows += `<div class="kv"><span>Skillnad mot första sessionen</span><span>${b ? n1(b.mean) : "–"}</span></div>`; }
+      const note = key === "digits" && w.n >= 3
+        ? `<p class="muted small">Lägre värde betyder att du valde mer lika färger varje gång. Som jämförelse har forskning om bokstäver och siffror använt gränsen 135,3 (Rothen m.fl., 2013). Värdet är ingen bedömning av dig.</p>`
+        : `<p class="muted small">Lägre värde betyder att du valde mer lika färger varje gång. För ljud finns ingen etablerad gräns ännu.</p>`;
+      const st = testState(key);
+      const status = ss.length < 2
+        ? `<div class="status"><span class="dot"></span><span><b>Preliminärt.</b> Uppföljning återstår. ${st.due ? "Nästa session kan göras " + fmtDate(st.due) + "." : "Nästa session kan göras nu."}</span></div>`
+        : `<div class="status done"><span class="dot"></span><span><b>Uppföljning gjord.</b> Resultatet är fortfarande preliminärt tills forskare har bestämt kriterierna.</span></div>`;
+      const card = document.createElement("div"); card.className = "card";
+      card.innerHTML = `<div class="res-head"><span class="ico">${ICONS[key]}</span><div><b>${TESTS[key].title}</b><div class="muted small">Senaste session ${fmtDate(last.date)}</div></div></div>
+        <div class="colours" aria-label="Dina färger i senaste sessionen">${dots}</div>${rows}${note}${status}${last.note ? `<p class="small"><span class="muted">Din beskrivning:</span> ${last.note.replace(/</g, "&lt;")}</p>` : ""}`;
+      list.appendChild(card);
+    }
+    if (!any) list.innerHTML = `<div class="card"><h2>Inga resultat än</h2><p class="muted">När du har gjort ett test visas dina svar här, med en färgprick för varje ljud eller siffra.</p></div>`;
+  }
+  $("res-continue").addEventListener("click", () => go("s-follow"));
+
+  // ---------- follow-up ----------
+  function nextDue() {
+    const dues = ["sound", "digits"].map(k => testState(k)).filter(s => s.due).map(s => s.due);
+    return dues.length ? Math.min(...dues) : null;
+  }
+  function renderFollow() {
+    const due = nextDue();
+    const days = due ? Math.ceil((due - now()) / 864e5) : 0;
+    $("follow-days").textContent = days > 0 ? `${days} ${days === 1 ? "dag" : "dagar"}` : "Nu";
+    $("follow-date").textContent = days > 0 ? `Öppnar ${fmtDate(due)}` : "Du kan göra uppföljningen direkt.";
+    $("remind").textContent = days > 0 ? "Påminn mig" : "Gör uppföljningen";
+    $("remind-msg").hidden = !S.remind;
+    if (S.remind) $("remind-msg").textContent = `Prototypen kan inte skicka aviseringar än. Skriv in ${fmtDate(S.remind)} i din kalender så länge.`;
+  }
+  $("remind").addEventListener("click", () => {
+    const due = nextDue();
+    if (!due || due <= now()) { go("s-choose"); return; }
+    S.remind = due; save(); renderFollow();
+  });
+  $("skip-follow").addEventListener("click", () => go("s-welcome"));
+  $("demo-skip").addEventListener("click", () => { S.offsetDays += RETEST_DAYS; S.remind = null; save(); renderFollow(); });
+})();
+</script>
+
+</body></html>
