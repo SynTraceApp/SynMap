@@ -270,7 +270,16 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 .fac-top b { color: var(--navy); min-width: 0; flex: 1; }
 .fac-top span { font-family: var(--mono); font-size: 13px; }
 .bar { height: 8px; border-radius: 4px; background: var(--line); position: relative; overflow: hidden; }
+.pa-scale { position: relative; height: 10px; border-radius: 5px; background: linear-gradient(90deg, var(--teal), var(--line) 50%, var(--violet)); margin: 6px 0 2px; }
+.pa-scale i { position: absolute; top: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: var(--card); border: 3px solid var(--navy); }
+.pa-ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
 .bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: linear-gradient(90deg, var(--teal), var(--violet)); }
+
+/* Mirror-touch */
+.mt-stage { width: 100%; height: auto; border-radius: 20px; background: #ece9f2; display: block; }
+.mt-stage .tch { animation: mt-touch 4s ease-in-out both; }
+@keyframes mt-touch { 0% { transform: translateX(110px); } 32% { transform: translateX(0); } 68% { transform: translateX(0); } 100% { transform: translateX(110px); } }
+#s-mirror .seg { gap: 6px; }
 
 /* Comparison over time */
 .cmp { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 8px; }
@@ -405,6 +414,16 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       <span class="txt"><b>Enkät: Så upplever du färgerna</b><span class="muted small">16 frågor från forskningen (CLaN) om var färgerna syns och hur de kommer.</span><span class="meta"><span class="chip" id="chip-clan"></span><span class="est" id="est-clan"></span></span></span>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
     </button>
+    <button class="card test-card" id="pick-pa">
+      <span class="icon-disc" data-icon="pa"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="13" cy="15" r="8" fill="none" stroke="#7657d5" stroke-width="2.2"/><path d="M8 29c1.5-4 8.5-4 10 0" fill="none" stroke="#7657d5" stroke-width="2.2" stroke-linecap="round"/><text x="22" y="20" font-family="Arial" font-weight="700" font-size="14" fill="#ff6fa8">A</text><circle cx="13" cy="15" r="2.6" fill="#47bdb1"/></svg></span>
+      <span class="txt"><b>Enkät: Ute i världen eller i huvudet?</b><span class="muted small">9 frågor från forskningen om var du ser färgerna på bokstäver och siffror.</span><span class="meta"><span class="chip" id="chip-pa"></span><span class="est" id="est-pa"></span></span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+    <button class="card test-card" id="pick-mirror">
+      <span class="icon-disc" data-icon="mirror"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M9 30V17a3 3 0 0 1 6 0v-6a3 3 0 0 1 6 0v8" fill="none" stroke="#7657d5" stroke-width="2.2" stroke-linecap="round"/><circle cx="26" cy="12" r="4" fill="#ff6fa8"/><path d="M26 18v4M22 20h8" stroke="#ff6fa8" stroke-width="2" stroke-linecap="round"/></svg></span>
+      <span class="txt"><b>Spegelberöring</b><span class="muted small">Undersök om du känner beröring på din egen kropp när du ser någon annan bli berörd.</span><span class="meta"><span class="chip" id="chip-mirror"></span><span class="est" id="est-mirror"></span></span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
     <div class="links-row"><button class="text-btn" id="to-results">Mina resultat</button><button class="text-btn" id="to-profile">Min profil</button><button class="text-btn" id="to-intro">Ändra mina svar</button></div>
   </section>
 
@@ -447,12 +466,43 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   <!-- Enkät: CLaN (Rothen m.fl. 2013) -->
   <section class="screen" id="s-clan" hidden>
     <div class="topbar"><button class="back" id="clan-back" aria-label="Föregående fråga"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="track"><span id="clan-bar"></span></div><span class="count" id="clan-count"></span></div>
-    <h1>Så upplever du färgerna</h1>
+    <h1 id="clan-title">Så upplever du färgerna</h1>
     <p class="lead" id="clan-lead"></p>
     <h2 id="clan-q"></h2>
     <div class="options" role="radiogroup" id="clan-opts"></div>
     <div class="grow"></div>
     <div class="nav-row"><button class="btn soft" id="clan-prev">Föregående</button><button class="btn primary" id="clan-next" disabled>Nästa</button></div>
+  </section>
+
+  <!-- Spegelberöring (efter Ward m.fl. 2018) -->
+  <section class="screen" id="s-mirror" hidden>
+    <div class="topbar"><button class="back" id="mt-quit" aria-label="Pausa testet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="track"><span id="mt-bar"></span></div><span class="count" id="mt-count"></span></div>
+    <h1>Spegelberöring</h1>
+    <div id="mt-intro" class="stack" style="gap:14px">
+      <div class="card howto">
+        <p>Du får se 20 korta tecknade klipp där en person eller ett föremål blir berört.</p>
+        <p>Efter varje klipp svarar du om du kände något på din egen kropp.</p>
+        <p>Räkna inte obehag, äckel eller att du ryckte till, bara en känsla på huden eller i kroppen.</p>
+      </div>
+      <p class="muted small">Klippen är tecknade efter videoklippen i Ward m.fl. (2018). De är inte originalfilmerna.</p>
+    </div>
+    <div id="mt-trial" class="stack" hidden>
+      <svg class="mt-stage" id="mt-stage" viewBox="0 0 320 220" role="img" aria-label="Klipp"></svg>
+      <button class="text-btn" id="mt-replay" style="align-self:center">Spela igen</button>
+      <div id="mt-q" class="stack" hidden>
+        <p class="q">Kände du något på din egen kropp?</p>
+        <div class="seg" id="mt-yes"></div>
+        <div id="mt-more" class="stack" hidden>
+          <p class="q">Hur kändes det?</p><div class="seg" id="mt-kind"></div>
+          <p class="q">Var på kroppen?</p><div class="seg" id="mt-where"></div>
+          <p class="q">Hur starkt? <span id="mt-int-v" class="count"></span></p>
+          <div class="slider-row"><span>0</span><input type="range" id="mt-int" min="0" max="10" value="5" aria-label="Styrka 0 till 10"><span>10</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="grow"></div>
+    <button class="btn primary" id="mt-start">Starta</button>
+    <button class="btn primary" id="mt-next" hidden disabled>Nästa</button>
   </section>
 
   <!-- Tid i rummet (sequence-space, Rothen m.fl. 2016) -->
@@ -686,6 +736,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   S.paused ||= {};
   S.lang ||= "sv";
   S.clan ||= { a: {}, done: null };
+  S.pa ||= { a: {}, done: null };
+  S.mt ||= { run: null, sessions: [] };
   S.study ||= {};
   delete S.study.mail;
   // A researcher can hand out a link with ?studie=KOD so the study code is filled in.
@@ -699,6 +751,71 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // ---------- language ----------
   // Swedish is the source text; EN maps it to English. t() also fills {placeholders}.
   const EN = {
+"Spegelberöring": "Mirror-touch",
+"Undersök om du känner beröring på din egen kropp när du ser någon annan bli berörd.": "Explore whether you feel touch on your own body when you see someone else being touched.",
+"Du får se 20 korta tecknade klipp där en person eller ett föremål blir berört.": "You will see 20 short drawn clips where a person or an object is touched.",
+"Efter varje klipp svarar du om du kände något på din egen kropp.": "After each clip you answer whether you felt anything on your own body.",
+"Räkna inte obehag, äckel eller att du ryckte till, bara en känsla på huden eller i kroppen.": "Do not count unease, disgust or flinching, only a sensation on your skin or in your body.",
+"Klippen är tecknade efter videoklippen i Ward m.fl. (2018). De är inte originalfilmerna.": "The clips are drawn after the video clips in Ward et al. (2018). They are not the original videos.",
+"Klipp": "Clip",
+"Spela igen": "Play again",
+"Kände du något på din egen kropp?": "Did you feel anything on your own body?",
+"Hur kändes det?": "How would you describe the sensation?",
+"Var på kroppen?": "Where on your body was it felt?",
+"Hur starkt?": "How intense was it?",
+"Styrka 0 till 10": "Intensity 0 to 10",
+"Starta": "Start",
+"Beröring utan smärta": "Touch (without pain)",
+"Smärta utan beröring": "Pain (without touch)",
+"Smärtsam beröring": "Painful touch",
+"Pirrande": "Tingling",
+"Klåda": "Itchiness",
+"Känsla av att bli kliad": "Feeling of being scratched",
+"Går inte att peka ut": "Not localizable",
+"Vänster kind": "Left face",
+"Höger kind": "Right face",
+"Vänster hand": "Left hand",
+"Höger hand": "Right hand",
+"Vänster arm": "Left arm",
+"Höger arm": "Right arm",
+"Bröstet": "Chest",
+"Ryggen": "Back",
+"Efter Ward m.fl. (2018), 20 tecknade klipp": "After Ward et al. (2018), 20 drawn clips",
+"Klipp med människor som gav beröring": "Clips of people that gave touch",
+"Klipp med föremål som gav beröring": "Clips of objects that gave touch",
+"Styrka när du kände något, medel": "Intensity when you felt something, mean",
+"I nivå med forskningens gräns för spegelberöring.": "At the level of the research cut-off for mirror-touch.",
+"Under forskningens gräns för spegelberöring.": "Below the research cut-off for mirror-touch.",
+"Ward m.fl. (2018) använde minst 7 av 14 klipp med människor som gräns.": "Ward et al. (2018) used at least 7 of 14 clips of people as the cut-off.",
+"Klippen här är tecknade, inte originalfilmerna, så jämförelsen är grov. Föremålen är med som jämförelse: hos den som har spegelberöring är känslan oftast tydligare för människor än för föremål. Det här är ingen diagnos.": "The clips here are drawn, not the original videos, so the comparison is rough. The objects are there for comparison: in people with mirror-touch the sensation is usually clearer for people than for objects. This is not a diagnosis.",
+"Testat · {a} av {b} klipp med människor gav beröring · du svarade \"{c}\"": "Tested · {a} of {b} clips of people gave touch · you answered \"{c}\"",
+"Enkät: Ute i världen eller i huvudet?": "Questionnaire: out in the world or in your mind?",
+"9 frågor från forskningen om var du ser färgerna på bokstäver och siffror.": "9 research questions about where you see the colours of letters and numbers.",
+"Ute i världen eller i huvudet?": "Out in the world or in your mind?",
+"Tänk på hur det är när du ser bokstäver och siffror. Svara hur väl påståendet stämmer för dig.": "Think about what happens when you see letters and numbers. Answer how well the statement fits you.",
+"När jag tittar på en viss bokstav eller siffra ”ser” jag en bestämd färg.": "When I look at a certain letter or number, I “see” a particular colour",
+"När jag tittar på en bokstav eller siffra finns färgen bara i mina tankar, inte någonstans utanför huvudet (till exempel på papperet).": "When I look at a certain letter/number, the accompanying colour appears only in my thoughts and not somewhere outside my head (such as on the paper)",
+"När jag tittar på en bokstav eller siffra kommer den synestetiska färgen i mina tankar, men på papperet syns bara färgen den är tryckt i (till exempel en svart bokstav på vit bakgrund).": "When I look at a certain letter/number, the accompanying synaesthetic colour comes in my thoughts but on the paper appears only the colour in which the letter/number is printed (e.g. a black letter against a white background)",
+"Det verkar som att färgen finns på papperet där bokstaven eller siffran står.": "It seems that the colour is on the paper where the letter/number is printed",
+"Tecknet i sig har ingen färg, men jag vet att det hör ihop med en bestämd färg.": "The figure itself has no colour but I am aware that it is associated with a specific colour",
+"Färgen är liksom projicerad på bokstaven eller siffran.": "The colour is, if it were, projected onto the letter/number",
+"Jag ser färgen på en bokstav eller siffra bara inne i huvudet.": "I see the colour of a letter/number only in my head",
+"Jag ser den synestetiska färgen mycket tydligt nära tecknet (till exempel ovanpå, bakom eller ovanför det).": "I see the synaesthetic colour very clearly in proximity of the stimulus (e.g. on top of it or behind it or above it)",
+"När jag tittar på en bokstav eller siffra syns den synestetiska färgen någonstans utanför huvudet (till exempel på papperet).": "When I look at a certain letter/number, the synaesthetic colour appears somewhere outside my head (such as on the paper)",
+"Mer som projektor: färgerna syns ute i världen, på eller nära tecknet.": "More like a projector: the colours appear out in the world, on or near the character.",
+"Mer som associator: färgerna finns i tankarna eller som en vetskap.": "More like an associator: the colours are in your thoughts or something you just know.",
+"Mitt emellan projektor och associator.": "Midway between projector and associator.",
+"Projektor–associator, 9 frågor (Rouw och Scholte, 2007)": "Projector–associator, 9 questions (Rouw & Scholte, 2007)",
+"Associator": "Associator",
+"Projektor": "Projector",
+"Projektorpåståenden, medel": "Projector statements, mean",
+"Associatorpåståenden, medel": "Associator statements, mean",
+"Skillnad (projektor minus associator)": "Difference (projector minus associator)",
+"Båda sätten räknas som synestesi. Forskare använder skillnaden för att dela in personer, där plus betyder projektor och minus associator. Den svenska översättningen är vår egen.": "Both count as synesthesia. Researchers use the difference to group people: plus means projector and minus associator.",
+"Projektor–associator:": "Projector–associator:",
+"mer projektor": "more projector",
+"mer associator": "more associator",
+"mitt emellan": "midway",
 "Dela med en forskare": "Share with a researcher",
 "Skriv in studiekoden du har fått, spara dina svar som en fil och skicka filen till forskargruppen. Inget skickas automatiskt, du väljer själv vem som får filen.": "Enter the study code you were given, save your answers as a file and send the file to the research group. Nothing is sent automatically; you choose who gets the file.",
 "T.ex. SYN-4K7Q": "E.g. SYN-4K7Q",
@@ -1217,7 +1334,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const rec = answered.filter(k => S.answers[ASKED[k]] !== "Nej");
     const all = !rec.length;
     for (const k of KEYS) (all || rec.includes(k) ? $("rec-list") : $("more-list")).appendChild($("pick-" + k));
-    (all || (S.answers.graph && S.answers.graph !== "Nej") ? $("rec-list") : $("more-list")).appendChild($("pick-clan"));
+    (all || (S.answers.touch && S.answers.touch !== "Nej") ? $("rec-list") : $("more-list")).appendChild($("pick-mirror"));
+    for (const id of ["pick-clan", "pick-pa"]) (all || (S.answers.graph && S.answers.graph !== "Nej") ? $("rec-list") : $("more-list")).appendChild($(id));
     $("more-tests").hidden = !$("more-list").children.length;
     $("rec-h").textContent = t(all
       ? (answered.length ? "Du svarade nej på alla färgfrågor, men du kan ändå prova ett test:" : "Alla tester")
@@ -1230,6 +1348,12 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const cs = clanState();
     $("chip-clan").textContent = cs.label; $("chip-clan").className = "chip " + cs.cls;
     $("est-clan").textContent = S.clan.done ? "" : t("ca {m} min", { m: 3 });
+    const ps = qnState("pa");
+    $("chip-pa").textContent = ps.label; $("chip-pa").className = "chip " + ps.cls;
+    $("est-pa").textContent = S.pa.done ? "" : t("ca {m} min", { m: 2 });
+    const ms = mtState();
+    $("chip-mirror").textContent = ms.label; $("chip-mirror").className = "chip " + ms.cls;
+    $("est-mirror").textContent = t("ca {m} min", { m: 5 });
     renderResume();
   }
   // Rough minutes per test, from seconds per item; the colour tests add about a minute for the speed test.
@@ -1429,34 +1553,205 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       return v.length ? v.reduce((a, x) => a + x, 0) / v.length : null;
     });
   }
-  function clanState() {
-    const n = Object.keys(S.clan.a).length;
-    if (S.clan.done) return { label: t("Klar"), cls: "teal" };
-    if (n) return { label: t("Påbörjad, {i} av {n}", { i: n, n: CLAN.length }), cls: "teal" };
+  // ---------- projector / associator questionnaire ----------
+  // Rouw & Scholte (2007), revised version after Anderson & Ward (2015): 9 items, score = mean projector items minus mean associator items.
+  const PA = [
+    ["P", "När jag tittar på en viss bokstav eller siffra ”ser” jag en bestämd färg."],
+    ["A", "När jag tittar på en bokstav eller siffra finns färgen bara i mina tankar, inte någonstans utanför huvudet (till exempel på papperet)."],
+    ["A", "När jag tittar på en bokstav eller siffra kommer den synestetiska färgen i mina tankar, men på papperet syns bara färgen den är tryckt i (till exempel en svart bokstav på vit bakgrund)."],
+    ["P", "Det verkar som att färgen finns på papperet där bokstaven eller siffran står."],
+    ["A", "Tecknet i sig har ingen färg, men jag vet att det hör ihop med en bestämd färg."],
+    ["P", "Färgen är liksom projicerad på bokstaven eller siffran."],
+    ["A", "Jag ser färgen på en bokstav eller siffra bara inne i huvudet."],
+    ["P", "Jag ser den synestetiska färgen mycket tydligt nära tecknet (till exempel ovanpå, bakom eller ovanför det)."],
+    ["P", "När jag tittar på en bokstav eller siffra syns den synestetiska färgen någonstans utanför huvudet (till exempel på papperet)."]
+  ];
+  function paScore() {
+    const m = k => { const v = PA.map((x, i) => [x[0], S.pa.a[i + 1]]).filter(([kk, a]) => kk === k && a).map(([, a]) => a); return v.length ? v.reduce((a, x) => a + x, 0) / v.length : null; };
+    const P = m("P"), A = m("A");
+    return P === null || A === null ? null : { P, A, d: P - A };
+  }
+
+  // ---------- mirror-touch ----------
+  // After Ward, Schnakenberg & Banissy (2018): 14 clips of a person touched (7 kinds, left and right) and 6 of objects.
+  // The clips here are drawn animations, not the original videos, so the cut-off of 7 is only a rough comparison.
+  const SKIN = "#f0c4a4", SKIN_LINE = "#c98f6e", SLEEVE = "#5b6b8c", DUMMY = "#bdbdc6";
+  const MT = [];
+  for (const side of ["L", "R"]) {
+    MT.push({ id: "cheek-finger-" + side, human: true, scene: "face", tool: "finger", side });
+    MT.push({ id: "cheek-knife-" + side, human: true, scene: "face", tool: "knife", side });
+    MT.push({ id: "hand-ego-finger-" + side, human: true, scene: "hands", tool: "finger", side });
+    MT.push({ id: "hand-ego-knife-" + side, human: true, scene: "hands", tool: "knife", side });
+    MT.push({ id: "hand-allo-finger-" + side, human: true, scene: "hands-allo", tool: "finger", side });
+    MT.push({ id: "hand-crossed-finger-" + side, human: true, scene: "hands-crossed", tool: "finger", side });
+    MT.push({ id: "cheek-inverted-finger-" + side, human: true, scene: "face-inv", tool: "finger", side });
+    MT.push({ id: "rubber-hand-" + side, human: false, scene: "rubber", tool: "finger", side });
+    MT.push({ id: "dummy-face-" + side, human: false, scene: "dummy", tool: "finger", side });
+    MT.push({ id: "fan-" + side, human: false, scene: "fan", tool: "finger", side });
+  }
+  const MT_KIND = ["Beröring utan smärta", "Smärta utan beröring", "Smärtsam beröring", "Pirrande", "Klåda", "Känsla av att bli kliad", "Annat"];
+  const MT_TOUCH = ["Beröring utan smärta", "Smärtsam beröring", "Känsla av att bli kliad"]; // counted as touch, as in the original scoring
+  const MT_WHERE = ["Går inte att peka ut", "Vänster kind", "Höger kind", "Vänster hand", "Höger hand", "Vänster arm", "Höger arm", "Bröstet", "Ryggen", "Annat"];
+  const MT_LIMIT = 7;
+  // A hand seen from the back, fingers up, palm centre at (0,0).
+  function handSvg(fill, line, thumbRight) {
+    const f = [[-21, 36], [-9, 44], [3, 42], [15, 33]].map(([x, h]) => `<rect x="${x}" y="${-22 - h}" width="10.5" height="${h + 8}" rx="5.2"/>`).join("");
+    const th = thumbRight ? `<rect x="14" y="-16" width="11" height="34" rx="5.5" transform="rotate(30 19 16)"/>` : `<rect x="-25" y="-16" width="11" height="34" rx="5.5" transform="rotate(-30 -19 16)"/>`;
+    return `<g fill="${fill}" stroke="${line}" stroke-width="1.2">${f}<rect x="-25" y="-26" width="50" height="56" rx="16"/>${th}</g>`;
+  }
+  function toucherSvg(tool) {
+    const sleeve = `<rect x="${tool === "knife" ? 118 : 76}" y="-17" width="200" height="36" rx="8" fill="${SLEEVE}"/>`;
+    if (tool === "knife") return `<polygon points="0,0 52,-7 52,5" fill="#d9dde3" stroke="#8b929c" stroke-width="1"/><rect x="50" y="-8" width="40" height="15" rx="4" fill="#6b4a36"/><rect x="86" y="-15" width="38" height="31" rx="11" fill="${SKIN}" stroke="${SKIN_LINE}"/>${sleeve}`;
+    return `<rect x="0" y="-6" width="48" height="12" rx="6" fill="${SKIN}" stroke="${SKIN_LINE}"/><rect x="40" y="-14" width="42" height="32" rx="12" fill="${SKIN}" stroke="${SKIN_LINE}"/>${sleeve}`;
+  }
+  // The toucher is drawn at the contact point; the animation slides it in along its own axis.
+  const toucher = (x, y, angle, tool) => `<g transform="translate(${x} ${y}) rotate(${angle})"><g class="tch">${toucherSvg(tool)}</g></g>`;
+  function faceSvg(dummy) {
+    const skin = dummy ? DUMMY : SKIN, line = dummy ? "#9a9aa6" : SKIN_LINE;
+    let g = `<rect x="138" y="170" width="44" height="60" fill="${skin}" stroke="${line}"/><ellipse cx="160" cy="112" rx="58" ry="74" fill="${skin}" stroke="${line}" stroke-width="1.4"/>`;
+    if (!dummy) g += `<path d="M102 98c-4-52 30-66 58-66s62 14 58 66c-8-24-20-34-58-36-38 2-50 12-58 36z" fill="#6b4a36"/><ellipse cx="138" cy="106" rx="6" ry="4" fill="#2f2a2a"/><ellipse cx="182" cy="106" rx="6" ry="4" fill="#2f2a2a"/><path d="M128 95q10-6 20 0M172 95q10-6 20 0" stroke="#6b4a36" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M160 112v18q-6 3-8 0" stroke="${line}" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M144 150q16 9 32 0" stroke="#b5655a" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    return g;
+  }
+  function mtScene(c) {
+    const L = c.side === "L";
+    let body = "", touch = "";
+    if (c.scene === "face" || c.scene === "dummy") {
+      body = faceSvg(c.scene === "dummy");
+      touch = toucher(L ? 126 : 194, 132, L ? 180 : 0, c.tool);
+    } else if (c.scene === "face-inv") {
+      body = `<g transform="rotate(180 160 112)">${faceSvg(false)}</g>`;
+      touch = toucher(L ? 126 : 194, 92, L ? 180 : 0, c.tool);
+    } else if (c.scene === "hands" || c.scene === "rubber") {
+      const rubber = c.scene === "rubber", fill = rubber ? DUMMY : SKIN, line = rubber ? "#9a9aa6" : SKIN_LINE;
+      const xs = rubber ? [160] : [105, 215];
+      body = (rubber ? `<rect x="40" y="186" width="240" height="34" rx="6" fill="#d8d2e6"/>` : xs.map(x => `<rect x="${x - 21}" y="168" width="42" height="60" fill="${SLEEVE}"/>`).join(""))
+        + xs.map((x, i) => `<g transform="translate(${x} ${rubber ? 140 : 140})">${handSvg(fill, line, rubber ? false : i === 0)}</g>`).join("");
+      const tx = rubber ? 160 : L ? 105 : 215;
+      touch = toucher(tx, 136, L ? -125 : -55, c.tool);
+    } else if (c.scene === "hands-allo") {
+      body = [105, 215].map((x, i) => `<rect x="${x - 21}" y="-10" width="42" height="62" fill="${SLEEVE}"/><g transform="translate(${x} 80) rotate(180)">${handSvg(SKIN, SKIN_LINE, i === 1)}</g>`).join("");
+      touch = toucher(L ? 105 : 215, 84, L ? 125 : 55, c.tool);
+    } else if (c.scene === "hands-crossed") {
+      // Arms cross at the wrists: the hand on the left comes from the right arm and the other way round.
+      body = `<line x1="250" y1="240" x2="125" y2="130" stroke="#4f5e7d" stroke-width="40"/><g transform="translate(110 112) rotate(-40)">${handSvg(SKIN, SKIN_LINE, true)}</g>`
+        + `<line x1="70" y1="240" x2="195" y2="130" stroke="${SLEEVE}" stroke-width="40"/><g transform="translate(210 112) rotate(40)">${handSvg(SKIN, SKIN_LINE, false)}</g>`;
+      touch = toucher(L ? 110 : 210, 108, L ? -100 : -80, c.tool);
+    } else if (c.scene === "fan") {
+      body = `<rect x="154" y="150" width="12" height="52" fill="#9aa0ab"/><rect x="118" y="198" width="84" height="12" rx="6" fill="#9aa0ab"/><circle cx="160" cy="102" r="58" fill="#f4f5f7" stroke="#9aa0ab" stroke-width="3"/>`
+        + [0, 120, 240].map(a => `<ellipse cx="160" cy="76" rx="15" ry="26" fill="#a8c7e6" transform="rotate(${a} 160 102)"/>`).join("") + `<circle cx="160" cy="102" r="9" fill="#7c8592"/>`
+        + [0, 1, 2, 3, 4, 5, 6, 7].map(k => `<line x1="160" y1="102" x2="${160 + 58 * Math.cos(k * Math.PI / 4)}" y2="${102 + 58 * Math.sin(k * Math.PI / 4)}" stroke="#c5c9d0" stroke-width="1"/>`).join("");
+      touch = toucher(L ? 102 : 218, 102, L ? 180 : 0, c.tool);
+    }
+    return body + touch;
+  }
+  let mtTimer = 0;
+  function mtPlay() {
+    const r = S.mt.run, c = MT.find(x => x.id === r.order[r.i]);
+    $("mt-stage").innerHTML = mtScene(c);
+    clearTimeout(mtTimer); mtTimer = setTimeout(() => { $("mt-q").hidden = false; }, 3900);
+  }
+  function mtShow() {
+    const r = S.mt.run, n = r.order.length, cur = r.out[r.i] || (r.out[r.i] = { id: r.order[r.i] });
+    $("mt-count").textContent = `${r.i + 1} / ${n}`;
+    $("mt-bar").style.width = `${Math.max(r.i / n * 100, 2)}%`;
+    $("mt-q").hidden = cur.yes === undefined;
+    const seg = (box, opts, val, set) => {
+      $(box).innerHTML = opts.map(o => `<button aria-pressed="${val === o}">${t(o)}</button>`).join("");
+      $(box).querySelectorAll("button").forEach((b, i) => b.addEventListener("click", () => { set(opts[i]); save(); mtShow(); }));
+    };
+    seg("mt-yes", ["Ja", "Nej"], cur.yes === undefined ? null : cur.yes ? "Ja" : "Nej", v => { cur.yes = v === "Ja"; if (!cur.yes) { delete cur.kind; delete cur.where; delete cur.intensity; } else cur.intensity ??= 5; });
+    $("mt-more").hidden = !cur.yes;
+    seg("mt-kind", MT_KIND, cur.kind, v => cur.kind = v);
+    seg("mt-where", MT_WHERE, cur.where, v => cur.where = v);
+    $("mt-int").value = cur.intensity ?? 5; $("mt-int-v").textContent = cur.intensity ?? 5;
+    $("mt-next").disabled = cur.yes === undefined || (cur.yes && !(cur.kind && cur.where));
+    $("mt-next").textContent = t(r.i === n - 1 ? "Klar" : "Nästa");
+  }
+  function mtOpen() {
+    if (!S.mt.run) {
+      const order = MT.map(x => x.id);
+      for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+      S.mt.run = { order, i: 0, out: [], started: false };
+    }
+    const started = S.mt.run.started;
+    $("mt-intro").hidden = started; $("mt-start").hidden = started;
+    $("mt-trial").hidden = !started; $("mt-next").hidden = !started;
+    $("mt-count").textContent = ""; $("mt-bar").style.width = "2%";
+    go("s-mirror");
+    if (started) { mtShow(); mtPlay(); }
+  }
+  $("pick-mirror").addEventListener("click", mtOpen);
+  $("mt-start").addEventListener("click", () => { S.mt.run.started = true; save(); mtOpen(); });
+  $("mt-replay").addEventListener("click", mtPlay);
+  $("mt-int").addEventListener("input", e => { const r = S.mt.run, cur = r.out[r.i]; cur.intensity = +e.target.value; $("mt-int-v").textContent = cur.intensity; save(); });
+  $("mt-quit").addEventListener("click", () => { clearTimeout(mtTimer); go("s-choose", false); });
+  $("mt-next").addEventListener("click", () => {
+    const r = S.mt.run;
+    if (r.i < r.order.length - 1) { r.i++; save(); mtShow(); mtPlay(); window.scrollTo(0, 0); return; }
+    clearTimeout(mtTimer);
+    S.mt.sessions.push({ date: now(), trials: r.out.map(o => ({ ...o, human: MT.find(x => x.id === o.id).human })), env: env() });
+    S.mt.run = null; save(); history.length = 0; history.push("s-choose"); go("s-results", false);
+  });
+  function mtScore(sess) {
+    const hit = o => o.yes && MT_TOUCH.includes(o.kind);
+    const hum = sess.trials.filter(o => o.human), obj = sess.trials.filter(o => !o.human);
+    const mean = l => { const v = l.filter(o => o.yes).map(o => o.intensity ?? 0); return v.length ? v.reduce((a, x) => a + x, 0) / v.length : null; };
+    return { human: hum.filter(hit).length, nHuman: hum.length, object: obj.filter(hit).length, nObject: obj.length, anyHuman: hum.filter(o => o.yes).length, intensity: mean(hum) };
+  }
+  function mtState() {
+    if (S.mt.run && S.mt.run.started) return { label: t("Pausat vid {i} av {n}", { i: S.mt.run.i + 1, n: S.mt.run.order.length }), cls: "teal" };
+    if (S.mt.sessions.length) return { label: t("Klar"), cls: "teal" };
     return { label: t("Ej påbörjat"), cls: "" };
   }
-  let ci = 0;
+  function mtCard() {
+    const ss = S.mt.sessions, sc = mtScore(ss[ss.length - 1]), card = document.createElement("div"); card.className = "card res-card";
+    const over = sc.human >= MT_LIMIT;
+    card.innerHTML = `<div class="res-head"><span class="icon-disc">${ICONS.mirror}</span><div><b>${t("Spegelberöring")}</b><div class="muted small">${t("Efter Ward m.fl. (2018), 20 tecknade klipp")}</div></div></div>
+      <div class="fac"><div class="fac-top"><b>${t("Klipp med människor som gav beröring")}</b><span>${sc.human} / ${sc.nHuman}</span></div><div class="bar"><i style="width:${sc.human / sc.nHuman * 100}%"></i></div></div>
+      <div class="fac"><div class="fac-top"><b>${t("Klipp med föremål som gav beröring")}</b><span>${sc.object} / ${sc.nObject}</span></div><div class="bar"><i style="width:${sc.object / sc.nObject * 100}%"></i></div></div>
+      ${sc.intensity !== null ? `<div class="kv"><span>${t("Styrka när du kände något, medel")}</span><span>${dec(sc.intensity)} / 10</span></div>` : ""}
+      <p class="small"><b>${t(over ? "I nivå med forskningens gräns för spegelberöring." : "Under forskningens gräns för spegelberöring.")}</b> ${t("Ward m.fl. (2018) använde minst 7 av 14 klipp med människor som gräns.")}</p>
+      <p class="muted small">${t("Klippen här är tecknade, inte originalfilmerna, så jämförelsen är grov. Föremålen är med som jämförelse: hos den som har spegelberöring är känslan oftast tydligare för människor än för föremål. Det här är ingen diagnos.")}</p>`;
+    return card;
+  }
+
+  // ---------- questionnaire screen (CLaN and projector/associator) ----------
+  const QN = {
+    clan: { store: () => S.clan, items: CLAN.map(x => x[1]), title: "Så upplever du färgerna", lead: n => n <= 10 ? "Tänk på färgerna du upplever för bokstäver och siffror, till exempel A, B, C och 0–9." : "Tänk nu på dina synestetiska färger i allmänhet." },
+    pa: { store: () => S.pa, items: PA.map(x => x[1]), title: "Ute i världen eller i huvudet?", lead: () => "Tänk på hur det är när du ser bokstäver och siffror. Svara hur väl påståendet stämmer för dig." }
+  };
+  function qnState(k) {
+    const q = QN[k], st = q.store(), n = Object.keys(st.a).length;
+    if (st.done) return { label: t("Klar"), cls: "teal" };
+    if (n) return { label: t("Påbörjad, {i} av {n}", { i: n, n: q.items.length }), cls: "teal" };
+    return { label: t("Ej påbörjat"), cls: "" };
+  }
+  const clanState = () => qnState("clan");
+  let ci = 0, cq = "clan";
   function showClan() {
-    const n = ci + 1;
-    $("clan-count").textContent = `${n} / ${CLAN.length}`;
-    $("clan-bar").style.width = `${Math.max(ci / CLAN.length * 100, 2)}%`;
-    $("clan-lead").textContent = t(n <= 10 ? "Tänk på färgerna du upplever för bokstäver och siffror, till exempel A, B, C och 0–9." : "Tänk nu på dina synestetiska färger i allmänhet.");
-    $("clan-q").textContent = t(CLAN[ci][1]);
-    $("clan-opts").innerHTML = CLAN_SCALE.map((o, i) => `<button class="opt" role="radio" aria-checked="${S.clan.a[n] === i + 1}"><span class="r"></span>${t(o)}</button>`).join("");
-    $("clan-opts").querySelectorAll(".opt").forEach((b, i) => b.addEventListener("click", () => { S.clan.a[n] = i + 1; save(); showClan(); }));
-    $("clan-next").disabled = !S.clan.a[n];
-    $("clan-next").textContent = t(n === CLAN.length ? "Klar" : "Nästa");
+    const q = QN[cq], st = q.store(), n = ci + 1, len = q.items.length;
+    $("clan-title").textContent = t(q.title);
+    $("clan-count").textContent = `${n} / ${len}`;
+    $("clan-bar").style.width = `${Math.max(ci / len * 100, 2)}%`;
+    $("clan-lead").textContent = t(q.lead(n));
+    $("clan-q").textContent = t(q.items[ci]);
+    $("clan-opts").innerHTML = CLAN_SCALE.map((o, i) => `<button class="opt" role="radio" aria-checked="${st.a[n] === i + 1}"><span class="r"></span>${t(o)}</button>`).join("");
+    $("clan-opts").querySelectorAll(".opt").forEach((b, i) => b.addEventListener("click", () => { st.a[n] = i + 1; save(); showClan(); }));
+    $("clan-next").disabled = !st.a[n];
+    $("clan-next").textContent = t(n === len ? "Klar" : "Nästa");
     $("clan-prev").disabled = ci === 0;
   }
-  $("pick-clan").addEventListener("click", () => {
-    const k = CLAN.findIndex((_, i) => !S.clan.a[i + 1]);
-    ci = k >= 0 ? k : 0; showClan(); go("s-clan");
-  });
+  function openQn(k) {
+    cq = k; const st = QN[k].store(), i = QN[k].items.findIndex((_, j) => !st.a[j + 1]);
+    ci = i >= 0 ? i : 0; showClan(); go("s-clan");
+  }
+  $("pick-clan").addEventListener("click", () => openQn("clan"));
+  $("pick-pa").addEventListener("click", () => openQn("pa"));
   $("clan-prev").addEventListener("click", () => { if (ci > 0) { ci--; showClan(); } });
   $("clan-back").addEventListener("click", () => { if (ci > 0) { ci--; showClan(); } else go("s-choose", false); });
   $("clan-next").addEventListener("click", () => {
-    if (ci < CLAN.length - 1) { ci++; showClan(); return; }
-    S.clan.done = now(); save(); history.length = 0; history.push("s-choose"); go("s-results", false);
+    if (ci < QN[cq].items.length - 1) { ci++; showClan(); return; }
+    QN[cq].store().done = now(); save(); history.length = 0; history.push("s-choose"); go("s-results", false);
   });
 
   // ---------- test flow ----------
@@ -1624,7 +1919,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   $("copy-csv").addEventListener("click", e => { copyOut(exportCsv()); e.target.textContent = t("Kopierat"); setTimeout(() => e.target.textContent = t("Kopiera CSV"), 1600); });
   function exportJson() {
     const { done, ...background } = S.bg;
-    return JSON.stringify({ app: "SynMap", version: 2, app_version: APP_V, participant_id: S.pid, study_code: S.study.code || null, exported: new Date().toISOString(), background, answers: S.answers, clan: S.clan.done ? { answers: S.clan.a, scores: clanScores(), date: S.clan.done } : null, sessions: S.sessions }, null, 1);
+    return JSON.stringify({ app: "SynMap", version: 2, app_version: APP_V, participant_id: S.pid, study_code: S.study.code || null, exported: new Date().toISOString(), background, answers: S.answers, clan: S.clan.done ? { answers: S.clan.a, scores: clanScores(), date: S.clan.done } : null, projector_associator: S.pa.done ? { answers: S.pa.a, score: paScore(), date: S.pa.done } : null, mirror_touch: S.mt.sessions.map(x => ({ ...x, score: mtScore(x) })), sessions: S.sessions }, null, 1);
   }
   const fileName = ext => `synmap_${(S.study.code || "data").replace(/[^\w-]+/g, "")}_${S.pid.replace("synmap-", "")}_${new Date(now()).toISOString().slice(0, 10)}.${ext}`;
   // Saves through the claude.ai downloads capability when the page runs as an artifact, otherwise as an ordinary browser download.
@@ -1808,7 +2103,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   }
 
   // ---------- results ----------
-  const ICONS = { clan: document.querySelector('[data-icon="clan"]').innerHTML, sound: document.querySelector('[data-icon="sound"]').innerHTML, digits: document.querySelector('[data-icon="digits"]').innerHTML, letters: document.querySelector('[data-icon="letters"]').innerHTML, time: document.querySelector('[data-icon="time"]').innerHTML, space: document.querySelector('[data-icon="space"]').innerHTML };
+  const ICONS = { mirror: document.querySelector('[data-icon="mirror"]').innerHTML, pa: document.querySelector('[data-icon="pa"]').innerHTML, clan: document.querySelector('[data-icon="clan"]').innerHTML, sound: document.querySelector('[data-icon="sound"]').innerHTML, digits: document.querySelector('[data-icon="digits"]').innerHTML, letters: document.querySelector('[data-icon="letters"]').innerHTML, time: document.querySelector('[data-icon="time"]').innerHTML, space: document.querySelector('[data-icon="space"]').innerHTML };
   const secs = ms => dec(ms / 1000, 2) + " s";
   const n1 = x => dec(x);
   function renderResults() {
@@ -1861,6 +2156,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       list.appendChild(card);
     }
     if (S.clan.done) { any = true; list.appendChild(clanCard()); }
+    if (S.pa.done && paScore()) { any = true; list.appendChild(paCard()); }
+    if (S.mt.sessions.length) { any = true; list.appendChild(mtCard()); }
     list.querySelectorAll("[data-speed]").forEach(b => b.addEventListener("click", () => {
       const key = b.dataset.speed, ss = S.sessions[key];
       T = { key, list: [], i: 0, responses: ss[ss.length - 1].responses, retro: true };
@@ -1871,6 +2168,18 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("consist").innerHTML = followed
       ? `${info}<div><b>${t("Konsistens")}</b><span class="muted small">${t("Uppföljning gjord. Resultatet är fortfarande preliminärt tills forskare har bestämt kriterierna.")}</span></div>`
       : `${info}<div><b>${t("Konsistens")}</b><span class="muted small">${t("Ännu inte utvärderad. Den bedöms först när du har gjort en uppföljning.")}</span></div>`;
+  }
+  function paCard() {
+    const sc = paScore(), card = document.createElement("div"); card.className = "card res-card";
+    const lean = sc.d > 0 ? "Mer som projektor: färgerna syns ute i världen, på eller nära tecknet." : sc.d < 0 ? "Mer som associator: färgerna finns i tankarna eller som en vetskap." : "Mitt emellan projektor och associator.";
+    card.innerHTML = `<div class="res-head"><span class="icon-disc">${ICONS.pa}</span><div><b>${t("Enkät: Ute i världen eller i huvudet?")}</b><div class="muted small">${t("Projektor–associator, 9 frågor (Rouw och Scholte, 2007)")}</div></div></div>
+      <div><div class="pa-scale" role="img" aria-label="${t(lean)}"><i style="left:${(sc.d + 4) / 8 * 100}%"></i></div><div class="pa-ends"><span>${t("Associator")}</span><span>${t("Projektor")}</span></div></div>
+      <p class="small"><b>${t(lean)}</b></p>
+      <div class="kv"><span>${t("Projektorpåståenden, medel")}</span><span>${dec(sc.P)} / 5</span></div>
+      <div class="kv"><span>${t("Associatorpåståenden, medel")}</span><span>${dec(sc.A)} / 5</span></div>
+      <div class="kv"><span>${t("Skillnad (projektor minus associator)")}</span><span>${sc.d > 0 ? "+" : ""}${dec(sc.d)}</span></div>
+      <p class="muted small">${t("Båda sätten räknas som synestesi. Forskare använder skillnaden för att dela in personer, där plus betyder projektor och minus associator. Den svenska översättningen är vår egen.")}</p>`;
+    return card;
   }
   function clanCard() {
     const sc = clanScores(), card = document.createElement("div"); card.className = "card res-card";
@@ -1965,11 +2274,12 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     });
     $("profile-map").innerHTML = out;
     const A = S.answers, kind = $("profile-kind");
-    kind.hidden = !A.where && !S.clan.done;
+    kind.hidden = !A.where && !S.clan.done && !S.pa.done;
     const low = x => S.lang === "en" ? t(x).replace(/^Yes|^No/, m => m.toLowerCase()) : t(x).toLowerCase();
     if (A.where) kind.innerHTML = `<b>${t("Så beskriver du dina färger")}</b><span class="small">${t("Var:")} ${low(A.where)}</span>${A.eyes ? `<span class="small">${t("Kvar när du blundar:")} ${low(A.eyes)}</span>` : ""}${A.auto ? `<span class="small">${t("Kommer av sig själv:")} ${low(A.auto)}</span>` : ""}${A.since ? `<span class="small">${t("Hur länge:")} ${low(A.since)}</span>` : ""}<span class="muted small">${t("Forskare skiljer på färger som syns ute i världen och färger som finns inne i huvudet. Båda räknas som synestesi.")}</span>`;
     else kind.innerHTML = `<b>${t("Så beskriver du dina färger")}</b>`;
     if (S.clan.done) { const sc = clanScores(); kind.innerHTML += `<span class="small">${t("Enkäten CLaN:")} ${CLAN_F.map((f, i) => sc[i] === null ? "" : `${t(f.n).toLowerCase()} ${dec(sc[i])}`).filter(Boolean).join(", ")} ${t("(av 5)")}</span>`; }
+    if (S.pa.done && paScore()) { const d = paScore().d; kind.innerHTML += `<span class="small">${t("Projektor–associator:")} ${d > 0 ? "+" : ""}${dec(d)} (${t(d > 0 ? "mer projektor" : d < 0 ? "mer associator" : "mitt emellan")})</span>`; }
 
     const disc = k => `<span class="icon-disc">${ICONS[k]}</span>`;
     const blankDisc = `<span class="icon-disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--muted)" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke-dasharray="3 3"/></svg></span>`;
@@ -1982,6 +2292,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
           + t(n.key === "space" ? "Plats för {a} av {b}" : "Färg för {a} av {b}", { a: cnt, b: tot }) + " · " + t(m.ss.length === 1 ? "{n} session" : "{n} sessioner", { n: m.ss.length })
           + (sp ? " · " + t("snabbtest {p} % rätt", { p: Math.round(sp.acc * 100) }) : "") + (m.b ? " · " + t("skillnad över tid {x}", { x: n1(m.b.mean) }) : " · " + t("uppföljning återstår"));
       } else if (n.key) line = t("Inte testat än · du svarade \"{a}\" i de inledande frågorna", { a: n.self ? t(n.self) : t("inget") });
+      else if (n.name === t("Spegelberöring") && S.mt.sessions.length) { const m = mtScore(S.mt.sessions[S.mt.sessions.length - 1]); line = t("Testat · {a} av {b} klipp med människor gav beröring · du svarade \"{c}\"", { a: m.human, b: m.nHuman, c: n.self ? t(n.self) : t("inget") }); }
       else line = t("Inget test än · du svarade \"{a}\"", { a: n.self ? t(n.self) : t("inget") });
       return `<div class="prow">${n.key ? disc(n.key) : blankDisc}<div class="txt"><b>${n.name}</b><span class="muted small">${line}</span></div></div>`;
     }).join("");

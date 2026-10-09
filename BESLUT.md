@@ -18,3 +18,5 @@ Kort logg över beslut som påverkar framtida arbete. Nyast överst. Format: `- 
 - 2026-10-09 – Ljudtestet följer Ward m.fl. (2006): pianotoner en kvint isär och samma ton på olika instrument, syntetiserade i webbläsaren. – Rickard
 - 2026-10-09 – Data delas med forskare genom att deltagaren sparar en fil och mejlar den själv. Ingen automatisk insamling förrän en forskargrupp med etikprövning och GDPR-ansvar är med. – Rickard
 - 2026-10-09 – Deltagaren anger ingen e-post i appen. Delning sker med en studiekod (SYN- och fyra tecken) som forskargruppen delar ut, och forskargruppen beskriver själv hur filen skickas. Ersätter mejl-knappen. – Rickard
+- 2026-10-09 – Projektor–associator mäts med Rouw och Scholtes frågor (reviderad version, 9 påståenden) i stället för Skelton m.fl. (2009), vars illustrerade frågor inte gick att få tag på. – Rickard
+- 2026-10-09 – Spegelberöringstestet följer Ward m.fl. (2018) men med egna tecknade klipp. Gränsen 7 av 14 visas bara som en grov jämförelse tills vi får originalfilmerna eller lov att använda dem. – Rickard
