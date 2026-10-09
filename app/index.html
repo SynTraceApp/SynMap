@@ -220,6 +220,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 .space-map span.old { background: transparent; color: var(--muted); border: 1px dashed var(--muted); }
 .export { display: flex; flex-direction: column; gap: 12px; }
 .export .fld input { font-size: 15px; }
+#study-code { text-transform: uppercase; }
 .export textarea { min-height: 120px; font-family: var(--mono); font-size: 11px; }
 
 /* Time estimate, pause and resume */
@@ -514,11 +515,15 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <div class="grow"></div>
     <div class="card export" id="export">
       <h2>Dela med en forskare</h2>
-      <p class="muted small">Spara dina svar som en fil och skicka den till forskaren. Inget skickas automatiskt, du väljer själv vem som får filen.</p>
-      <label class="fld"><span class="lbl">Studiekod</span><input type="text" id="study-code" placeholder="Om forskaren har gett dig en kod" autocomplete="off"></label>
-      <label class="fld"><span class="lbl">Forskarens e-post</span><input type="email" id="study-mail" placeholder="namn@universitet.se" autocomplete="off"></label>
+      <p class="muted small">Skriv in studiekoden du har fått, spara dina svar som en fil och skicka filen till forskargruppen. Inget skickas automatiskt, du väljer själv vem som får filen.</p>
+      <label class="fld"><span class="lbl">Studiekod</span><input type="text" id="study-code" placeholder="T.ex. SYN-4K7Q" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="40"></label>
+      <p class="muted small" id="code-hint" hidden></p>
+      <details><summary>Hur får jag en studiekod?</summary><div>
+        <p>Du får koden av en forskargrupp när du anmäler dig till en studie som använder SynMap, till exempel i inbjudan eller på studiens webbsida. Ibland får du en länk där koden redan är ifylld.</p>
+        <p>Koden ser ut som SYN-4K7Q: SYN, ett bindestreck och fyra bokstäver eller siffror. Den talar om vilken studie dina svar hör till, men ingenting om vem du är.</p>
+        <p>Forskargruppen berättar också hur du skickar filen till dem. Har du ingen kod kan du ändå spara filen och använda den senare.</p>
+      </div></details>
       <button class="btn primary" id="dl-file">Spara fil med mina svar</button>
-      <button class="btn soft" id="mail-btn" disabled>Mejla forskaren</button>
       <p class="small" id="share-msg" hidden></p>
       <p class="muted small" id="pid-line"></p>
       <details><summary>Fler format</summary><div>
@@ -582,7 +587,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
         <details><summary>Hur läser jag bedömningen?</summary><div><p>SynMap väger ihop flera saker: om du själv beskriver upplevelsen, om du valde samma färger eller platser varje gång, hur det gick i snabbtestet och om svaren är desamma vid en uppföljning.</p><p><b>Starkt stöd</b> betyder att nästan allt pekar åt samma håll. <b>Måttligt stöd</b> betyder att flera saker gör det. <b>Svagt stöd</b> betyder att mönstret inte syns i testet.</p><p>Bedömningen är preliminär tills du har gjort en uppföljning, eftersom stabilitet över tid är det viktigaste kännetecknet.</p></div></details>
         <details><summary>Kan testet ha fel?</summary><div><p>Ja, åt båda hållen. Den som väljer samma färg för allt, eller bara svart, vitt och grått, kan få en låg poäng utan synestesi. Därför säger SynMap "Kan inte bedömas" i de fallen.</p><p>Den som har svaga färger, nedsatt färgseende eller nattläge på skärmen kan få svagt stöd fast upplevelsen är verklig. Ett svagt resultat utesluter alltså inte synestesi.</p></div></details>
         <details><summary>Ute i världen eller inne i huvudet?</summary><div><p>En del ser färgen ute på själva bokstaven. Andra ser den inne i huvudet eller bara vet vilken färg det är. Båda räknas som synestesi. Dina svar på följdfrågorna syns i din profil.</p></div></details>
-        <details><summary>Läs mer eller delta i forskning</summary><div><p>Du kan kopiera dina data från resultatsidan och skicka dem till en forskargrupp själv. Här finns mer att läsa:</p>
+        <details><summary>Läs mer eller delta i forskning</summary><div><p>Deltar du i en studie får du en studiekod av forskargruppen. Skriv in den under Dela med en forskare på resultatsidan, spara filen och skicka den till dem. Här finns mer att läsa:</p>
           <a href="https://www.sussex.ac.uk/synaesthesia/" target="_blank" rel="noopener">Synestesiforskning vid University of Sussex</a>
           <a href="https://synesthete.ircn.jp/home" target="_blank" rel="noopener">The Synesthesia Battery</a>
           <a href="https://www.uksynaesthesia.com" target="_blank" rel="noopener">UK Synaesthesia Association</a>
@@ -601,7 +606,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
         <details><summary>How do I read the assessment?</summary><div><p>SynMap weighs several things together: whether you describe the experience yourself, whether you chose the same colours or places each time, how the speed test went, and whether your answers stay the same at a follow-up.</p><p><b>Strong support</b> means almost everything points the same way. <b>Moderate support</b> means several things do. <b>Weak support</b> means the pattern does not show in the test.</p><p>The assessment is preliminary until you have done a follow-up, because stability over time is the most important sign.</p></div></details>
         <details><summary>Can the test be wrong?</summary><div><p>Yes, both ways. Someone who picks the same colour for everything, or only black, white and grey, can get a low score without synesthesia. That is why SynMap says "Can't be assessed" in those cases.</p><p>Someone with faint colours, reduced colour vision or night mode on the screen can get weak support even though the experience is real. A weak result does not rule out synesthesia.</p></div></details>
         <details><summary>Out in the world or in the mind?</summary><div><p>Some people see the colour out on the letter itself. Others see it in their mind's eye or just know which colour it is. Both count as synesthesia. Your answers to the follow-up questions are shown in your profile.</p></div></details>
-        <details><summary>Read more or take part in research</summary><div><p>You can copy your data from the results page and send it to a research group yourself. More to read:</p>
+        <details><summary>Read more or take part in research</summary><div><p>If you take part in a study, the research group gives you a study code. Enter it under Share with a researcher on the results page, save the file and send it to them. More to read:</p>
           <a href="https://www.sussex.ac.uk/synaesthesia/" target="_blank" rel="noopener">Synaesthesia research at the University of Sussex</a>
           <a href="https://synesthete.ircn.jp/home" target="_blank" rel="noopener">The Synesthesia Battery</a>
           <a href="https://www.uksynaesthesia.com" target="_blank" rel="noopener">UK Synaesthesia Association</a>
@@ -682,8 +687,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   S.lang ||= "sv";
   S.clan ||= { a: {}, done: null };
   S.study ||= {};
-  // A researcher can hand out a link with ?studie=KOD&mejl=adress so the fields are filled in.
-  try { const q = new URLSearchParams(location.search); if (q.get("studie")) S.study.code = q.get("studie").slice(0, 40); if (q.get("mejl")) S.study.mail = q.get("mejl").slice(0, 120); } catch {}
+  delete S.study.mail;
+  // A researcher can hand out a link with ?studie=KOD so the study code is filled in.
+  try { const q = new URLSearchParams(location.search); if (q.get("studie")) S.study.code = q.get("studie").trim().toUpperCase().slice(0, 40); } catch {}
   S.pid ||= "synmap-" + Math.random().toString(36).slice(2, 10);
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
   const now = () => Date.now() + S.offsetDays * 864e5;
@@ -694,22 +700,23 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // Swedish is the source text; EN maps it to English. t() also fills {placeholders}.
   const EN = {
 "Dela med en forskare": "Share with a researcher",
-"Spara dina svar som en fil och skicka den till forskaren. Inget skickas automatiskt, du väljer själv vem som får filen.": "Save your answers as a file and send it to the researcher. Nothing is sent automatically; you choose who gets the file.",
+"Skriv in studiekoden du har fått, spara dina svar som en fil och skicka filen till forskargruppen. Inget skickas automatiskt, du väljer själv vem som får filen.": "Enter the study code you were given, save your answers as a file and send the file to the research group. Nothing is sent automatically; you choose who gets the file.",
+"T.ex. SYN-4K7Q": "E.g. SYN-4K7Q",
+"Hur får jag en studiekod?": "How do I get a study code?",
+"Du får koden av en forskargrupp när du anmäler dig till en studie som använder SynMap, till exempel i inbjudan eller på studiens webbsida. Ibland får du en länk där koden redan är ifylld.": "A research group gives you the code when you sign up for a study that uses SynMap, for example in the invitation or on the study's web page. Sometimes you get a link with the code already filled in.",
+"Koden ser ut som SYN-4K7Q: SYN, ett bindestreck och fyra bokstäver eller siffror. Den talar om vilken studie dina svar hör till, men ingenting om vem du är.": "The code looks like SYN-4K7Q: SYN, a hyphen and four letters or digits. It tells which study your answers belong to, but nothing about who you are.",
+"Forskargruppen berättar också hur du skickar filen till dem. Har du ingen kod kan du ändå spara filen och använda den senare.": "The research group also tells you how to send the file to them. If you have no code, you can still save the file and use it later.",
+"Koden ser inte ut som en studiekod (till exempel SYN-4K7Q). Kontrollera att den är rätt skriven.": "This does not look like a study code (for example SYN-4K7Q). Check that it is typed correctly.",
+"Studiekoden följer med i filen.": "The study code is included in the file.",
 "Studiekod": "Study code",
-"Om forskaren har gett dig en kod": "If the researcher gave you a code",
-"Forskarens e-post": "Researcher's email",
-"namn@universitet.se": "name@university.edu",
 "Spara fil med mina svar": "Save a file with my answers",
-"Mejla forskaren": "Email the researcher",
 "Fler format": "More formats",
 "Filen ovan innehåller allt (JSON). CSV är bara färgsvaren, i ett format som forskarnas verktyg synr kan läsa.": "The file above contains everything (JSON). CSV is only the colour answers, in a format the research tool synr can read.",
 "Spara CSV": "Save CSV",
-"Sparad som {f}. Bifoga filen när du mejlar forskaren.": "Saved as {f}. Attach the file when you email the researcher.",
+"Sparad som {f}. Skicka filen till forskargruppen på det sätt de har beskrivit.": "Saved as {f}. Send the file to the research group in the way they described.",
 "Filen sparades inte.": "The file was not saved.",
 "Det gick inte att spara en fil här. Använd Kopiera under Fler format i stället.": "A file could not be saved here. Use Copy under More formats instead.",
 "Ditt deltagar-id: {p}. Det finns i filen så att forskaren kan hålla isär svaren utan ditt namn.": "Your participant ID: {p}. It is in the file so the researcher can tell answers apart without your name.",
-"SynMap-svar": "SynMap answers",
-"Hej!\n\nHär är mina svar från SynMap. Filen är bifogad.\n\nDeltagar-id: {p}\nStudiekod: {c}\n": "Hi!\n\nHere are my answers from SynMap. The file is attached.\n\nParticipant ID: {p}\nStudy code: {c}\n",
 "ca {m} min, med snabbtest": "about {m} min, with speed test",
 "Gör snabbtestet (del 2)": "Do the speed test (part 2)",
 "Snabbtestet hoppades över eftersom svaren inte gick att bedöma. Det behöver färger som går att skilja åt.": "The speed test was skipped because the answers could not be assessed. It needs colours that can be told apart.",
@@ -1631,26 +1638,25 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
         const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: mime })); a.download = name;
         document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
       }
-      msg.textContent = t("Sparad som {f}. Bifoga filen när du mejlar forskaren.", { f: name }); msg.hidden = false;
+      msg.textContent = t("Sparad som {f}. Skicka filen till forskargruppen på det sätt de har beskrivit.", { f: name }); msg.hidden = false;
     } catch (e) {
       msg.textContent = e && e.code === "declined" ? t("Filen sparades inte.") : t("Det gick inte att spara en fil här. Använd Kopiera under Fler format i stället."); msg.hidden = false;
     }
   }
   function renderShare() {
-    $("study-code").value = S.study.code || ""; $("study-mail").value = S.study.mail || "";
-    $("mail-btn").disabled = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(S.study.mail || "");
+    $("study-code").value = S.study.code || "";
+    renderCodeHint();
     $("pid-line").textContent = t("Ditt deltagar-id: {p}. Det finns i filen så att forskaren kan hålla isär svaren utan ditt namn.", { p: S.pid });
   }
-  $("study-code").addEventListener("input", e => { S.study.code = e.target.value.trim(); save(); });
-  $("study-mail").addEventListener("input", e => { S.study.mail = e.target.value.trim(); save(); renderShare(); });
+  // Study codes look like SYN-4K7Q. Other codes are still accepted, the hint only flags likely typos.
+  function renderCodeHint() {
+    const c = S.study.code || "", h = $("code-hint");
+    h.hidden = !c;
+    h.textContent = /^SYN-[A-Z0-9]{4}$/.test(c) ? t("Studiekoden följer med i filen.") : t("Koden ser inte ut som en studiekod (till exempel SYN-4K7Q). Kontrollera att den är rätt skriven.");
+  }
+  $("study-code").addEventListener("input", e => { S.study.code = e.target.value.trim().toUpperCase(); save(); renderCodeHint(); });
   $("dl-file").addEventListener("click", () => saveFile(fileName("json"), exportJson(), "application/json"));
   $("dl-csv").addEventListener("click", () => saveFile(fileName("csv"), exportCsv(), "text/csv"));
-  $("mail-btn").addEventListener("click", () => {
-    const subj = t("SynMap-svar") + (S.study.code ? " " + S.study.code : "") + " " + S.pid;
-    const body = t("Hej!\n\nHär är mina svar från SynMap. Filen är bifogad.\n\nDeltagar-id: {p}\nStudiekod: {c}\n", { p: S.pid, c: S.study.code || "–" });
-    const a = document.createElement("a"); a.href = `mailto:${encodeURIComponent(S.study.mail)}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`; a.target = "_blank"; a.rel = "noopener";
-    document.body.appendChild(a); a.click(); a.remove();
-  });
   $("copy-json").addEventListener("click", e => {
     copyOut(exportJson());
     e.target.textContent = t("Kopierat"); setTimeout(() => e.target.textContent = t("Kopiera allt (JSON)"), 1600);

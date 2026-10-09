@@ -17,3 +17,4 @@ Kort logg över beslut som påverkar framtida arbete. Nyast överst. Format: `- 
 - 2026-10-09 – CLaN-enkäten (Rothen m.fl. 2013) används med den engelska originaltexten och en egen svensk översättning. Fråga Sussex-gruppen om lov och om en validerad översättning innan appen sprids brett. – Rickard
 - 2026-10-09 – Ljudtestet följer Ward m.fl. (2006): pianotoner en kvint isär och samma ton på olika instrument, syntetiserade i webbläsaren. – Rickard
 - 2026-10-09 – Data delas med forskare genom att deltagaren sparar en fil och mejlar den själv. Ingen automatisk insamling förrän en forskargrupp med etikprövning och GDPR-ansvar är med. – Rickard
+- 2026-10-09 – Deltagaren anger ingen e-post i appen. Delning sker med en studiekod (SYN- och fyra tecken) som forskargruppen delar ut, och forskargruppen beskriver själv hur filen skickas. Ersätter mejl-knappen. – Rickard
