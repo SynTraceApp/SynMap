@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-09
+- **Repo** – Ny regel i `CLAUDE.md`: all ny text i appen ska också läggas in i den engelska ordlistan `EN`, annars syns den på svenska i den engelska versionen. (Rickard)
 - **Resultat** – Samlad bedömning per test: Starkt, Måttligt eller Svagt stöd, eller Kan inte bedömas. Den väger ihop egen beskrivning, konsistens (under 135,3), snabbtest (minst 80 % rätt), uppföljning (medelavstånd under 45) och om färgerna kommer automatiskt och funnits länge. Starkt stöd kräver godkänd uppföljning. Utan uppföljning står "Preliminärt". Visas på resultatsidan och i profilen. Gränserna 45, 80 % och 10 % (Tid i rummet) är våra egna och bör ses över med forskare. (Rickard)
 - **App** – Ny skärm "Vad betyder det?" med vanliga frågor (vad synestesi är, hur vanligt, att det inte är en sjukdom, hur bedömningen läses, när testet kan ha fel) och länkar till forskargrupper. Nås från resultat, profil och Om synestesi. (Rickard)
 - **Frågor** – Ny skärm "Om dig" efter de inledande frågorna: ålder, kön, skrivhand, modersmål, skriftsystem, färgseende och nattläge/blåljusfilter. Allt är frivilligt. Nedsatt färgseende och nattläge nämns i bedömningen. Varje session sparar nu också skärmstorlek, mobil/dator, mörkt läge, språk och appversion. JSON-exporten har version 2 med bakgrundsfrågorna. (Rickard)

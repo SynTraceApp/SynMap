@@ -25,7 +25,7 @@ Två personer arbetar i det här repot, var och en med sin egen Claude. De här 
 
 ## Om appen
 - `app/index.html` är prototypen: en enda självbärande HTML-fil som ska fungera direkt i webbläsaren. Lägg inte till något byggsteg eller ramverk utan ett beslut i `BESLUT.md`.
-- Skriv all text i appen på svenska.
+- Skriv all text i appen på svenska. Appen finns också på engelska: lägg till varje ny eller ändrad svensk text i ordlistan `EN` i `app/index.html` (svensk text → engelsk text) och använd `t("...")` för text som skrivs ut från JavaScript. Längre texter i HTML kan i stället ha en svensk och en engelsk version med `data-lang="sv"` och `data-lang="en"`. Testa på båda språken.
 - Formulera aldrig resultat som en diagnos. Använd ord som "sannolikhet", "konsistens" och "mönster", och visa resultat som preliminära tills uppföljningarna är gjorda.
 - Svar sparas bara i användarens egen webbläsare. Skicka inga data någonstans utan ett beslut i `BESLUT.md`.
 - Testa ändringar genom att öppna filen i webbläsaren, både i mobilbredd och datorbredd, innan du pushar.
