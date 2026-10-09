@@ -19,4 +19,4 @@ Grafem–färg-testet visar bokstäver A–Ö och siffror 0–9 tre gånger var 
 
 ## Arbeta med Claude
 
-Koppla det här repot till ditt eget Claude-projekt. Arbeta sedan i en egen gren och öppna en pull request, så att ni ser varandras ändringar innan de hamnar i `main`.
+Koppla det här repot till ditt eget Claude-projekt. Claude följer reglerna i `CLAUDE.md`: varje ändring görs i en egen gren och blir en pull request, pågående arbete skrivs upp i `ARBETE.md` och viktiga beslut i `BESLUT.md`.
