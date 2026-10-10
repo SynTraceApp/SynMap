@@ -9,6 +9,9 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Skriv för en människa, inte för en dator. Säg vad användaren märker eller vad den andra behöver veta, inte vilka rader som ändrats.
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
+## 2026-10-10
+- **Text** – Spegelberöring: svarsknappen "Nej" efter varje klipp heter nu "Njae" (engelska "Not really"). Det räknas fortfarande som att man inte kände något. (Rickard)
+
 ## 2026-10-09
 - **Test** – Nytt test "Spegelberöring" efter Ward, Schnakenberg och Banissy (2018): 20 korta klipp där en person (14 klipp: kind och hand som berörs med finger eller kniv, sedda från olika håll, korsade händer och upp-och-nedvänt ansikte, vänster och höger) eller ett föremål (6 klipp: gummihand, docka, fläkt) blir berört. Efter varje klipp svarar man om man kände något, hur det kändes, var och hur starkt. Klippen är tecknade animationer, inte originalfilmerna (de gick inte att få tag på och licensen är okänd), så gränsen minst 7 av 14 är bara en grov jämförelse. Testet kan pausas och fortsätta. Resultat på resultatsidan, i profilen och i JSON-exporten (mirror_touch). Rekommenderas om man inte svarat Nej på beröringsfrågan. (Rickard)
 - **Frågor** – Ny enkät "Ute i världen eller i huvudet?": projektor–associator-frågorna från Rouw och Scholte (2007) i den reviderade versionen (Anderson och Ward 2015), 9 påståenden på femgradig skala. Resultatet är medel för projektorpåståendena minus medel för associatorpåståendena och visas som en skala. Svenska är vår översättning, engelska är originaltexten. Finns på Välj test, resultatsidan, profilen och i JSON-exporten (projector_associator). (Rickard)

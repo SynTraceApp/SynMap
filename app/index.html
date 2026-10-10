@@ -752,6 +752,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // Swedish is the source text; EN maps it to English. t() also fills {placeholders}.
   const EN = {
 "Spegelberöring": "Mirror-touch",
+"Njae": "Not really",
 "Undersök om du känner beröring på din egen kropp när du ser någon annan bli berörd.": "Explore whether you feel touch on your own body when you see someone else being touched.",
 "Du får se 20 korta tecknade klipp där en person eller ett föremål blir berört.": "You will see 20 short drawn clips where a person or an object is touched.",
 "Efter varje klipp svarar du om du kände något på din egen kropp.": "After each clip you answer whether you felt anything on your own body.",
@@ -1659,7 +1660,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       $(box).innerHTML = opts.map(o => `<button aria-pressed="${val === o}">${t(o)}</button>`).join("");
       $(box).querySelectorAll("button").forEach((b, i) => b.addEventListener("click", () => { set(opts[i]); save(); mtShow(); }));
     };
-    seg("mt-yes", ["Ja", "Nej"], cur.yes === undefined ? null : cur.yes ? "Ja" : "Nej", v => { cur.yes = v === "Ja"; if (!cur.yes) { delete cur.kind; delete cur.where; delete cur.intensity; } else cur.intensity ??= 5; });
+    seg("mt-yes", ["Ja", "Njae"], cur.yes === undefined ? null : cur.yes ? "Ja" : "Njae", v => { cur.yes = v === "Ja"; if (!cur.yes) { delete cur.kind; delete cur.where; delete cur.intensity; } else cur.intensity ??= 5; });
     $("mt-more").hidden = !cur.yes;
     seg("mt-kind", MT_KIND, cur.kind, v => cur.kind = v);
     seg("mt-where", MT_WHERE, cur.where, v => cur.where = v);
