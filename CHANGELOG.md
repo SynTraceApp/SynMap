@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-10
+- **Test** – Föregående och Nästa i alla tester utom snabbtestet. I färgtesterna och Tid i rummet behålls svaret när man går tillbaka (färgen eller platsen visas igen) och Nästa går vidare utan att man svarar om. Spegelberöring har fått Föregående och Nästa. Snabbtestet är tidsstyrt och saknar dem med flit. På grenen `cajsa-synmap`. (Cajsa)
 - **App** – Gren `cajsa-synmap`: Cajsas utvecklade version av appen (arbetsversion från Claude). Ny välkomstsida med meny (Om appen, Om synestesi, Forskningsunderlag), språkval (svenska, engelska, franska, tyska, spanska med inbyggda översättningar), samtyckesfråga först, bilder och ikoner i Om appen, mörk bedömningspanel och profilträd som text, egen stil för onumrerade poster, och att resultaten sparas kvar vid omstart. Rickards ändring "Njae" är med. Inte ihopslagen med main än. (Cajsa)
 - **Text** – Spegelberöring: svarsknappen "Nej" efter varje klipp heter nu "Njae" (engelska "Not really"). Det räknas fortfarande som att man inte kände något. (Rickard)
 

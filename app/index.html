@@ -626,7 +626,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     </div>
     <div class="grow"></div>
     <button class="btn primary" id="mt-start">Starta</button>
-    <button class="btn primary" id="mt-next" hidden disabled>Nästa</button>
+    <div class="nav-row" id="mt-nav" hidden><button class="btn soft" id="mt-prev" disabled>Föregående</button><button class="btn primary" id="mt-next" disabled>Nästa</button></div>
   </section>
 
   <!-- Tid i rummet (sequence-space, Rothen m.fl. 2016) -->
@@ -2248,6 +2248,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("mt-int").value = cur.intensity ?? 5; $("mt-int-v").textContent = cur.intensity ?? 5;
     $("mt-next").disabled = cur.yes === undefined || (cur.yes && !(cur.kind && cur.where));
     $("mt-next").textContent = t(r.i === n - 1 ? "Klar" : "Nästa");
+    $("mt-prev").disabled = r.i === 0;
   }
   function mtOpen() {
     if (!S.mt.run) {
@@ -2257,7 +2258,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     }
     const started = S.mt.run.started;
     $("mt-intro").hidden = started; $("mt-start").hidden = started;
-    $("mt-trial").hidden = !started; $("mt-next").hidden = !started;
+    $("mt-trial").hidden = !started; $("mt-nav").hidden = !started;
     $("mt-count").textContent = ""; $("mt-bar").style.width = "2%";
     go("s-mirror");
     if (started) { mtShow(); mtPlay(); }
@@ -2267,6 +2268,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   $("mt-replay").addEventListener("click", mtPlay);
   $("mt-int").addEventListener("input", e => { const r = S.mt.run, cur = r.out[r.i]; cur.intensity = +e.target.value; $("mt-int-v").textContent = cur.intensity; save(); });
   $("mt-quit").addEventListener("click", () => { clearTimeout(mtTimer); go("s-choose", false); });
+  $("mt-prev").addEventListener("click", () => { const r = S.mt.run; if (!r || r.i === 0) return; r.i--; save(); mtShow(); mtPlay(); window.scrollTo(0, 0); });
   $("mt-next").addEventListener("click", () => {
     const r = S.mt.run;
     if (r.i < r.order.length - 1) { r.i++; save(); mtShow(); mtPlay(); window.scrollTo(0, 0); return; }
@@ -2368,6 +2370,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   function showTrial() {
     const s = T.list[T.i];
     T.played = false; T.auto = null; pick = null; $("sat").value = 100;
+    const prevR = T.responses[T.i];   // already answered (the person went back): show that answer again
+    if (prevR) { if (prevR.p) { pick = { h: prevR.p.h, l: prevR.p.l }; $("sat").value = prevR.p.sat; } if (T.key === "sound") { T.auto = prevR.auto; T.played = true; } }
     $("test-count").textContent = `${T.i + 1} / ${T.list.length}`;
     $("test-bar").style.width = `${Math.max(T.i / T.list.length * 100, 2)}%`;
     $("play-hint").textContent = t("Tryck för att lyssna");
@@ -2391,7 +2395,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     sw.hidden = !sound;
     sw.style.background = rgb && showPicker ? css(rgb) : "";
     sw.style.borderStyle = rgb && showPicker ? "solid" : "";
-    $("test-next").disabled = sound ? !(T.auto && (T.auto !== "ja" || rgb)) : !rgb;
+    const had = T.responses[T.i] && !pick;
+    $("test-next").disabled = (sound ? !(T.auto && (T.auto !== "ja" || rgb)) : !rgb) && !had;
   }
   $("play").addEventListener("click", () => {
     playSound(SOUNDS.concat(TONES).find(x => x.id === T.list[T.i]));
@@ -2404,16 +2409,19 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     refreshTrial();
   }));
   function answer(rgb) {
-    T.responses.push({ s: T.list[T.i], rgb, auto: T.key === "sound" ? T.auto : null, ms: Math.round(performance.now() - (T.shown || 0)) });
+    const rec = { s: T.list[T.i], rgb, auto: T.key === "sound" ? T.auto : null, ms: Math.round(performance.now() - (T.shown || 0)) };
+    if (rgb && pick) rec.p = { h: pick.h, l: pick.l, sat: +$("sat").value };
+    if (T.i < T.responses.length) T.responses[T.i] = rec; else T.responses.push(rec);
     T.i++; persist();
     if (T.i < T.list.length) showTrial(); else if (T.key !== "sound" && prepSpeed()) go("s-speed"); else toAfter();
   }
   $("test-next").addEventListener("click", () => {
-    if (T.key === "sound" && T.auto !== "ja") answer(null); else answer(curRgb());
+    const old = T.responses[T.i];
+    if (T.key === "sound" && T.auto !== "ja") answer(null); else if (!pick && old) answer(old.rgb); else answer(curRgb());
   });
   $("nocolor").addEventListener("click", () => answer(null));
-  // Going back drops the previous answer and shows that item again, so a mis-tap can be fixed.
-  $("test-prev").addEventListener("click", () => { if (!T || T.i === 0) return; T.i--; T.responses.pop(); persist(); showTrial(); });
+  // Going back shows the earlier item with its answer kept; Next moves on (or saves a changed answer).
+  $("test-prev").addEventListener("click", () => { if (!T || T.i === 0) return; T.i--; persist(); showTrial(); });
   $("test-quit").addEventListener("click", pauseTest);
   $("test-pause").addEventListener("click", pauseTest);
   document.addEventListener("keydown", e => { if (!$("s-test").hidden && e.key === "Enter" && !$("test-next").disabled) { e.preventDefault(); $("test-next").click(); } });
@@ -2427,7 +2435,12 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("space-count").textContent = `${T.i + 1} / ${T.list.length}`;
     $("space-bar").style.width = `${Math.max(T.i / T.list.length * 100, 2)}%`;
     $("space-prev").disabled = T.i === 0;
-    $("space-next").disabled = true;
+    const prevR = T.responses[T.i];
+    $("space-next").disabled = !prevR;
+    if (prevR && prevR.pos) {
+      spot = prevR.pos;
+      const m = document.createElement("span"); m.className = "space-mark"; m.style.left = spot[0] * 100 + "%"; m.style.top = spot[1] * 100 + "%"; $("space-field").appendChild(m);
+    }
     T.shown = performance.now();
   }
   $("space-field").addEventListener("pointerdown", e => {
@@ -2439,13 +2452,14 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("space-next").disabled = false;
   });
   function spaceAnswer(pos) {
-    T.responses.push({ s: T.list[T.i], pos, ms: Math.round(performance.now() - T.shown) });
+    const rec = { s: T.list[T.i], pos, ms: Math.round(performance.now() - T.shown) };
+    if (T.i < T.responses.length) T.responses[T.i] = rec; else T.responses.push(rec);
     T.i++; persist();
     if (T.i < T.list.length) showSpace(); else { T.speed = null; toAfter(); }
   }
-  $("space-next").addEventListener("click", () => { if (spot) spaceAnswer(spot); });
+  $("space-next").addEventListener("click", () => { if (spot) spaceAnswer(spot); else if (T.responses[T.i]) spaceAnswer(T.responses[T.i].pos); });
   $("space-none").addEventListener("click", () => spaceAnswer(null));
-  $("space-prev").addEventListener("click", () => { if (T.i === 0) return; T.i--; T.responses.pop(); persist(); showSpace(); });
+  $("space-prev").addEventListener("click", () => { if (T.i === 0) return; T.i--; persist(); showSpace(); });
   $("space-quit").addEventListener("click", pauseTest);
   $("space-pause").addEventListener("click", pauseTest);
   // Consistency = mean area of the triangle spanned by the three taps, as % of the field.
