@@ -2049,6 +2049,18 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   menuBtn.addEventListener("click", e => { e.stopPropagation(); setMenu(menuEl.hidden); });
   document.addEventListener("click", e => { if (!menuEl.hidden && !menuEl.contains(e.target)) setMenu(false); });
   document.addEventListener("keydown", e => { if (e.key === "Escape") setMenu(false); });
+  // Testing aid, to be removed before release: left and right arrow keys press Föregående and Nästa on the visible screen.
+  // Skipped in the speed test (arrows answer there) and while a colour field, slider or text field has focus.
+  const ARROW_NAV = true;
+  document.addEventListener("keydown", e => {
+    if (!ARROW_NAV || (e.key !== "ArrowLeft" && e.key !== "ArrowRight") || e.altKey || e.ctrlKey || e.metaKey) return;
+    const f = document.activeElement;
+    if (f && (f.matches("input, textarea, select, [contenteditable]") || f.closest("[role=application], .plane, #plane"))) return;
+    const scr = document.querySelector("section[id^='s-']:not([hidden])");
+    if (!scr || scr.id === "s-speed") return;
+    const b = [...scr.querySelectorAll(`[id$="-${e.key === "ArrowLeft" ? "prev" : "next"}"]`)].find(x => x.offsetParent && !x.disabled);
+    if (b) { e.preventDefault(); b.click(); }
+  });
   $("go-about").addEventListener("click", () => { setMenu(false); $("about").hidden = false; });
   $("go-about-app").addEventListener("click", () => { setMenu(false); go("s-about-app"); });
   $("about-close").addEventListener("click", () => { $("about").hidden = true; });
