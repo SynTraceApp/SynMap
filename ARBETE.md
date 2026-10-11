@@ -3,6 +3,7 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
+- Föra in dämpad orange för Pausat/Påbörjad, spanska profiltexter och Kopiera adress-knappen i app/index.html – Cajsa
 
 ## Klart
 - Länkrad, ikonrad och kontaktadress i app/index.html – Cajsa
