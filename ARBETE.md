@@ -5,6 +5,7 @@ Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sa
 ## Pågår
 
 ## Klart
+- Ord → smak ombyggt efter MULTISENSE – Cajsa
 - Personifiering och Ord → smak, Börja-knapp, ny ordning i Om appen – Cajsa
 - Startskärm, alla tester i Välj test, Så funkar SynMap – Cajsa
 - Projektor–associator-enkät och spegelberöringstest – Rickard
