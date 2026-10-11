@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-11
+- **Underlag** – Nytt skript `docs/SynMap-formular.gs` som skapar ett Google-formulär med frågor till testanvändare efter testet (vad de gjorde, hur det fungerade, resultaten, om dem, till sist). Klistras in i script.google.com och körs med skapaFormular. Det är fristående: ingen länk finns i appen och inga svar skickas från appen. Frågorna ligger som en lista överst i filen. Ofärdigt: skriptet är inte körd av oss mot Google ännu när det skrevs. (Cajsa)
 - **App** – Bakåtpilen på Min profil och Mina resultat går nu tillbaka till testlistan. Tidigare lades varje byte med länkraden (Välj test / Mina resultat / Min profil) till i historiken, så pilen kunde hamna på fel skärm. Bytena fyller inte längre historiken. (Cajsa)
 - **Text** – Ny länk sist i Läs mer eller delta i forskning (Vad betyder resultatet?, nås via Om synestesi → Läs mer): The Synesthesia Network. Finns på alla språk. (Cajsa)
 - **Test** – Färgväljaren Fält är borttagen (kod och knapp). Kvar: Hjul (standard), HSV, Lab och En i taget. Cajsa valde bort den efter Rickards fråga i ARBETE.md; den som hade valt Fält får Hjul. Färghjulets ring är dessutom mjukare, särskilt runt blått och ljusblått, så att det inte syns någon skarp kant där. Gå tillbaka med `git revert` på commiten "Tar bort färgväljaren Fält". (Cajsa)
