@@ -1792,7 +1792,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const k = introList().findIndex(q => !S.answers[q.id]);
     if (k >= 0) { qi = k; showIntro(); go("s-intro"); } else if (!S.bg.done) go("s-bg"); else go("s-choose");
   };
-  $("go-start").addEventListener("click", () => { if (S.consent) startFlow(); else go("s-consent"); });
+  // The consent question and research data stay off until BESLUT.md has a decision on shared data collection.
+  const RESEARCH_ON = false;
+  $("go-start").addEventListener("click", () => { if (S.consent || !RESEARCH_ON) startFlow(); else go("s-consent"); });
+  $("go-research").hidden = !RESEARCH_ON;
   const answerConsent = v => { S.consent = v; save(); history.length = 0; history.push("s-welcome"); startFlow(); };
   $("consent-yes").addEventListener("click", () => answerConsent("yes"));
   $("consent-no").addEventListener("click", () => answerConsent("no"));
@@ -1811,7 +1814,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     return out;
   }
   async function shareResults() {
-    if (S.consent !== "yes") return;
+    if (!RESEARCH_ON || S.consent !== "yes") return;
     try {
       const db = await dbP; if (!db) return;
       if (!S.sid) { S.sid = crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now(); save(); }
