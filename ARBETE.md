@@ -3,9 +3,9 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
-- Byta namnen i upphovsraderna i app/index.html mot pseudonymer – Cajsa
 
 ## Klart
+- Pseudonymer i upphovsraderna i app/index.html – Cajsa
 - Dämpad orange för Pausat/Påbörjad, spanska profiltexter och Kopiera adress i app/index.html – Cajsa
 - Länkrad, ikonrad och kontaktadress i app/index.html – Cajsa
 - Cajsas senaste appändringar i app/index.html (Om dig först, uppföljning för alla tester, Så fungerar SynMap, upphovsrader, Dela med en forskare borttaget) – Cajsa
