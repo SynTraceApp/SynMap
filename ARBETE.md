@@ -3,6 +3,7 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
+- Föregående på första inledande frågan går tillbaka till Om dig i app/index.html – Rickard
 
 ## Klart
 - Överlappande cirklar överst i Din synestesiprofil i app/index.html – Cajsa
