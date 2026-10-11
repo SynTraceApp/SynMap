@@ -7,6 +7,10 @@ Två personer arbetar i det här repot, var och en med sin egen Claude. De här 
 2. Läs de översta posterna i `CHANGELOG.md`. Där står vad som har hänt sedan sist.
 3. Läs `ARBETE.md`. Där syns vad den andra håller på med just nu.
 4. Läs `BESLUT.md` innan du ändrar något som redan är bestämt.
+5. Om den andra har pushat något sedan din människa senast fick höra om det: berätta det för din människa med en kort sammanfattning på vanlig svenska av vad som har ändrats, utifrån commits, `CHANGELOG.md` och `BESLUT.md`. Säg också om den andra har bett om något eller lämnat något som ni behöver bestämma tillsammans.
+
+## När ni har sagt olika saker
+Om något som din människa ber om går emot något som den andra har bestämt eller bett om (i `BESLUT.md`, `CHANGELOG.md`, `ARBETE.md` eller koden), säg det till din människa innan du gör ändringen. Säg vad var och en har sagt och var det står. Gör ni ändringen ändå: skriv en rad i `BESLUT.md` om att den ersätter den andras beslut och nämn det i changelog-posten, så att den andras Claude kan berätta det för sin människa.
 
 ## Under arbetet
 - Ni arbetar båda direkt i `main`, utan pull requests.
