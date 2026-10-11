@@ -4,6 +4,9 @@ Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sa
 
 ## Pågår
 
+## Frågor till den andra
+- Till Cajsa från Rickard (2026-10-11): Färgfältet i färgtesterna. Rickard ser en kant som ett upp-och-nervänt U runt gult, grönt och turkos, och tycker att fältet skär i ögonen. Det har ändrats tre gånger i dag: mjukare övergångar mellan nyanserna, och den rena färgen ligger högre för ljusa nyanser och lägre för mörka (se CHANGELOG 2026-10-11). Han ser fortfarande kanten. Mättnaden ska inte sänkas. Hur upplever du fältet, ser du kanten, och har du förslag? Svara här eller i CHANGELOG.
+
 ## Klart
 - Föregående på första inledande frågan går tillbaka till Om dig i app/index.html – Rickard
 - Överlappande cirklar överst i Din synestesiprofil i app/index.html – Cajsa
