@@ -3295,7 +3295,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     return C;
   }
   
+  const anyTested = () => KEYS.some(k => S.sessions[k].length) || S.mt.sessions.length > 0 || trSessions("ol").length > 0 || trSessions("lg").length > 0;
   function renderCircles() {
+    if (!anyTested()) { $("profile-circles").innerHTML = `<circle cx="179" cy="215" r="66" fill="#8b7be8" fill-opacity=".07" stroke="#8b7be8" stroke-opacity=".7" stroke-width="2" stroke-dasharray="5 4"/>`; return; }
     const LV = { strong: .45, moderate: .3, weak: .15, na: 0 };
     const lv = k => { const a = assess(k); return a ? LV[a.level] : null; };
     const top = (...v) => { v = v.filter(x => x !== null); return v.length ? Math.max(...v) : null; };
@@ -3357,6 +3359,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 
     const disc = k => `<span class="icon-disc">${ICONS[k]}</span>`;
     const blankDisc = `<span class="icon-disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--muted)" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke-dasharray="3 3"/></svg></span>`;
+    $("profile-list").hidden = !anyTested();
     $("profile-list").innerHTML = nodes.map(n => {
       let line;
       if (n.sum) {

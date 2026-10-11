@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-11
+- **Resultat** – Din synestesiprofil: innan något test är gjort visas bara en tom streckad cirkel och ingen lista under. Sinnescirklarna och listan kommer när det första testet är gjort. (Cajsa)
 - **Resultat** – Din synestesiprofil har nu en bild överst där sinnena är cirklar (Färg i mitten, Hörsel, Språk, Rum, Smak och Känsel runt omkring) som överlappar där svaren stödjer ett samband. Stora cirklar är primära upplevelser och små sekundära; streckad cirkel betyder inte testad än och överlappar inte. Överlappet följer testens stödnivå (starkt, måttligt, svagt; kan inte bedömas ger ingen överlapp) och är alltså en grov bild i fyra steg, inte ett exakt mått. Ord → smak överlappar Språk. Spegelberöring och Personlighet saknar partner i bilden. Texten under förklarar bilden. Kartan och listan ligger kvar under. Översatt till de fem språken. Cirklarnas storlek och vilka sinnen som är primära är vår egen indelning och bör granskas av en forskare. (Cajsa)
 - **App** – Så fungerar SynMap: punkten "1. Om dig" är borttagen ur listan och resten är omnumrerad (1. Välj test till 5. Uppföljning), på alla fem språken. Själva frågorna om dig finns kvar efter Börja. (Cajsa)
 - **Design** – Klick på kontaktadressen: adressen ligger kvar och en liten etikett "Kopierad" visas bredvid den en stund. Tidigare byttes adressen ut mot ordet. (Cajsa)
