@@ -3,6 +3,7 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
+- Byta namnen i upphovsraderna i app/index.html mot pseudonymer – Cajsa
 
 ## Klart
 - Dämpad orange för Pausat/Påbörjad, spanska profiltexter och Kopiera adress i app/index.html – Cajsa
