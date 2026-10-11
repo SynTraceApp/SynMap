@@ -2273,7 +2273,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     return Math.max(1, Math.round(left * EST_SEC[key] / 60) + (key === "sound" || key === "space" ? 0 : 1));
   }
   function renderResume() {
-    const ks = KEYS.filter(k => S.paused[k]), box = $("resume-card");
+    // Bara det senast pausade testet visas här; de andra fortsätter man från sina kort i listan.
+    const ks = KEYS.filter(k => S.paused[k]).sort((a, b) => (S.paused[b].at || 0) - (S.paused[a].at || 0)).slice(0, 1), box = $("resume-card");
     box.hidden = !ks.length;
     box.innerHTML = ks.map(k => {
       const p = S.paused[k];
@@ -2842,7 +2843,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     return list;
   }
   // Answers are saved after every item, so a paused or reloaded test continues where it stopped.
-  function persist() { if (T) { S.paused[T.key] = { list: T.list, i: T.i, responses: T.responses }; save(); } }
+  function persist() { if (T) { S.paused[T.key] = { list: T.list, i: T.i, responses: T.responses, at: Date.now() }; save(); } }
   function pauseTest() { persist(); T = null; go("s-choose", false); }
   function startTest(key) {
     const p = S.paused[key];
