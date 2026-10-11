@@ -3,6 +3,7 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
+- Flytta Börja-knappen tillbaka till sin plats på startsidan i app/index.html – Cajsa
 
 ## Klart
 - Pseudonymer i upphovsraderna i app/index.html – Cajsa
