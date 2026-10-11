@@ -2197,7 +2197,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const started = k => KEYS.includes(k) ? S.sessions[k].length || S.paused[k] : k === "mirror" ? S.mt.sessions.length || S.mt.run : k === "clan" ? Object.keys(S.clan.a).length : k === "pa" ? Object.keys(S.pa.a).length : trState(k).label !== t("Ej påbörjat");
     const recd = new Set(ALL.filter(k => score(k) > 0));
     const all = !recd.size;
-    const order = ALL.map((k, i) => [k, i]).sort((a, b) => score(b[0]) - score(a[0]) || mins(a[0]) - mins(b[0]) || a[1] - b[1]).map(([k]) => k);
+    // A test that is done and waiting for its follow-up goes below the ones that can be done now.
+    const stateOf = k => KEYS.includes(k) ? testState(k) : k === "mirror" ? mtState() : k === "clan" ? clanState() : k === "pa" ? qnState("pa") : trState(k);
+    const waits = k => stateOf(k).open === false ? 1 : 0;
+    const order = ALL.map((k, i) => [k, i]).sort((a, b) => waits(a[0]) - waits(b[0]) || score(b[0]) - score(a[0]) || mins(a[0]) - mins(b[0]) || a[1] - b[1]).map(([k]) => k);
     for (const k of order) (all || recd.has(k) || started(k) ? $("rec-list") : $("more-list")).appendChild($("pick-" + k));
     $("rec-list").prepend($("pick-intro")); $("rec-list").prepend($("pick-map")); $("pick-map").style.display = "none"; // self-rating is switched off for now
     $("more-tests").hidden = !$("more-list").children.length;
