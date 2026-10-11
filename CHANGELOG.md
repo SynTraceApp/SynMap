@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-11
+- **Design** – Tid i rummet: mitten av rutan visar nu en figur sedd uppifrån (huvud, axlar och näsa som pekar framåt) med texten "du", och kanterna är märkta Framför dig, Bakom dig, Vänster och Höger. Under rutan står "Rummet sett uppifrån. Du står i mitten och tittar framåt." Tidigare stod bara ett litet "du" i mitten, och testare tyckte att det var otydligt att man själv står där. Man kan fortfarande trycka var som helst, även på figuren. (Rickard)
 - **App** – Testhjälp: vänster- och högerpil på tangentbordet trycker på Föregående och Nästa på den skärm man står på, så att det går snabbare att testa appen. Gäller inte snabbtestet (där svarar pilarna) eller när färgfältet, ett reglage eller ett textfält är markerat. Ska tas bort före release: sätt ARROW_NAV = false eller ta bort blocket i koden. (Rickard)
 - **App** – Länkraden överst på Välj test, Dina resultat och Din synestesiprofil är nu Välj test / Mina resultat / Min profil. Länken Ändra mina svar är borta; de inledande frågorna ändras via kortet Inledande frågor i Välj test. Ändrar Cajsas länkrad; gå tillbaka med `git revert` på commiten "Ändrar Cajsas beslut: byt Ändra mina svar…". (Rickard)
 - **App** – Välj test: ett test som är gjort och väntar på uppföljning läggs under de tester som går att göra nu, men ovanför Fler tester. När uppföljningen kan göras flyttas det upp igen. (Rickard)
