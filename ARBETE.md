@@ -3,6 +3,7 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
+- Föra in snabbtestet som väntar på svar, färgrektangeln i ljudtestet och kontaktadressen som kopieras i app/index.html – Cajsa
 
 ## Klart
 - Börja-knappens plats på startsidan återställd – Cajsa
