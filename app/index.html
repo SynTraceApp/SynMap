@@ -518,7 +518,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <div class="topbar"><button class="back" id="intro-back" aria-label="Föregående fråga"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="stepper" id="intro-dots"></div><span class="count grow" style="text-align:right" id="intro-count"></span></div>
     <h1>Inledande frågor</h1>
     <p class="lead" id="intro-lead" hidden>Här kan du ändra dina svar. Det påverkar vilka tester som rekommenderas.</p>
-    <div class="links-row nav-links" id="intro-nav" hidden><button class="text-btn" data-nav="s-results">Mina resultat</button><button class="text-btn" data-nav="s-profile">Min profil</button><button class="text-btn" data-nav="s-intro">Ändra mina svar</button></div>
+    <div class="links-row nav-links" id="intro-nav" hidden><button class="text-btn" data-nav="s-choose">Välj test</button><button class="text-btn" data-nav="s-results">Mina resultat</button><button class="text-btn" data-nav="s-profile">Min profil</button></div>
     <h2 id="intro-q"></h2>
     <div class="options" role="radiogroup" id="intro-opts"></div>
     <div class="grow"></div>
@@ -550,7 +550,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <div class="topbar"><button class="back" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
     <h1>Välj test</h1>
     <p class="lead">Välj det område du vill utforska. Du kan göra flera.</p>
-    <div class="links-row nav-links"><button class="text-btn" data-nav="s-results">Mina resultat</button><button class="text-btn" data-nav="s-profile">Min profil</button><button class="text-btn" data-nav="s-intro">Ändra mina svar</button></div>
+    <div class="links-row nav-links"><button class="text-btn" data-nav="s-choose">Välj test</button><button class="text-btn" data-nav="s-results">Mina resultat</button><button class="text-btn" data-nav="s-profile">Min profil</button></div>
     <div class="card resume" id="resume-card" hidden></div>
     <p class="sub-h" id="rec-h"></p>
     <div id="rec-list" class="stack" style="gap:12px"></div>
@@ -796,7 +796,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <div class="topbar"><button class="back" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
     <h1>Dina resultat</h1>
     <p class="lead">Här ser du en sammanställning av dina svar. Inga diagnostiska slutsatser dras.</p>
-    <div class="links-row nav-links"><button class="text-btn" data-nav="s-results">Mina resultat</button><button class="text-btn" data-nav="s-profile">Min profil</button><button class="text-btn" data-nav="s-intro">Ändra mina svar</button></div>
+    <div class="links-row nav-links"><button class="text-btn" data-nav="s-choose">Välj test</button><button class="text-btn" data-nav="s-results">Mina resultat</button><button class="text-btn" data-nav="s-profile">Min profil</button></div>
     <div id="res-list" class="stack" style="gap:14px"></div>
     <div class="consist" id="consist"></div>
     <div class="grow"></div>
@@ -832,7 +832,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <div class="topbar"><button class="back" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
     <h1>Din synestesiprofil</h1>
     <p class="lead">Alla dina tester och svar samlade i en bild. Profilen är preliminär och ingen diagnos.</p>
-    <div class="links-row nav-links"><button class="text-btn" data-nav="s-results">Mina resultat</button><button class="text-btn" data-nav="s-profile">Min profil</button><button class="text-btn" data-nav="s-intro">Ändra mina svar</button></div>
+    <div class="links-row nav-links"><button class="text-btn" data-nav="s-choose">Välj test</button><button class="text-btn" data-nav="s-results">Mina resultat</button><button class="text-btn" data-nav="s-profile">Min profil</button></div>
     <div class="card map-card"><svg id="profile-circles" viewBox="0 0 358 440" role="img" aria-label="Dina sinnen som överlappande cirklar"></svg></div>
     <p class="muted small">Stor cirkel = primär upplevelse, den som ger upphov till de andra. Liten cirkel = sekundär upplevelse, som följer av en primär. Överlappet visar hur starkt stödet för sambandet är i dina svar (se listan längre ned). Det sinne som ligger i mitten är det som har flest samband med dina övriga upplevelser. Streckad cirkel = inte testad än.</p>
     <div class="card map-card"><svg id="profile-map" viewBox="-10 -6 380 384" role="img" aria-label="Karta över dina synestesityper"></svg></div>
