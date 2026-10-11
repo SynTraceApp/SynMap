@@ -3,7 +3,7 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
-- Publicera testversion på GitHub Pages, och föra in senaste appändringarna (Börja först med Om dig, Självskattning av, uppföljning efter 7 dagar för alla tester, Så fungerar SynMap, namn och copyright, Dela med en forskare borttagen) – Cajsa
+- Föra in Cajsas senaste appändringar i app/index.html – Cajsa
 
 ## Klart
 - Ord → smak ombyggt efter MULTISENSE – Cajsa
