@@ -10,6 +10,9 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-11
+- **App** – Så fungerar SynMap: punkten "1. Om dig" är borttagen ur listan och resten är omnumrerad (1. Välj test till 5. Uppföljning), på alla fem språken. Själva frågorna om dig finns kvar efter Börja. (Cajsa)
+- **Design** – Klick på kontaktadressen: adressen ligger kvar och en liten etikett "Kopierad" visas bredvid den en stund. Tidigare byttes adressen ut mot ordet. (Cajsa)
+- **Design** – Inledande frågor, när man kommit dit via Ändra mina svar: länkraden Mina resultat / Min profil / Ändra mina svar sitter på samma höjd som på Dina resultat och Din synestesiprofil, tack vare en kort förklaringstext under rubriken (översatt till de fem språken). (Cajsa)
 - **Test** – Snabbtestet väntar nu tills man har svarat innan nästa fråga kommer, i stället för att gå vidare efter tre sekunder. Tecknet visas fortfarande bara en gång i en sekund och går inte att få fram igen; när det har försvunnit visas ett "?" tills man svarar. Svarstiden räknas från att tecknet visas, så den som tänker länge får en lång svarstid, och ingen fråga räknas längre som obesvarad. Originalstudiens snabbtest hade en tidsgräns, så en forskare bör titta på det. Texten är ändrad på testets startsida och i Så fungerar SynMap, på alla fem språken. (Cajsa)
 - **Design** – Ljudtestet: den valda färgen visas i en låg rektangel över färgfältet i stället för i en liten cirkel bredvid frågan, så att ett finger i fältet inte täcker den. I siffer-, bokstavs- och veckodagstesterna är det fortfarande tecknet som får färgen. (Cajsa)
 - **App** – Kontaktadressen synmap@proton.me: mejllänken öppnar inte mejlappen när appen visas inbäddad i claude.ai, så ett klick på adressen kopierar den och visar "Kopierad". På en egen webbadress öppnas mejlappen som vanligt. (Cajsa)
