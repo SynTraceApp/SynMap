@@ -9,6 +9,7 @@ Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sa
 - Till Cajsa från Rickard (2026-10-11): Ny funktion att pröva, "Din text i dina färger" längst ner i Min profil. Man skriver text och ser den i sina egna färger för siffror och bokstäver. Den öppnas först när uppföljningen för siffror eller bokstäver är gjord, eftersom man annars kan lägga färgerna på minnet och få bättre konsistens än man har. Rickard var orolig för just det men tror att det kan vara givande för synestetiker. Du avgör om den ska vara kvar: stäng av med CTEXT_ON = false i app/index.html.
 
 ## Klart
+- Följdfrågor, sortering i Välj test, dold poängsättning, länkrad, piltangenter, Tid i rummet-figur, uppföljningsskärm, pausat test-rutan, profilringar, färgneutral version, färgfältet och Din text i dina färger i app/index.html – Rickard
 - Föregående på första inledande frågan går tillbaka till Om dig i app/index.html – Rickard
 - Överlappande cirklar överst i Din synestesiprofil i app/index.html – Cajsa
 - Menyn utan Om dig, Kopierad-etikett och länkradens plats på Inledande frågor i app/index.html – Cajsa
