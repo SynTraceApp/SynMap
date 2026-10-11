@@ -30,3 +30,4 @@ Kort logg över beslut som påverkar framtida arbete. Nyast överst. Format: `- 
 - 2026-10-11 – Testare når oss via synmap@proton.me, som en mailto-länk längst ned i Så fungerar SynMap. Inget kontaktformulär och inget skickas från appen. – Cajsa
 - 2026-10-11 – Upphovsraderna i appen använder pseudonymerna Fiona och Fingal. Ersätter raden om namn i upphovsraderna från tidigare idag. Kontaktadressen och övriga rader är oförändrade. – Cajsa
 - 2026-10-11 – Snabbtestet har ingen tidsgräns per fråga: nästa kommer när man har svarat, men tecknet visas bara en gång i en sekund. Ska granskas av en forskare. – Cajsa
+- 2026-10-11 – Profilen visar sinnena som överlappande cirklar överst. Överlappet motsvarar testets stödnivå (starkt 45 %, måttligt 30 %, svagt 15 % av den mindre cirkeln, Ord → smak 30 % om konsistensen når 26 %). Det är en grov bild och inget exakt mått. Primära och sekundära sinnen är vår indelning. – Cajsa

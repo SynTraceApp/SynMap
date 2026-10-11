@@ -3,9 +3,9 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
-- Överlappande cirklar överst i Din synestesiprofil (app/index.html) – Cajsa
 
 ## Klart
+- Överlappande cirklar överst i Din synestesiprofil i app/index.html – Cajsa
 - Menyn utan Om dig, Kopierad-etikett och länkradens plats på Inledande frågor i app/index.html – Cajsa
 - Snabbtest som väntar på svar, färgrektangel i ljudtestet och kopierbar kontaktadress i app/index.html – Cajsa
 - Börja-knappens plats på startsidan återställd – Cajsa

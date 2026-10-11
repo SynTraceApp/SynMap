@@ -372,6 +372,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 #profile-map .ts, .pm .ts { fill: var(--muted); font-family: var(--font); font-size: 12px; }
 #profile-map .tc, .pm .tc { fill: var(--navy); font-family: var(--font); font-size: 15px; font-weight: 800; }
 #profile-map .pc, .pm .pc { fill: var(--navy); font-family: var(--mono); font-size: 12px; font-weight: 500; }
+#profile-circles { width: 100%; height: auto; display: block; }
+#profile-circles .cn { fill: var(--ink); font-family: var(--font); font-weight: 700; text-anchor: middle; paint-order: stroke; stroke: var(--card); stroke-width: 3px; stroke-linejoin: round; }
 .prow { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
 .prow:first-child { border-top: 0; }
 .prow .icon-disc { width: 40px; height: 40px; }
@@ -831,6 +833,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <h1>Din synestesiprofil</h1>
     <p class="lead">Alla dina tester och svar samlade i en bild. Profilen är preliminär och ingen diagnos.</p>
     <div class="links-row nav-links"><button class="text-btn" data-nav="s-results">Mina resultat</button><button class="text-btn" data-nav="s-profile">Min profil</button><button class="text-btn" data-nav="s-intro">Ändra mina svar</button></div>
+    <div class="card map-card"><svg id="profile-circles" viewBox="0 0 358 440" role="img" aria-label="Dina sinnen som överlappande cirklar"></svg></div>
+    <p class="muted small">Stor cirkel = primär upplevelse, den som ger upphov till de andra. Liten cirkel = sekundär upplevelse, som följer av en primär. Överlappet visar hur starkt stödet för sambandet är i dina svar (se listan längre ned). Det sinne som ligger i mitten är det som har flest samband med dina övriga upplevelser. Streckad cirkel = inte testad än.</p>
     <div class="card map-card"><svg id="profile-map" viewBox="-10 -6 380 384" role="img" aria-label="Karta över dina synestesityper"></svg></div>
     <p class="muted small">Ringarna runt testade typer visar färgerna du valde. Siffran i mitten är hur stor andel av tecknen eller ljuden som gav en färg. Streckade cirklar är typer du bara har svarat på i de inledande frågorna.</p>
     <div class="card kind" id="profile-kind" hidden></div>
@@ -1735,6 +1739,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   Object.assign(BUNDLED.es, {"Efter MULTISENSE-testet (Ipser, Ward och Simner 2019), versionen med fem grundsmaker. Ordlistan är vår egen, på svenska och översatt till de andra språken, inte originalets. Gränsen kommer från originalstudien.": "Según la prueba MULTISENSE (Ipser, Ward y Simner 2019), versión con cinco sabores básicos. La lista de palabras es nuestra, en sueco y traducida a los otros idiomas, no es la original. El límite procede del estudio original.", "I originalstudien hade synestetiker i median 68 % och kontroller 13 %, och gränsen 26 % släppte igenom 90 % av synestetikerna och 7 % av kontrollerna. Ordlistan här är vår egen och översatt, så jämförelsen är grov. Resultatet är preliminärt och ingen diagnos.": "En el estudio original los sinestésicos tenían una mediana del 68 % y los controles del 13 %, y el límite del 26 % dejaba pasar al 90 % de los sinestésicos y al 7 % de los controles. La lista de palabras aquí es nuestra y traducida, así que la comparación es aproximada. El resultado es preliminar y no es un diagnóstico.", "Undersök om ord och namn ger en smak på tungan. Det tar cirka 30 minuter.": "Explora si las palabras y los nombres producen un sabor en la lengua. Dura unos 30 minutos.", "Uppföljning {n}: förra gången {a}, nu {b}": "Seguimiento {n}: la última vez {a}, ahora {b}"});
   Object.assign(BUNDLED.fr, {"Koncept": "Concept", "Utveckling": "Développement", "Programmering": "Programmation", "och": "et"});
   Object.assign(BUNDLED.de, {"Koncept": "Konzept", "Utveckling": "Entwicklung", "Programmering": "Programmierung", "och": "und"});
+  Object.assign(EN, {"Stor cirkel = primär upplevelse, den som ger upphov till de andra. Liten cirkel = sekundär upplevelse, som följer av en primär. Överlappet visar hur starkt stödet för sambandet är i dina svar (se listan längre ned). Det sinne som ligger i mitten är det som har flest samband med dina övriga upplevelser. Streckad cirkel = inte testad än.": "Large circle = primary experience, the one that gives rise to the others. Small circle = secondary experience, which follows from a primary one. The overlap shows how strong the support for the connection is in your answers (see the list further down). The sense in the middle is the one with the most connections to your other experiences. Dashed circle = not tested yet.", "Dina sinnen som överlappande cirklar": "Your senses as overlapping circles"});
+  Object.assign(BUNDLED.fr, {"Stor cirkel = primär upplevelse, den som ger upphov till de andra. Liten cirkel = sekundär upplevelse, som följer av en primär. Överlappet visar hur starkt stödet för sambandet är i dina svar (se listan längre ned). Det sinne som ligger i mitten är det som har flest samband med dina övriga upplevelser. Streckad cirkel = inte testad än.": "Grand cercle = expérience primaire, celle qui donne naissance aux autres. Petit cercle = expérience secondaire, qui découle d'une expérience primaire. Le chevauchement montre la solidité de l'indice d'un lien dans vos réponses (voir la liste plus bas). Le sens au centre est celui qui a le plus de liens avec vos autres expériences. Cercle en pointillés = pas encore testé.", "Dina sinnen som överlappande cirklar": "Vos sens sous forme de cercles qui se chevauchent"});
+  Object.assign(BUNDLED.de, {"Stor cirkel = primär upplevelse, den som ger upphov till de andra. Liten cirkel = sekundär upplevelse, som följer av en primär. Överlappet visar hur starkt stödet för sambandet är i dina svar (se listan längre ned). Det sinne som ligger i mitten är det som har flest samband med dina övriga upplevelser. Streckad cirkel = inte testad än.": "Großer Kreis = primäres Erleben, das die anderen hervorruft. Kleiner Kreis = sekundäres Erleben, das aus einem primären folgt. Die Überlappung zeigt, wie stark deine Antworten für den Zusammenhang sprechen (siehe Liste weiter unten). Der Sinn in der Mitte hat die meisten Verbindungen zu deinen übrigen Erlebnissen. Gestrichelter Kreis = noch nicht getestet.", "Dina sinnen som överlappande cirklar": "Deine Sinne als überlappende Kreise"});
+  Object.assign(BUNDLED.es, {"Stor cirkel = primär upplevelse, den som ger upphov till de andra. Liten cirkel = sekundär upplevelse, som följer av en primär. Överlappet visar hur starkt stödet för sambandet är i dina svar (se listan längre ned). Det sinne som ligger i mitten är det som har flest samband med dina övriga upplevelser. Streckad cirkel = inte testad än.": "Círculo grande = experiencia primaria, la que da origen a las demás. Círculo pequeño = experiencia secundaria, que se deriva de una primaria. El solapamiento muestra la solidez del indicio de la conexión en tus respuestas (ver la lista más abajo). El sentido del centro es el que tiene más conexiones con tus otras experiencias. Círculo discontinuo = aún sin probar.", "Dina sinnen som överlappande cirklar": "Tus sentidos como círculos que se superponen"});
   Object.assign(BUNDLED.es, {"Koncept": "Concepto", "Utveckling": "Desarrollo", "Programmering": "Programación", "och": "y"});
   Object.assign(BUNDLED.es, {"Inget test än · du svarade \"{a}\"": "Aún sin prueba · respondiste «{a}»", "Inte testat än · du svarade \"{a}\" i de inledande frågorna": "Aún sin probar · respondiste «{a}» en las preguntas iniciales", "Testat · {a} av {b} klipp med människor gav beröring · du svarade \"{c}\"": "Probado · {a} de {b} clips con personas provocaron tacto · respondiste «{c}»"});
   Object.assign(BUNDLED.fr, {"Tecknet visas bara en gång. Nästa kommer först när du har svarat.": "Le caractère n'apparaît qu'une seule fois. Le suivant n'arrive qu'après votre réponse."});
@@ -3237,6 +3245,71 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const b = ss.length > 1 ? between(ss[0], last) : null;
     return { ss, means, share, b };
   }
+  // ---------- profile: senses as overlapping circles ----------
+  // Overlap = how strongly the answers support the link (share of the smaller circle). Untested circles are dashed and do not overlap.
+  function layoutCircles(st) { // st: {hear,lang,room,taste: null|0..1, touch: bool, col: bool}
+    const W = 358, H = 440, cx = 179, cy = 215;
+    const lens = (d, a, b) => {
+      if (d >= a + b) return 0;
+      if (d <= Math.abs(a - b)) return Math.PI * Math.min(a, b) ** 2;
+      const p = a * a * Math.acos((d * d + a * a - b * b) / (2 * d * a)), q = b * b * Math.acos((d * d + b * b - a * a) / (2 * d * b));
+      return p + q - .5 * Math.sqrt((-d + a + b) * (d + a - b) * (d - a + b) * (d + a + b));
+    };
+    const dist = (a, b, f) => {
+      const tg = f * Math.PI * Math.min(a, b) ** 2; let lo = Math.abs(a - b), hi = a + b;
+      for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (lens(m, a, b) > tg) lo = m; else hi = m; }
+      return (lo + hi) / 2;
+    };
+    const dd = (r1, r2, s) => s === null ? r1 + r2 + 4 : s <= 0 ? r1 + r2 : dist(r1, r2, s);
+    const C = { col: { r: 66, x: cx, y: cy, on: st.col } };
+    const free = (x, y, r, skip) => Object.keys(C).every(k => k === "col" || k === skip || Math.hypot(C[k].x - x, C[k].y - y) >= C[k].r + r + 2);
+    const put = (k, r, ang, s, on) => {
+      const d = dd(66, r, s);
+      let best = null;
+      for (let i = 0; i < 40 && !best; i++) {
+        for (const sg of i ? [1, -1] : [1]) {
+          const a = (ang + sg * i * 3) * Math.PI / 180;
+          const x = Math.min(W - r - 3, Math.max(r + 3, cx + d * Math.cos(a))), y = cy + d * Math.sin(a);
+          if (y - r >= 0 && y + r <= H && free(x, y, r)) { best = { r, x, y, on }; break; }
+        }
+      }
+      C[k] = best || { r, x: Math.min(W - r - 3, Math.max(r + 3, cx + d * Math.cos(ang * Math.PI / 180))), y: cy + d * Math.sin(ang * Math.PI / 180), on };
+    };
+    put("lang", 52, -8, st.lang, st.lang !== null);
+    const rt = 36;
+    let sm = null;
+    if (st.taste !== null) {
+      const f = 66 + rt, l = dd(52, rt, st.taste), L = C.lang, D = Math.hypot(L.x - cx, L.y - cy);
+      const a = (f * f - l * l + D * D) / (2 * D), h2 = f * f - a * a;
+      if (h2 >= 0) {
+        const h = Math.sqrt(h2), ux = (L.x - cx) / D, uy = (L.y - cy) / D;
+        const c = [[cx + a * ux - h * uy, cy + a * uy + h * ux], [cx + a * ux + h * uy, cy + a * uy - h * ux]];
+        sm = c[0][1] > c[1][1] ? c[0] : c[1];
+      }
+    }
+    if (!sm) { const a = 50 * Math.PI / 180, d = 66 + rt + 4; sm = [cx + d * Math.cos(a), cy + d * Math.sin(a)]; }
+    C.taste = { r: rt, x: Math.min(W - rt - 3, sm[0]), y: sm[1], on: st.taste !== null };
+    put("hear", 52, 172, st.hear, st.hear !== null);
+    put("touch", 36, 125, null, st.touch);
+    put("room", 36, -90, st.room, st.room !== null);
+    return C;
+  }
+  
+  function renderCircles() {
+    const LV = { strong: .45, moderate: .3, weak: .15, na: 0 };
+    const lv = k => { const a = assess(k); return a ? LV[a.level] : null; };
+    const top = (...v) => { v = v.filter(x => x !== null); return v.length ? Math.max(...v) : null; };
+    const lgS = trSessions("lg");
+    const taste = lgS.length ? (() => { const sc = lgScore(lgS[lgS.length - 1]).score; return sc === null ? 0 : sc >= 26 ? .3 : .1; })() : null;
+    const st = { col: KEYS.some(k => S.sessions[k].length && k !== "space"), hear: lv("sound"), lang: top(lv("digits"), lv("letters"), lv("time")), room: lv("space"), taste, touch: S.mt.sessions.length > 0 };
+    const C = layoutCircles(st);
+    const NAMES = { sv: ["Färg", "Hörsel", "Språk", "Rum", "Smak", "Känsel"], en: ["Colour", "Hearing", "Language", "Space", "Taste", "Touch"], fr: ["Couleur", "Ouïe", "Langage", "Espace", "Goût", "Toucher"], de: ["Farbe", "Gehör", "Sprache", "Raum", "Geschmack", "Tastsinn"], es: ["Color", "Oído", "Lenguaje", "Espacio", "Gusto", "Tacto"] }[S.lang] || ["Färg", "Hörsel", "Språk", "Rum", "Smak", "Känsel"];
+    const order = [["col", 0, "url(#pc-rainbow)"], ["hear", 1, "#4d8ef0"], ["lang", 2, "#8b7be8"], ["room", 3, "#47bdb1"], ["taste", 4, "#ffb56b"], ["touch", 5, "#ff6fa8"]];
+    let out = `<defs><linearGradient id="pc-rainbow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6fa8"/><stop offset=".35" stop-color="#ffb56b"/><stop offset=".65" stop-color="#47bdb1"/><stop offset="1" stop-color="#8b7be8"/></linearGradient></defs>`;
+    for (const [k, , col] of order) { const c = C[k]; out += `<circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="${c.r}" fill="${col}" fill-opacity="${c.on ? .32 : .07}" stroke="${col}" stroke-opacity="${c.on ? .9 : .7}" stroke-width="2"${c.on ? "" : ' stroke-dasharray="5 4"'}/>`; }
+    for (const [k, i] of order) { const c = C[k]; out += `<text class="cn" x="${c.x.toFixed(1)}" y="${(c.y + (c.r > 40 ? 5 : 4)).toFixed(1)}" style="font-size:${c.r > 40 ? 15 : 12}px">${NAMES[i]}</text>`; }
+    $("profile-circles").innerHTML = out;
+  }
   function renderProfile() {
     const cx = 180, cy = 188, R = 128;
     const SHORT = { sound: "Ljud → färg", digits: "Siffra → färg", letters: "Bokstav → färg", time: "Dag/månad → färg", space: "Tid i rummet" };
@@ -3273,6 +3346,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       if (!n.sum) out += `<text class="ts" x="${lx}" y="${ly + 14}" text-anchor="${anc}">${n.self ? t(n.self) : t("Inget svar")}</text>`;
     });
     $("profile-map").innerHTML = out;
+    renderCircles();
     const A = S.answers, kind = $("profile-kind");
     kind.hidden = !A.where && !S.clan.done && !S.pa.done;
     const low = x => S.lang === "en" ? t(x).replace(/^Yes|^No/, m => m.toLowerCase()) : t(x).toLowerCase();
