@@ -10,6 +10,8 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-11
+- **App** – Bakåtpilen på Min profil och Mina resultat går nu tillbaka till testlistan. Tidigare lades varje byte med länkraden (Välj test / Mina resultat / Min profil) till i historiken, så pilen kunde hamna på fel skärm. Bytena fyller inte längre historiken. (Cajsa)
+- **Text** – Ny länk sist i Läs mer eller delta i forskning (Vad betyder resultatet?, nås via Om synestesi → Läs mer): The Synesthesia Network. Finns på alla språk. (Cajsa)
 - **Test** – Färgväljaren Fält är borttagen (kod och knapp). Kvar: Hjul (standard), HSV, Lab och En i taget. Cajsa valde bort den efter Rickards fråga i ARBETE.md; den som hade valt Fält får Hjul. Färghjulets ring är dessutom mjukare, särskilt runt blått och ljusblått, så att det inte syns någon skarp kant där. Gå tillbaka med `git revert` på commiten "Tar bort färgväljaren Fält". (Cajsa)
 - **Test** – Cajsas färghjul är standard. Rickards provväljare finns kvar som knappar under väljaren: Hjul (standard) / Fält / HSV / Lab, så att ni kan jämföra. Alla sparar svaret som RGB och poängsätts likadant; knapparna stängs av med PICKER_TOGGLE = false. (Rickard)
 - **Test** – Färgväljaren Jämn (OKLCH) är borttagen; Rickard tyckte inte att den blev bra. Kvar att jämföra: Fält, HSV och Lab. Den som hade valt Jämn får Fält. (Rickard)

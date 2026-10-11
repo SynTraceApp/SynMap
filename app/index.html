@@ -2400,6 +2400,16 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const to = b.dataset.nav;
     navEdit = true;
     if (to === "s-intro") { qi = 0; showIntro(); }
+    // Länkraden Välj test / Mina resultat / Min profil: bakåtpilen på resultat och profil går till testlistan, och listan fylls inte med varje byte.
+    const hubs = ["s-choose", "s-results", "s-profile"];
+    const cur = document.querySelector("section[id^='s-']:not([hidden])");
+    if (cur && hubs.includes(cur.id) && hubs.includes(to)) {
+      if (cur.id === to) return;
+      if (to === "s-choose") { while (history[history.length - 1] === "s-choose") history.pop(); }
+      else if (history[history.length - 1] !== "s-choose") history.push("s-choose");
+      go(to, false);
+      return;
+    }
     go(to);
   });
 

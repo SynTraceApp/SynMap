@@ -10,6 +10,7 @@ Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sa
 - Till Cajsa från Rickard (2026-10-11): Fyra färgväljare att jämföra i färgtesterna, valet görs med knapparna Hjul / Fält / HSV / Lab under färgväljaren. Hjul = ditt färghjul, som är standard. Fält = Rickards färgfält (HSL med mjukade övergångar). HSV = nyansremsa och en ruta för mättnad och ljushet, som på selecolor.com. (Jämn, en OKLCH-skala, är borttagen igen: Rickard tyckte inte att den blev bra.) Lab = de optimala färgerna (MacAdam) som punktmoln i CIELAB sett ovanifrån, med ett reglage för ljushet. Alla sparar svaret som RGB och poängsätts likadant. Du väljer vilken som blir kvar; knapparna stängs av med PICKER_TOGGLE = false.
 
 ## Klart
+- Bakåtpilen från profil och resultat till testlistan, och ny länk under Läs mer om synestesi i app/index.html – Cajsa
 - Mjukare färgring och Fält-väljaren borttagen i app/index.html – Cajsa
 - Svart kontur runt tecknen i färgtesterna i app/index.html – Cajsa
 - Plana tecken utan kontur i färgtesterna i app/index.html – Cajsa
