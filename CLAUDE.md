@@ -10,7 +10,12 @@ Två personer arbetar i det här repot, var och en med sin egen Claude. De här 
 5. Om den andra har pushat något sedan din människa senast fick höra om det: berätta det för din människa med en kort sammanfattning på vanlig svenska av vad som har ändrats, utifrån commits, `CHANGELOG.md` och `BESLUT.md`. Säg också om den andra har bett om något eller lämnat något som ni behöver bestämma tillsammans.
 
 ## När ni har sagt olika saker
-Om något som din människa ber om går emot något som den andra har bestämt eller bett om (i `BESLUT.md`, `CHANGELOG.md`, `ARBETE.md` eller koden), säg det till din människa innan du gör ändringen. Säg vad var och en har sagt och var det står. Gör ni ändringen ändå: skriv en rad i `BESLUT.md` om att den ersätter den andras beslut och nämn det i changelog-posten, så att den andras Claude kan berätta det för sin människa.
+Det här är extra viktigt. Om något som din människa ber om går emot något som den andra har bestämt, bett om eller byggt (i `BESLUT.md`, `CHANGELOG.md`, `ARBETE.md` eller koden):
+1. Säg det till din människa innan du gör ändringen: vad var och en har sagt, när och var det står.
+2. Görs ändringen ändå, gör den i en egen commit som bara innehåller den ändringen. Börja commit-meddelandet med `Ändrar <namn>s beslut:` så att den går att hitta med `git log --grep="beslut:"` och ångra med `git revert <commit>`.
+3. Stryk inte den gamla raden i `BESLUT.md`. Lägg till ` (ersatt ÅÅÅÅ-MM-DD av <namn>, se nedan)` sist på den och skriv en ny rad som säger vad som gäller nu och vad den ersätter.
+4. Skriv i changelog-posten att den ersätter den andras beslut och hur man går tillbaka.
+5. Märker du att den andra har ändrat något som din människa har bestämt: säg det direkt till din människa, med vad som ändrades och i vilken commit.
 
 ## Under arbetet
 - Ni arbetar båda direkt i `main`, utan pull requests.
