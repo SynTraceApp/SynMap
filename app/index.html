@@ -2448,11 +2448,20 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // Här mjukas övergången ut inom varje sjättedel i sidled och varje halva i höjdled, så att kanterna försvinner.
   // Alla färger går fortfarande att välja; pick.h och pick.l är samma HSL-värden som förut.
   // SOFT = hur mycket som mjukas ut (0 = vanlig HSL, 1 = helt platt vid kanterna, vilket i stället ger fläckar).
-  const SOFT = 0.5;
+  const SOFT = 0.5, LIFT = 0.6;
   const smooth = (u, n) => { const t = Math.min(Math.max(u, 0), 1) * n, seg = Math.min(n - 1, Math.floor(t)), f = t - seg; return (seg + (1 - SOFT) * f + SOFT * f * f * (3 - 2 * f)) / n; };
   const unsmooth = (v, n) => { v = Math.min(Math.max(v, 0), 1); let lo = 0, hi = 1; for (let k = 0; k < 30; k++) { const m = (lo + hi) / 2; if (smooth(m, n) < v) lo = m; else hi = m; } return (lo + hi) / 2; };
   const xToHue = x => 360 * smooth(x, 6), hueToX = h => unsmooth(h / 360, 6);
-  const yToL = y => 100 * smooth(1 - y, 2), lToY = l => 1 - unsmooth(l / 100, 2);
+  // Gult, grönt och turkos ser mycket ljusare ut än blått på samma höjd, så fältet fick en ljus kupol med en kant (ett upp-och-nervänt U).
+  // Därför ligger den rena färgen högre i fältet för ljusa nyanser och lägre för mörka (efter ljusheten L i OKLab), så att varje rad
+  // ser ungefär lika ljus ut. Varje kolumn går fortfarande från vitt via den rena färgen till svart.
+  const HUE_L = (() => { const lin = v => (v /= 255) <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+    const L = h => { const [r, g, b] = hslToRgb(h, 100, 50).map(lin); return 0.2105 * Math.cbrt(0.4122 * r + 0.5363 * g + 0.0514 * b) + 0.7936 * Math.cbrt(0.2119 * r + 0.6807 * g + 0.1074 * b) - 0.0041 * Math.cbrt(0.0883 * r + 0.2817 * g + 0.6300 * b); };
+    const t = Array.from({ length: 361 }, (_, h) => L(h)), mean = t.reduce((a, x) => a + x, 0) / t.length;
+    return t.map(x => 0.5 - LIFT * (x - mean)); })();
+  const pureY = h => { const i = Math.min(359, Math.max(0, Math.floor(h))); return HUE_L[i] + (HUE_L[i + 1] - HUE_L[i]) * (h - i); };
+  const yToL = (y, h) => { const y0 = pureY(h); y = Math.min(Math.max(y, 0), 1); return 100 * (1 - smooth(y < y0 ? 0.5 * y / y0 : 0.5 + 0.5 * (y - y0) / (1 - y0), 2)); };
+  const lToY = (l, h) => { const y0 = pureY(h), u = unsmooth(1 - l / 100, 2); return u < 0.5 ? 2 * u * y0 : y0 + (2 * u - 1) * (1 - y0); };
   function drawPlane() {
     const w = plane.clientWidth, h = plane.clientHeight, d = window.devicePixelRatio || 1;
     if (!w || !h) return;
@@ -2460,15 +2469,15 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const s = +$("sat").value, img = pctx.createImageData(plane.width, plane.height);
     const hues = Array.from({ length: plane.width }, (_, x) => xToHue(x / (plane.width - 1)));
     for (let y = 0; y < plane.height; y++) {
-      const l = yToL(y / (plane.height - 1));
+      const fy = y / (plane.height - 1);
       for (let x = 0; x < plane.width; x++) {
-        const c = hslToRgb(hues[x], s, l), i = (y * plane.width + x) * 4;
+        const c = hslToRgb(hues[x], s, yToL(fy, hues[x])), i = (y * plane.width + x) * 4;
         img.data[i] = c[0]; img.data[i + 1] = c[1]; img.data[i + 2] = c[2]; img.data[i + 3] = 255;
       }
     }
     pctx.putImageData(img, 0, 0);
     if (pick) {
-      const px = hueToX(pick.h) * plane.width, py = lToY(pick.l) * plane.height;
+      const px = hueToX(pick.h) * plane.width, py = lToY(pick.l, pick.h) * plane.height;
       pctx.lineWidth = 2 * d;
       pctx.strokeStyle = "#000"; pctx.beginPath(); pctx.arc(px, py, 9 * d, 0, 7); pctx.stroke();
       pctx.strokeStyle = "#fff"; pctx.beginPath(); pctx.arc(px, py, 7 * d, 0, 7); pctx.stroke();
@@ -2478,7 +2487,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   function setPick(e) {
     const r = plane.getBoundingClientRect();
     const x = Math.min(Math.max(e.clientX - r.left, 0), r.width), y = Math.min(Math.max(e.clientY - r.top, 0), r.height);
-    pick = { h: xToHue(x / r.width), l: yToL(y / r.height) };
+    const h = xToHue(x / r.width); pick = { h, l: yToL(y / r.height, h) };
     drawPlane(); refreshTrial();
   }
   let drag = false;
@@ -2487,10 +2496,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   plane.addEventListener("pointerup", () => { drag = false; });
   plane.addEventListener("keydown", e => {
     const st = e.shiftKey ? 10 : 2; pick ||= { h: 0, l: 50 };
-    if (e.key === "ArrowLeft") pick.h = xToHue(Math.max(0, hueToX(pick.h) - st / 200));
-    else if (e.key === "ArrowRight") pick.h = xToHue(Math.min(1, hueToX(pick.h) + st / 200));
-    else if (e.key === "ArrowUp") pick.l = yToL(Math.max(0, lToY(pick.l) - st / 100));
-    else if (e.key === "ArrowDown") pick.l = yToL(Math.min(1, lToY(pick.l) + st / 100));
+    const ky = lToY(pick.l, pick.h);
+    if (e.key === "ArrowLeft") { pick.h = xToHue(Math.max(0, hueToX(pick.h) - st / 200)); pick.l = yToL(ky, pick.h); }
+    else if (e.key === "ArrowRight") { pick.h = xToHue(Math.min(1, hueToX(pick.h) + st / 200)); pick.l = yToL(ky, pick.h); }
+    else if (e.key === "ArrowUp") pick.l = yToL(Math.max(0, lToY(pick.l, pick.h) - st / 100), pick.h);
+    else if (e.key === "ArrowDown") pick.l = yToL(Math.min(1, lToY(pick.l, pick.h) + st / 100), pick.h);
     else return;
     e.preventDefault(); drawPlane(); refreshTrial();
   });
