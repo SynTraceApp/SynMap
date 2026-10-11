@@ -1402,6 +1402,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 "Bakom dig": "Behind you",
 "Rummet runt dig, sett uppifrån": "The space around you, seen from above",
 "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "The space seen from above. You stand in the middle, facing forward.",
+"Du fortsätter där du slutade.": "You continue where you left off.",
 "Uppföljningen": "The follow-up",
 "Uppföljningen öppnar om": "The follow-up opens in",
 "Välj nästa test": "Choose next test",
@@ -1758,9 +1759,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   Object.assign(BUNDLED.fr, {"Framför dig": "Devant vous", "Bakom dig": "Derrière vous", "Vänster": "Gauche", "Höger": "Droite", "Rummet runt dig, sett uppifrån": "L'espace autour de vous, vu d'en haut", "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "L'espace vu d'en haut. Vous êtes au centre et regardez devant vous."});
   Object.assign(BUNDLED.de, {"Framför dig": "Vor dir", "Bakom dig": "Hinter dir", "Vänster": "Links", "Höger": "Rechts", "Rummet runt dig, sett uppifrån": "Der Raum um dich, von oben gesehen", "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "Der Raum von oben gesehen. Du stehst in der Mitte und schaust nach vorn."});
   Object.assign(BUNDLED.es, {"Framför dig": "Delante de ti", "Bakom dig": "Detrás de ti", "Vänster": "Izquierda", "Höger": "Derecha", "Rummet runt dig, sett uppifrån": "El espacio a tu alrededor, visto desde arriba", "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "El espacio visto desde arriba. Estás en el centro mirando hacia delante."});
-  Object.assign(BUNDLED.fr, {"Uppföljningen": "Le suivi", "Uppföljningen öppnar om": "Le suivi s'ouvre dans", "Välj nästa test": "Choisir le test suivant"});
-  Object.assign(BUNDLED.de, {"Uppföljningen": "Die Nachuntersuchung", "Uppföljningen öppnar om": "Die Nachuntersuchung öffnet in", "Välj nästa test": "Nächsten Test wählen"});
-  Object.assign(BUNDLED.es, {"Uppföljningen": "El seguimiento", "Uppföljningen öppnar om": "El seguimiento se abre en", "Välj nästa test": "Elegir la siguiente prueba"});
+  Object.assign(BUNDLED.fr, {"Du fortsätter där du slutade.": "Vous reprenez là où vous vous étiez arrêté.", "Uppföljningen": "Le suivi", "Uppföljningen öppnar om": "Le suivi s'ouvre dans", "Välj nästa test": "Choisir le test suivant"});
+  Object.assign(BUNDLED.de, {"Du fortsätter där du slutade.": "Du machst dort weiter, wo du aufgehört hast.", "Uppföljningen": "Die Nachuntersuchung", "Uppföljningen öppnar om": "Die Nachuntersuchung öffnet in", "Välj nästa test": "Nächsten Test wählen"});
+  Object.assign(BUNDLED.es, {"Du fortsätter där du slutade.": "Continúas donde lo dejaste.", "Uppföljningen": "El seguimiento", "Uppföljningen öppnar om": "El seguimiento se abre en", "Välj nästa test": "Elegir la siguiente prueba"});
   Object.assign(BUNDLED.fr, { "Kommer upplevelserna av sig själva, utan att du försöker?": "Ces expériences viennent-elles d'elles-mêmes, sans que vous essayiez ?" });
   Object.assign(BUNDLED.de, { "Kommer upplevelserna av sig själva, utan att du försöker?": "Kommen die Erlebnisse von selbst, ohne dass du es versuchst?" });
   Object.assign(BUNDLED.es, { "Kommer upplevelserna av sig själva, utan att du försöker?": "¿Las experiencias vienen por sí solas, sin que lo intentes?" });
@@ -2272,17 +2273,35 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const p = S.paused[key], left = p ? p.list.length - p.i : stimFor(key).length * REPS;
     return Math.max(1, Math.round(left * EST_SEC[key] / 60) + (key === "sound" || key === "space" ? 0 : 1));
   }
+  // Rutan överst påminner om ett påbörjat test: det som öppnades senast om det är pausat, annars det senast pausade.
+  function pausedTests() {
+    const qnOpen = k => { const m = S[k], n = Object.keys(QN[k].store().a).length; return n > 0 && (m.fu || !m.done); };
+    return KEYS.filter(k => S.paused[k])
+      .concat(S.mt.run && S.mt.run.started ? ["mirror"] : [])
+      .concat(["ol", "lg"].filter(k => S.tr[k].run && S.tr[k].run.started))
+      .concat(["clan", "pa"].filter(qnOpen));
+  }
+  function dropPaused(k) {
+    if (KEYS.includes(k)) delete S.paused[k];
+    else if (k === "mirror") S.mt.run = null;
+    else if (k === "ol" || k === "lg") S.tr[k].run = null;
+    else QN[k].store().a = {};
+    save(); renderChoose();
+  }
   function renderResume() {
-    // Bara det senast pausade testet visas här; de andra fortsätter man från sina kort i listan.
-    const ks = KEYS.filter(k => S.paused[k]).sort((a, b) => (S.paused[b].at || 0) - (S.paused[a].at || 0)).slice(0, 1), box = $("resume-card");
+    const at = k => k === S.lastOpen ? Infinity : (S.paused[k] && S.paused[k].at) || 0;
+    const ks = pausedTests().sort((a, b) => at(b) - at(a)).slice(0, 1), box = $("resume-card");
     box.hidden = !ks.length;
     box.innerHTML = ks.map(k => {
       const p = S.paused[k];
-      return `<div class="stack" style="gap:4px"><b>${t("Pausat test: {x}", { x: t(TESTS[k].title) })}</b><span class="muted small">${t("{i} av {n} svar sparade. Du fortsätter där du slutade.", { i: Math.min(p.i, p.list.length), n: p.list.length })}</span></div>
+      const name = KEYS.includes(k) ? t(TESTS[k].title) : $("pick-" + k).querySelector("b").textContent;
+      const where = KEYS.includes(k) ? t("{i} av {n} svar sparade. Du fortsätter där du slutade.", { i: Math.min(p.i, p.list.length), n: p.list.length })
+        : (k === "mirror" ? mtState() : k === "ol" || k === "lg" ? trState(k) : qnState(k)).label + ". " + t("Du fortsätter där du slutade.");
+      return `<div class="stack" style="gap:4px"><b>${t("Pausat test: {x}", { x: name })}</b><span class="muted small">${where}</span></div>
         <div class="nav-row" style="grid-template-columns:1fr 1fr"><button class="btn soft" data-drop="${k}">${t("Börja om")}</button><button class="btn primary" data-resume="${k}">${t("Fortsätt")}</button></div>`;
     }).join("");
-    box.querySelectorAll("[data-resume]").forEach(b => b.addEventListener("click", () => startTest(b.dataset.resume)));
-    box.querySelectorAll("[data-drop]").forEach(b => b.addEventListener("click", () => { delete S.paused[b.dataset.drop]; save(); renderChoose(); }));
+    box.querySelectorAll("[data-resume]").forEach(b => b.addEventListener("click", () => $("pick-" + b.dataset.resume).click()));
+    box.querySelectorAll("[data-drop]").forEach(b => b.addEventListener("click", () => dropPaused(b.dataset.drop)));
   }
   $("pick-sound").addEventListener("click", () => startTest("sound"));
   $("pick-digits").addEventListener("click", () => startTest("digits"));
@@ -2584,6 +2603,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("mt-prev").disabled = r.i === 0;
   }
   function mtOpen() {
+    S.lastOpen = "mirror";
     if (!S.mt.run && !mtState().open) { go("s-follow"); return; }
     if (!S.mt.run) {
       const order = MT.map(x => x.id);
@@ -2707,6 +2727,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("tr-prev").disabled = r.i === 0;
   }
   function trOpen(key) {
+    S.lastOpen = key;
     trKey = key; const c = TR[key], st = S.tr[key];
     if ((!st.run || (key === "lg" && st.run.fmt !== 2)) && !trState(key).open) { go("s-follow"); return; }
     if (st.run && key === "lg" && st.run.fmt !== 2) st.run = null;
@@ -2815,6 +2836,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("clan-prev").disabled = ci === 0;
   }
   function openQn(k) {
+    S.lastOpen = k;
     const m = S[k];
     if (m.done && !m.fu) { if (!qnState(k).open) { go("s-follow"); return; } m.fu = { a: {}, done: null }; save(); }
     cq = k; const st = QN[k].store(), i = QN[k].items.findIndex((_, j) => !st.a[j + 1]);
@@ -2846,6 +2868,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   function persist() { if (T) { S.paused[T.key] = { list: T.list, i: T.i, responses: T.responses, at: Date.now() }; save(); } }
   function pauseTest() { persist(); T = null; go("s-choose", false); }
   function startTest(key) {
+    S.lastOpen = key;
     const p = S.paused[key];
     if (!p && !testState(key).open) { go("s-follow"); return; }
     T = p ? { key, list: p.list.slice(), i: p.i, responses: p.responses.slice() } : { key, list: shuffled(stimFor(key)), i: 0, responses: [] };
@@ -3375,40 +3398,51 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     for (const [k, i] of order) { const c = C[k]; out += `<text class="cn" x="${c.x.toFixed(1)}" y="${(c.y + (c.r > 40 ? 5 : 4)).toFixed(1)}" style="font-size:${c.r > 40 ? 15 : 12}px">${NAMES[i]}</text>`; }
     $("profile-circles").innerHTML = out;
   }
+  // Personlighet, Ord → smak och Spegelberöring får en ring i kartan när testet är gjort: andelen tecken, ord eller klipp som gav en upplevelse.
+  function testRing(q) {
+    const col = { pers: [139, 123, 232], taste: [255, 181, 107], touch: [255, 111, 168] }[q];
+    const last = l => l[l.length - 1];
+    let share = null;
+    if (q === "pers" && trSessions("ol").length) { const m = trScore("ol", last(trSessions("ol"))); share = m.n / m.total; }
+    if (q === "taste" && trSessions("lg").length) { const m = lgScore(last(trSessions("lg"))); share = m.withTaste / m.total; }
+    if (q === "touch" && S.mt.sessions.length) { const m = mtScore(last(S.mt.sessions)); share = m.nHuman ? m.human / m.nHuman : 0; }
+    return share === null ? null : { share, means: [col, col, col, col] };
+  }
   function renderProfile() {
     const cx = 180, cy = 188, R = 128;
     const SHORT = { sound: "Ljud → färg", digits: "Siffra → färg", letters: "Bokstav → färg", time: "Dag/månad → färg", space: "Tid i rummet" };
     const nodes = [
       ...KEYS.map(k => ({ key: k, name: t(SHORT[k]), sum: testSummary(k), self: S.answers[ASKED[k]], a: assess(k) })),
-      ...SELF.map(x => ({ name: t(x.name), q: x.q, self: S.answers[x.q] }))
+      ...SELF.map(x => ({ name: t(x.name), q: x.q, self: S.answers[x.q], ring: testRing(x.q) }))
     ];
     const NS = "http://www.w3.org/2000/svg";
     let out = "";
     const pts = nodes.map((n, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / nodes.length; return [cx + Math.cos(a) * R, cy + Math.sin(a) * R * .92]; });
     nodes.forEach((n, i) => {
-      const w = n.sum ? Math.max(n.sum.share, .08) : (SELF_W[n.self] ?? 0);
+      const g = n.sum || n.ring, w = g ? Math.max(g.share, .08) : (SELF_W[n.self] ?? 0);
       const [x, y] = pts[i];
-      out += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="var(--violet)" stroke-opacity="${.15 + w * .55}" stroke-width="${1 + w * 4}" ${n.sum ? "" : 'stroke-dasharray="4 4"'}/>`;
+      out += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="var(--violet)" stroke-opacity="${.15 + w * .55}" stroke-width="${1 + w * 4}" ${g ? "" : 'stroke-dasharray="4 4"'}/>`;
     });
     out += `<circle cx="${cx}" cy="${cy}" r="30" fill="var(--violet-soft)" stroke="var(--violet)" stroke-width="1.5"/><text class="tc" x="${cx}" y="${cy + 5}" text-anchor="middle">${t("Du")}</text>`;
     nodes.forEach((n, i) => {
       const [x, y] = pts[i];
-      if (n.sum) {
-        const r = 24, segs = n.sum.means, k = segs.length;
+      const g = n.sum || n.ring;
+      if (g) {
+        const r = 24, segs = g.means, k = segs.length;
         segs.forEach((c, j) => {
           const a0 = -Math.PI / 2 + j * 2 * Math.PI / k, a1 = a0 + 2 * Math.PI / k;
           const p = (a, rr) => `${(x + Math.cos(a) * rr).toFixed(1)} ${(y + Math.sin(a) * rr).toFixed(1)}`;
           out += `<path d="M${p(a0, r)} A${r} ${r} 0 0 1 ${p(a1, r)} L${p(a1, r - 8)} A${r - 8} ${r - 8} 0 0 0 ${p(a0, r - 8)}Z" fill="${c ? css(c) : "var(--line)"}" stroke="var(--card)" stroke-width="1"/>`;
         });
-        out += `<circle cx="${x}" cy="${y}" r="${r - 8}" fill="var(--card)"/><text class="pc" x="${x}" y="${y + 4}" text-anchor="middle">${Math.round(n.sum.share * 100)}%</text>`;
+        out += `<circle cx="${x}" cy="${y}" r="${r - 8}" fill="var(--card)"/><text class="pc" x="${x}" y="${y + 4}" text-anchor="middle">${Math.round(g.share * 100)}%</text>`;
       } else {
         out += `<circle cx="${x}" cy="${y}" r="16" fill="var(--card)" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="3 3"/>`;
       }
-      const top = y < cy - 20, ly = y + (top ? (n.sum ? -32 : -36) : (n.sum ? 40 : 32));
+      const top = y < cy - 20, ly = y + (top ? (g ? -32 : -36) : (g ? 40 : 32));
       // The two bottom labels sit close together, so they are pushed apart from the middle.
       const near = !top && y > cy && Math.abs(x - cx) < 70, anc = near ? (x < cx ? "end" : "start") : "middle", lx = near ? x + (x < cx ? 18 : -18) : x;
       out += `<text class="t" x="${lx}" y="${ly}" text-anchor="${anc}">${n.name}</text>`;
-      if (!n.sum) out += `<text class="ts" x="${lx}" y="${ly + 14}" text-anchor="${anc}">${n.self ? t(n.self) : t("Inget svar")}</text>`;
+      if (!g) out += `<text class="ts" x="${lx}" y="${ly + 14}" text-anchor="${anc}">${n.self ? t(n.self) : t("Inget svar")}</text>`;
     });
     $("profile-map").innerHTML = out;
     renderCircles();
