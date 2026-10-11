@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-11
+- **Text** – Spegelberöring: svarsknappen heter "Nej" igen i stället för "Njae", på Rickards begäran. (Rickard)
 - **Frågor** – Testet "Kartläggning: alla sinnen" (19 frågor som korsar alla sinnesintryck) heter nu "Självskattning: alla sinnen". Kortet, frågesidan och sammanfattningen säger tydligt att det inte är ett riktigt test utan din egen beskrivning, och att svaren bara visar vad de kan tyda på. Engelska är uppdaterad; franska, tyska och spanska finns inte för det här testet än. (Cajsa)
 - **App** – app/index.html är nu Cajsas senaste version från Claude, ihopslagen med Rickards ändringar (Njae, samtyckesfrågan och Forskningsunderlag dolda via RESEARCH_ON = false). Utöver det som redan stod här: översättningar till franska, tyska och spanska för hela appen utom testet Självskattning, profilträdet i Om appen som text så att det översätts, egen stil för onumrerade poster i Om appen, och att svaren sparas kvar när appen startas om (i artefakten även i användarens privata lager i claude.ai; i den vanliga filen bara i webbläsaren). Testet Självskattning (tidigare Kartläggning) kom med från en annan session. (Cajsa)
 - **Repo** – Nytt beslut i BESLUT.md: samtyckesfrågan och Forskningsunderlag förblir dolda tills ni har bestämt om delad insamling. (Rickard)
