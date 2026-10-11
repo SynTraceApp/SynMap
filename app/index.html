@@ -2106,6 +2106,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const b = [...scr.querySelectorAll(`[id$="-${e.key === "ArrowLeft" ? "prev" : "next"}"]`)].find(x => x.offsetParent && !x.disabled);
     if (b) { e.preventDefault(); b.click(); }
   });
+  // Ett reglage som man har dragit i med mus eller finger släpper fokus, så att piltangenterna byter fråga i stället för att flytta reglaget.
+  document.addEventListener("pointerup", e => { if (ARROW_NAV && e.target.matches?.('input[type="range"]')) setTimeout(() => e.target.blur()); });
   $("go-about").addEventListener("click", () => { setMenu(false); $("about").hidden = false; });
   $("go-about-app").addEventListener("click", () => { setMenu(false); go("s-about-app"); });
   $("about-close").addEventListener("click", () => { $("about").hidden = true; });

@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-11
+- **App** – Testhjälpen med piltangenterna: ett reglage (staplarna i Ord → smak, styrkan i Spegelberöring, mättnaden i färgväljaren) släpper fokus när man har dragit i det med mus eller finger. Då byter vänster- och högerpil fråga i stället för att flytta reglaget. Med Tab kan man fortfarande flytta reglaget med pilarna. Försvinner tillsammans med ARROW_NAV före release. (Rickard)
 - **Design** – Ny knapp i menyn på startskärmen: Färgneutral version. Den gör hela appen grå (knappar, ikoner, startbilden, profilens cirklar) och sparas i webbläsaren. Samma knapp heter sedan Visa appen i färg. Testytorna och de färger man själv har valt (färgväljaren, ringarna i profilen) behåller sina färger. Fungerar i ljust och mörkt läge. (Rickard)
 - **App** – Rutan med pausat test överst i Välj test gäller nu alla tester, inte bara färgtesterna och Tid i rummet. Den visar också Personlighet, Ord → smak, Spegelberöring och de två enkäterna när de är påbörjade. Visas det test man senast öppnade, om det är pausat, annars det som pausades senast. Börja om nollställer just det testet. (Rickard)
 - **Resultat** – Min profil: Personlighet, Ord → smak och Spegelberöring får en ring med en procentsiffra i kartan när testet är gjort, som de andra testerna. Siffran är andelen tecken, ord eller klipp som gav en upplevelse. Tidigare syntes de bara som svar på de inledande frågorna. (Rickard)
