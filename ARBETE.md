@@ -3,9 +3,9 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
-- Flytta Börja-knappen tillbaka till sin plats på startsidan i app/index.html – Cajsa
 
 ## Klart
+- Börja-knappens plats på startsidan återställd – Cajsa
 - Pseudonymer i upphovsraderna i app/index.html – Cajsa
 - Dämpad orange för Pausat/Påbörjad, spanska profiltexter och Kopiera adress i app/index.html – Cajsa
 - Länkrad, ikonrad och kontaktadress i app/index.html – Cajsa
