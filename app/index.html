@@ -2110,9 +2110,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("intro-opts").querySelectorAll(".opt").forEach((b, i) => b.addEventListener("click", () => { S.answers[q.id] = q.opts[i]; save(); showIntro(); }));
     $("intro-next").disabled = !S.answers[q.id];
     $("intro-next").textContent = t(qi === list.length - 1 ? "Klar" : "Nästa");
-    $("intro-prev").disabled = qi === 0;
+    // On the first question the button leads back to About you, except when editing from the links.
+    $("intro-prev").disabled = qi === 0 && navEdit;
   }
-  $("intro-prev").addEventListener("click", () => { if (qi > 0) { qi--; showIntro(); } });
+  let bgFromIntro = false;
+  $("intro-prev").addEventListener("click", () => { if (qi > 0) { qi--; showIntro(); } else if (!navEdit) { bgFromIntro = true; go("s-bg"); } });
   $("intro-back").addEventListener("click", () => { if (qi > 0) { qi--; showIntro(); } else if (navEdit) {
     // Editing from the three links: back goes to the test list, dropping the detour from the history.
     const i = history.lastIndexOf("s-choose");
@@ -2148,7 +2150,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   $("bg-age").addEventListener("input", e => { const v = parseInt(e.target.value, 10); S.bg.age = v >= 5 && v <= 120 ? v : undefined; save(); });
   $("bg-lang").addEventListener("input", e => { S.bg.lang = e.target.value.trim() || undefined; save(); });
   $("bg-back").addEventListener("click", () => go(history.pop() || "s-welcome", false));
-  $("bg-done").addEventListener("click", () => { S.bg.done = true; save(); startFlow(); });
+  $("bg-done").addEventListener("click", () => { S.bg.done = true; save(); if (bgFromIntro) { bgFromIntro = false; qi = 0; showIntro(); go("s-intro"); } else startFlow(); });
 
   // ---------- choose ----------
   function testState(key) {

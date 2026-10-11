@@ -3,9 +3,9 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
-- Föregående på första inledande frågan går tillbaka till Om dig i app/index.html – Rickard
 
 ## Klart
+- Föregående på första inledande frågan går tillbaka till Om dig i app/index.html – Rickard
 - Överlappande cirklar överst i Din synestesiprofil i app/index.html – Cajsa
 - Menyn utan Om dig, Kopierad-etikett och länkradens plats på Inledande frågor i app/index.html – Cajsa
 - Snabbtest som väntar på svar, färgrektangel i ljudtestet och kopierbar kontaktadress i app/index.html – Cajsa
