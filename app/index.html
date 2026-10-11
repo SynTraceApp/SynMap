@@ -2173,16 +2173,18 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     return { label: t("Uppföljning öppnar {d}", { d: fmtDate(due) }), cls: "orange", open: false, due };
   }
   function renderChoose() {
-    // Recommended tests come first, sorted by how strongly the intro answers point to them; the rest wait under "Fler tester".
+    // Recommended tests come first, sorted by how strongly the intro answers point to them and then by time; the rest wait under "Fler tester".
     // A test someone has already started stays in the main list. Before any intro answer, or with only Nej, everything is shown.
     const SRC = { sound: "sound", digits: "graph", letters: "graph", time: "timecol", space: "space", mirror: "touch", ol: "pers", lg: "taste", clan: "graph", pa: "graph" };
     const W = { "Ja, tydligt": 3, "Ibland": 2, "Vet inte": 1 };
     const ALL = [...KEYS, "mirror", "ol", "clan", "pa", "lg"];
-    const score = k => (W[S.answers[SRC[k]]] || 0) * 10 - (k === "clan" || k === "pa" ? 1 : 0);
+    const score = k => W[S.answers[SRC[k]]] || 0;
+    // Within the same strength the shortest test comes first (minutes as shown on the card).
+    const mins = k => KEYS.includes(k) ? estMin(k) : { clan: 3, pa: 2, ol: 3, lg: 30, mirror: 5 }[k];
     const started = k => KEYS.includes(k) ? S.sessions[k].length || S.paused[k] : k === "mirror" ? S.mt.sessions.length || S.mt.run : k === "clan" ? Object.keys(S.clan.a).length : k === "pa" ? Object.keys(S.pa.a).length : trState(k).label !== t("Ej påbörjat");
     const recd = new Set(ALL.filter(k => score(k) > 0));
     const all = !recd.size;
-    const order = ALL.map((k, i) => [k, i]).sort((a, b) => score(b[0]) - score(a[0]) || a[1] - b[1]).map(([k]) => k);
+    const order = ALL.map((k, i) => [k, i]).sort((a, b) => score(b[0]) - score(a[0]) || mins(a[0]) - mins(b[0]) || a[1] - b[1]).map(([k]) => k);
     for (const k of order) (all || recd.has(k) || started(k) ? $("rec-list") : $("more-list")).appendChild($("pick-" + k));
     $("rec-list").prepend($("pick-intro")); $("rec-list").prepend($("pick-map")); $("pick-map").style.display = "none"; // self-rating is switched off for now
     $("more-tests").hidden = !$("more-list").children.length;
