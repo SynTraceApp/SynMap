@@ -2173,18 +2173,19 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     return { label: t("Uppföljning öppnar {d}", { d: fmtDate(due) }), cls: "orange", open: false, due };
   }
   function renderChoose() {
-    // Every test is listed. The intro answers only mark which ones are recommended (a small chip), everything not answered "Nej".
-    const answered = KEYS.filter(k => S.answers[ASKED[k]]);
-    const rec = answered.filter(k => S.answers[ASKED[k]] !== "Nej");
-    const all = !rec.length;
-    const recd = new Set(all ? [] : rec);
-    if (!all && S.answers.touch && S.answers.touch !== "Nej") recd.add("mirror");
-    if (!all && S.answers.graph && S.answers.graph !== "Nej") { recd.add("clan"); recd.add("pa"); }
-    if (!all && S.answers.pers && S.answers.pers !== "Nej") recd.add("ol");
-    if (!all && S.answers.taste && S.answers.taste !== "Nej") recd.add("lg");
-    for (const k of [...KEYS, "mirror", "ol", "clan", "pa", "lg"]) $("rec-list").appendChild($("pick-" + k));
+    // Recommended tests come first, sorted by how strongly the intro answers point to them; the rest wait under "Fler tester".
+    // A test someone has already started stays in the main list. Before any intro answer, or with only Nej, everything is shown.
+    const SRC = { sound: "sound", digits: "graph", letters: "graph", time: "timecol", space: "space", mirror: "touch", ol: "pers", lg: "taste", clan: "graph", pa: "graph" };
+    const W = { "Ja, tydligt": 3, "Ibland": 2, "Vet inte": 1 };
+    const ALL = [...KEYS, "mirror", "ol", "clan", "pa", "lg"];
+    const score = k => (W[S.answers[SRC[k]]] || 0) * 10 - (k === "clan" || k === "pa" ? 1 : 0);
+    const started = k => KEYS.includes(k) ? S.sessions[k].length || S.paused[k] : k === "mirror" ? S.mt.sessions.length || S.mt.run : k === "clan" ? Object.keys(S.clan.a).length : k === "pa" ? Object.keys(S.pa.a).length : trState(k).label !== t("Ej påbörjat");
+    const recd = new Set(ALL.filter(k => score(k) > 0));
+    const all = !recd.size;
+    const order = ALL.map((k, i) => [k, i]).sort((a, b) => score(b[0]) - score(a[0]) || a[1] - b[1]).map(([k]) => k);
+    for (const k of order) (all || recd.has(k) || started(k) ? $("rec-list") : $("more-list")).appendChild($("pick-" + k));
     $("rec-list").prepend($("pick-intro")); $("rec-list").prepend($("pick-map")); $("pick-map").style.display = "none"; // self-rating is switched off for now
-    $("more-tests").hidden = true;
+    $("more-tests").hidden = !$("more-list").children.length;
     $("rec-h").hidden = true;
     for (const k of [...KEYS, "mirror", "ol", "clan", "pa", "lg"]) {
       const meta = $("pick-" + k).querySelector(".meta"); meta.querySelectorAll(".rec-chip").forEach(e => e.remove());
