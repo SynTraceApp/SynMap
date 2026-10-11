@@ -9,6 +9,9 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Skriv för en människa, inte för en dator. Säg vad användaren märker eller vad den andra behöver veta, inte vilka rader som ändrats.
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
+## 2026-10-11
+- **Frågor** – Ny enkät "Självskattning (inget test)": 11 påståenden där man själv bedömer hur väl de stämmer (kommer av sig själv, går inte att stänga av, likadana år efter år, funnits sedan barndomen, släkt, flera sammankopplingar, inlärda kopplingar, hjälp att minnas). Står först under Välj test. Texten säger tydligt att det inte är ett riktigt test, att svaren inte kan visa om man har synestesi och att de inte påverkar den samlade bedömningen. Resultatkort och med i JSON-exporten (self_rating). Översatt till engelska, franska, tyska och spanska. På grenen `cajsa-synmap`. (Cajsa)
+
 ## 2026-10-10
 - **Test** – Föregående och Nästa i alla tester utom snabbtestet. I färgtesterna och Tid i rummet behålls svaret när man går tillbaka (färgen eller platsen visas igen) och Nästa går vidare utan att man svarar om. Spegelberöring har fått Föregående och Nästa. Snabbtestet är tidsstyrt och saknar dem med flit. På grenen `cajsa-synmap`. (Cajsa)
 - **App** – Gren `cajsa-synmap`: Cajsas utvecklade version av appen (arbetsversion från Claude). Ny välkomstsida med meny (Om appen, Om synestesi, Forskningsunderlag), språkval (svenska, engelska, franska, tyska, spanska med inbyggda översättningar), samtyckesfråga först, bilder och ikoner i Om appen, mörk bedömningspanel och profilträd som text, egen stil för onumrerade poster, och att resultaten sparas kvar vid omstart. Rickards ändring "Njae" är med. Inte ihopslagen med main än. (Cajsa)
