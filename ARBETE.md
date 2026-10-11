@@ -5,6 +5,7 @@ Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sa
 ## Pågår
 
 ## Klart
+- Personifiering och Ord → smak, Börja-knapp, ny ordning i Om appen – Cajsa
 - Startskärm, alla tester i Välj test, Så funkar SynMap – Cajsa
 - Projektor–associator-enkät och spegelberöringstest – Rickard
 - Dela med forskare via studiekod i stället för e-post – Rickard
