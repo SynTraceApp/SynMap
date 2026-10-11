@@ -3,6 +3,7 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
+- Föra in Om dig borttagen ur menyn, Kopierad-etikett och länkradens plats på Inledande frågor i app/index.html – Cajsa
 
 ## Klart
 - Snabbtest som väntar på svar, färgrektangel i ljudtestet och kopierbar kontaktadress i app/index.html – Cajsa
