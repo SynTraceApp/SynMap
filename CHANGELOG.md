@@ -9,6 +9,10 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Skriv för en människa, inte för en dator. Säg vad användaren märker eller vad den andra behöver veta, inte vilka rader som ändrats.
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
+## 2026-10-11
+- **App** – Ändringarna i "SynMap Prototyp.html" (uppladdad av cajsag73 den 10 oktober) är nu införda i app/index.html, ovanpå Njae-ändringen. Det gäller mörk välkomstsida med bild och nya färgband, knappen Start, en meny med Om appen, Om synestesi, Forskningsunderlag och språkval, en ny skärm "Om appen" med illustrationer, samt franska, tyska och spanska. Det som saknas i de inbyggda översättningarna maskinöversätts i artefakten via claude.ai och märks som inte validerat. (cajsag73, infört av Rickard)
+- **App** – Obs: samtyckesfrågan ("Vill du låta dina resultat bli en del av vår studie?") och skärmen Forskningsunderlag finns i koden, men den delade databasen är inte påslagen i artefakten. Inget skickas alltså än, och Forskningsunderlag visar att det inte gick att läsa. Att slå på det strider mot beslutet om ingen automatisk insamling i BESLUT.md och väntar på ett nytt beslut. (Rickard)
+
 ## 2026-10-10
 - **Text** – Spegelberöring: svarsknappen "Nej" efter varje klipp heter nu "Njae" (engelska "Not really"). Det räknas fortfarande som att man inte kände något. (Rickard)
 
