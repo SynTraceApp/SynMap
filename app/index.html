@@ -63,6 +63,10 @@
 }
 [data-palette="neutral"] .ribbons, [data-palette="neutral"] .icon-disc, [data-palette="neutral"] #profile-circles, [data-palette="neutral"] .logo, [data-palette="neutral"] #s-welcome { filter: grayscale(1); }
 * { box-sizing: border-box; }
+.ctext-out { font-family: var(--stimulus); font-weight: 700; font-size: 20px; line-height: 1.4; letter-spacing: .04em; word-break: break-word; background: var(--stage-light); border-radius: 12px; padding: 8px 12px; color: var(--neutral); }
+.ctext-out.big { font-size: 30px; min-height: 58px; }
+.ctext-out span { -webkit-text-stroke: .4px rgba(0, 0, 0, .25); }
+#ctext-in { font: inherit; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
 [hidden] { display: none !important; }
 html, body { min-height: 100%; }
 body { background: var(--page); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.5; padding: 0 16px; }
@@ -867,6 +871,13 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <p class="muted small">Ringarna runt testade typer visar färgerna du valde. Siffran i mitten är hur stor andel av tecknen eller ljuden som gav en färg. Streckade cirklar är typer du bara har svarat på i de inledande frågorna.</p>
     <div class="card kind" id="profile-kind" hidden></div>
     <div class="card" id="profile-list" style="padding-block:6px"></div>
+    <div class="card stack" id="ctext" hidden>
+      <b>Din text i dina färger</b>
+      <span class="muted small">Skriv något och se det i de färger du valde för siffror och bokstäver. Tecken utan färg visas i grått. Det här öppnas först när uppföljningen är gjord, så att färgerna inte påverkar svaren.</span>
+      <div class="ctext-out" id="ctext-abc" aria-hidden="true"></div>
+      <input type="text" id="ctext-in" maxlength="120" aria-label="Din text">
+      <div class="ctext-out big" id="ctext-out"></div>
+    </div>
     <div class="grow"></div>
     <div class="links-row"><button class="text-btn" id="profile-meaning">Vad betyder det?</button></div>
     <button class="btn primary" id="profile-choose">Gör fler tester</button>
@@ -1424,6 +1435,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "The space seen from above. You stand in the middle, facing forward.",
 "Färgneutral version": "Colour-neutral version",
 "Visa appen i färg": "Show the app in colour",
+"Din text i dina färger": "Your text in your colours",
+"Skriv något och se det i de färger du valde för siffror och bokstäver. Tecken utan färg visas i grått. Det här öppnas först när uppföljningen är gjord, så att färgerna inte påverkar svaren.": "Type something and see it in the colours you chose for digits and letters. Characters without a colour are shown in grey. This opens only after the follow-up, so that the colours do not affect your answers.",
+"Din text": "Your text",
+"Hej, jag heter Anna": "Hi, my name is Anna",
 "Du fortsätter där du slutade.": "You continue where you left off.",
 "Uppföljningen": "The follow-up",
 "Uppföljningen öppnar om": "The follow-up opens in",
@@ -1781,9 +1796,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   Object.assign(BUNDLED.fr, {"Framför dig": "Devant vous", "Bakom dig": "Derrière vous", "Vänster": "Gauche", "Höger": "Droite", "Rummet runt dig, sett uppifrån": "L'espace autour de vous, vu d'en haut", "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "L'espace vu d'en haut. Vous êtes au centre et regardez devant vous."});
   Object.assign(BUNDLED.de, {"Framför dig": "Vor dir", "Bakom dig": "Hinter dir", "Vänster": "Links", "Höger": "Rechts", "Rummet runt dig, sett uppifrån": "Der Raum um dich, von oben gesehen", "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "Der Raum von oben gesehen. Du stehst in der Mitte und schaust nach vorn."});
   Object.assign(BUNDLED.es, {"Framför dig": "Delante de ti", "Bakom dig": "Detrás de ti", "Vänster": "Izquierda", "Höger": "Derecha", "Rummet runt dig, sett uppifrån": "El espacio a tu alrededor, visto desde arriba", "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "El espacio visto desde arriba. Estás en el centro mirando hacia delante."});
-  Object.assign(BUNDLED.fr, {"Färgneutral version": "Version aux couleurs neutres", "Visa appen i färg": "Afficher l'application en couleur", "Du fortsätter där du slutade.": "Vous reprenez là où vous vous étiez arrêté.", "Uppföljningen": "Le suivi", "Uppföljningen öppnar om": "Le suivi s'ouvre dans", "Välj nästa test": "Choisir le test suivant"});
-  Object.assign(BUNDLED.de, {"Färgneutral version": "Farbneutrale Version", "Visa appen i färg": "App in Farbe anzeigen", "Du fortsätter där du slutade.": "Du machst dort weiter, wo du aufgehört hast.", "Uppföljningen": "Die Nachuntersuchung", "Uppföljningen öppnar om": "Die Nachuntersuchung öffnet in", "Välj nästa test": "Nächsten Test wählen"});
-  Object.assign(BUNDLED.es, {"Färgneutral version": "Versión de color neutro", "Visa appen i färg": "Mostrar la app en color", "Du fortsätter där du slutade.": "Continúas donde lo dejaste.", "Uppföljningen": "El seguimiento", "Uppföljningen öppnar om": "El seguimiento se abre en", "Välj nästa test": "Elegir la siguiente prueba"});
+  Object.assign(BUNDLED.fr, {"Din text i dina färger": "Votre texte dans vos couleurs", "Skriv något och se det i de färger du valde för siffror och bokstäver. Tecken utan färg visas i grått. Det här öppnas först när uppföljningen är gjord, så att färgerna inte påverkar svaren.": "Écrivez quelque chose et voyez-le dans les couleurs que vous avez choisies pour les chiffres et les lettres. Les caractères sans couleur apparaissent en gris. Cela ne s'ouvre qu'après le suivi, afin que les couleurs n'influencent pas vos réponses.", "Din text": "Votre texte", "Hej, jag heter Anna": "Bonjour, je m'appelle Anna", "Färgneutral version": "Version aux couleurs neutres", "Visa appen i färg": "Afficher l'application en couleur", "Du fortsätter där du slutade.": "Vous reprenez là où vous vous étiez arrêté.", "Uppföljningen": "Le suivi", "Uppföljningen öppnar om": "Le suivi s'ouvre dans", "Välj nästa test": "Choisir le test suivant"});
+  Object.assign(BUNDLED.de, {"Din text i dina färger": "Dein Text in deinen Farben", "Skriv något och se det i de färger du valde för siffror och bokstäver. Tecken utan färg visas i grått. Det här öppnas först när uppföljningen är gjord, så att färgerna inte påverkar svaren.": "Schreib etwas und sieh es in den Farben, die du für Ziffern und Buchstaben gewählt hast. Zeichen ohne Farbe werden grau angezeigt. Das öffnet sich erst nach der Nachuntersuchung, damit die Farben deine Antworten nicht beeinflussen.", "Din text": "Dein Text", "Hej, jag heter Anna": "Hallo, ich heiße Anna", "Färgneutral version": "Farbneutrale Version", "Visa appen i färg": "App in Farbe anzeigen", "Du fortsätter där du slutade.": "Du machst dort weiter, wo du aufgehört hast.", "Uppföljningen": "Die Nachuntersuchung", "Uppföljningen öppnar om": "Die Nachuntersuchung öffnet in", "Välj nästa test": "Nächsten Test wählen"});
+  Object.assign(BUNDLED.es, {"Din text i dina färger": "Tu texto en tus colores", "Skriv något och se det i de färger du valde för siffror och bokstäver. Tecken utan färg visas i grått. Det här öppnas först när uppföljningen är gjord, så att färgerna inte påverkar svaren.": "Escribe algo y míralo en los colores que elegiste para números y letras. Los caracteres sin color se muestran en gris. Esto se abre solo después del seguimiento, para que los colores no influyan en tus respuestas.", "Din text": "Tu texto", "Hej, jag heter Anna": "Hola, me llamo Anna", "Färgneutral version": "Versión de color neutro", "Visa appen i färg": "Mostrar la app en color", "Du fortsätter där du slutade.": "Continúas donde lo dejaste.", "Uppföljningen": "El seguimiento", "Uppföljningen öppnar om": "El seguimiento se abre en", "Välj nästa test": "Elegir la siguiente prueba"});
   Object.assign(BUNDLED.fr, { "Kommer upplevelserna av sig själva, utan att du försöker?": "Ces expériences viennent-elles d'elles-mêmes, sans que vous essayiez ?" });
   Object.assign(BUNDLED.de, { "Kommer upplevelserna av sig själva, utan att du försöker?": "Kommen die Erlebnisse von selbst, ohne dass du es versuchst?" });
   Object.assign(BUNDLED.es, { "Kommer upplevelserna av sig själva, utan att du försöker?": "¿Las experiencias vienen por sí solas, sin que lo intentes?" });
@@ -3462,7 +3477,32 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     if (q === "touch" && S.mt.sessions.length) { const m = mtScore(last(S.mt.sessions)); share = m.nHuman ? m.human / m.nHuman : 0; }
     return share === null ? null : { share, means: [col, col, col, col] };
   }
+  // ---------- din text i dina färger (prov, Cajsa avgör om den blir kvar) ----------
+  // Visar bara färger från siffer- och bokstavstester som har en uppföljning, så att man inte kan lägga färgerna på minnet före den.
+  const CTEXT_ON = true;
+  function ctextColours() {
+    const map = {};
+    for (const k of ["digits", "letters"]) {
+      const ss = S.sessions[k]; if (ss.length < 2) continue;
+      const by = {}; for (const r of ss[ss.length - 1].responses) if (r.rgb) (by[r.s] ||= []).push(r.rgb);
+      for (const st in by) map[st.toLocaleUpperCase()] = meanRgb(by[st]);
+    }
+    return map;
+  }
+  function paintText(el, str, map) {
+    el.replaceChildren(...[...str].map(ch => { const sp = document.createElement("span"), c = map[ch.toLocaleUpperCase()]; sp.textContent = ch; if (c) sp.style.color = css(c); return sp; }));
+  }
+  function renderCtext() {
+    const map = ctextColours(), keys = Object.keys(map);
+    $("ctext").hidden = !CTEXT_ON || !keys.length;
+    if ($("ctext").hidden) return;
+    paintText($("ctext-abc"), keys.filter(k => /\d/.test(k)).sort().join("") + " " + keys.filter(k => !/\d/.test(k)).sort((a, b) => a.localeCompare(b, "sv")).join(""), map);
+    if (!$("ctext-in").value) $("ctext-in").value = t("Hej, jag heter Anna");
+    paintText($("ctext-out"), $("ctext-in").value, map);
+  }
+  $("ctext-in").addEventListener("input", () => paintText($("ctext-out"), $("ctext-in").value, ctextColours()));
   function renderProfile() {
+    renderCtext();
     const cx = 180, cy = 188, R = 128;
     const SHORT = { sound: "Ljud → färg", digits: "Siffra → färg", letters: "Bokstav → färg", time: "Dag/månad → färg", space: "Tid i rummet" };
     const nodes = [

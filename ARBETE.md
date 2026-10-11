@@ -6,6 +6,7 @@ Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sa
 
 ## Frågor till den andra
 - Till Cajsa från Rickard (2026-10-11): Färgfältet i färgtesterna. Rickard ser en kant som ett upp-och-nervänt U runt gult, grönt och turkos, och tycker att fältet skär i ögonen. Det har ändrats tre gånger i dag: mjukare övergångar mellan nyanserna, och den rena färgen ligger högre för ljusa nyanser och lägre för mörka (se CHANGELOG 2026-10-11). Han ser fortfarande kanten. Mättnaden ska inte sänkas. Hur upplever du fältet, ser du kanten, och har du förslag? Svara här eller i CHANGELOG.
+- Till Cajsa från Rickard (2026-10-11): Ny funktion att pröva, "Din text i dina färger" längst ner i Min profil. Man skriver text och ser den i sina egna färger för siffror och bokstäver. Den öppnas först när uppföljningen för siffror eller bokstäver är gjord, eftersom man annars kan lägga färgerna på minnet och få bättre konsistens än man har. Rickard var orolig för just det men tror att det kan vara givande för synestetiker. Du avgör om den ska vara kvar: stäng av med CTEXT_ON = false i app/index.html.
 
 ## Klart
 - Föregående på första inledande frågan går tillbaka till Om dig i app/index.html – Rickard
