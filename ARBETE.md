@@ -3,6 +3,7 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
+- Överlappande cirklar överst i Din synestesiprofil (app/index.html) – Cajsa
 
 ## Klart
 - Menyn utan Om dig, Kopierad-etikett och länkradens plats på Inledande frågor i app/index.html – Cajsa
