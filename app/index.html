@@ -211,7 +211,16 @@ canvas.hero-rib { display: none; }
 .preview { width: 52px; height: 52px; border-radius: 50%; border: 1.5px dashed var(--line); flex: none; }
 .preview.set { border-style: solid; border-color: color-mix(in srgb, var(--stim-ink) 15%, transparent); }
 .picker { display: flex; flex-direction: column; gap: 12px; }
+.picker-modes { display: flex; gap: 2px; flex-wrap: wrap; justify-content: flex-end; }
+.picker-modes .text-btn { padding: 4px 8px; font-size: 13px; }
+.picker-modes .text-btn[aria-pressed="true"] { background: var(--violet-soft); border-radius: 999px; }
+.seq { display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; }
+.seq-swatch { width: 100%; height: 170px; border-radius: 16px; background: #000; }
+.seq-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
+#hue-strip { width: 100%; height: 30px; border-radius: 10px; touch-action: none; cursor: crosshair; display: block; }
 #plane { width: min(100%, 320px); aspect-ratio: 1; height: auto; margin: 0 auto; touch-action: none; cursor: pointer; display: block; }
+/* Rickards provväljare (Fält, HSV, Lab) använder en rektangulär yta i stället för hjulet. */
+#plane.wide { width: 100%; aspect-ratio: auto; height: 170px; border-radius: 16px; cursor: crosshair; }
 .slider-row { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--muted); }
 .slider-row input { flex: 1; min-width: 0; accent-color: var(--violet); }
 .pick-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
@@ -674,9 +683,19 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <div id="picker-block" class="picker">
       <div class="q-row"><p class="q" id="picker-q"></p><span class="pv" id="swatch" role="img" aria-label="Vald färg"></span></div>
       <canvas id="plane" tabindex="0" aria-label="Färghjul: ringen väljer nyans, rutan väljer mättnad och ljushet"></canvas>
-      <input type="range" id="sat" min="0" max="100" step="any" value="100" hidden>
+      <canvas id="hue-strip" tabindex="0" aria-label="Nyans" hidden></canvas>
+      <div class="seq" id="seq" hidden>
+        <div class="seq-swatch" id="seq-swatch"></div>
+        <b id="seq-count"></b>
+        <span class="muted small" id="seq-eta"></span>
+        <div class="seq-row"><button type="button" class="btn soft" id="seq-back">Förra färgen</button><button type="button" class="btn primary" id="seq-step">Nästa färg</button></div>
+        <span class="muted small">Skämt. Det här är inte en riktig färgväljare.</span>
+      </div>
+      <div class="slider-row" id="lab-row" hidden><label for="labL">Ljushet</label><input type="range" id="labL" min="1" max="100" value="100"></div>
+      <div class="slider-row" id="sat-row" hidden><label for="sat">Mättnad</label><input type="range" id="sat" min="0" max="100" step="any" value="100"></div>
       <div class="pick-row">
         <button class="nocolor" id="nocolor"><span class="o"></span>Ingen färg</button>
+        <span class="picker-modes" id="picker-mode" role="group" aria-label="Färgväljare"><button type="button" class="text-btn" data-pm="">Hjul</button><button type="button" class="text-btn" data-pm="falt">Fält</button><button type="button" class="text-btn" data-pm="hsv">HSV</button><button type="button" class="text-btn" data-pm="lab">Lab</button><button type="button" class="text-btn" data-pm="seq">En i taget</button></span>
       </div>
     </div>
     <div class="grow"></div>
@@ -1438,6 +1457,21 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 "Skriv något och se det i de färger du valde för siffror och bokstäver. Tecken utan färg visas i grått. Det här öppnas först när uppföljningen är gjord, så att färgerna inte påverkar svaren.": "Type something and see it in the colours you chose for digits and letters. Characters without a colour are shown in grey. This opens only after the follow-up, so that the colours do not affect your answers.",
 "Din text": "Your text",
 "Hej, jag heter Anna": "Hi, my name is Anna",
+"Prova HSV-väljaren": "Try the HSV picker",
+"Byt till färgfältet": "Switch to the colour field",
+"Nyans": "Hue",
+"Färgruta: mättnad åt sidan, ljushet uppåt och nedåt": "Colour square: saturation sideways, brightness up and down",
+"Fält": "Field",
+"Färgväljare": "Colour picker",
+"En i taget": "One at a time",
+"Förra färgen": "Previous colour",
+"Nästa färg": "Next colour",
+"Skämt. Det här är inte en riktig färgväljare.": "A joke. This is not a real colour picker.",
+"Färg {i} av {n}": "Colour {i} of {n}",
+"Om du klickar en gång i sekunden är du igenom alla om {d} dygn.": "If you click once a second, you will have seen them all in {d} days.",
+"Ljushet": "Lightness",
+"Hjul": "Wheel",
+"Optimala färger i CIELAB sett ovanifrån": "Optimal colours in CIELAB seen from above",
 "Du fortsätter där du slutade.": "You continue where you left off.",
 "Uppföljningen": "The follow-up",
 "Uppföljningen öppnar om": "The follow-up opens in",
@@ -1795,9 +1829,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   Object.assign(BUNDLED.fr, {"Framför dig": "Devant vous", "Bakom dig": "Derrière vous", "Vänster": "Gauche", "Höger": "Droite", "Rummet runt dig, sett uppifrån": "L'espace autour de vous, vu d'en haut", "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "L'espace vu d'en haut. Vous êtes au centre et regardez devant vous."});
   Object.assign(BUNDLED.de, {"Framför dig": "Vor dir", "Bakom dig": "Hinter dir", "Vänster": "Links", "Höger": "Rechts", "Rummet runt dig, sett uppifrån": "Der Raum um dich, von oben gesehen", "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "Der Raum von oben gesehen. Du stehst in der Mitte und schaust nach vorn."});
   Object.assign(BUNDLED.es, {"Framför dig": "Delante de ti", "Bakom dig": "Detrás de ti", "Vänster": "Izquierda", "Höger": "Derecha", "Rummet runt dig, sett uppifrån": "El espacio a tu alrededor, visto desde arriba", "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "El espacio visto desde arriba. Estás en el centro mirando hacia delante."});
-  Object.assign(BUNDLED.fr, {"Din text i dina färger": "Votre texte dans vos couleurs", "Skriv något och se det i de färger du valde för siffror och bokstäver. Tecken utan färg visas i grått. Det här öppnas först när uppföljningen är gjord, så att färgerna inte påverkar svaren.": "Écrivez quelque chose et voyez-le dans les couleurs que vous avez choisies pour les chiffres et les lettres. Les caractères sans couleur apparaissent en gris. Cela ne s'ouvre qu'après le suivi, afin que les couleurs n'influencent pas vos réponses.", "Din text": "Votre texte", "Hej, jag heter Anna": "Bonjour, je m'appelle Anna", "Färgneutral version": "Version aux couleurs neutres", "Visa appen i färg": "Afficher l'application en couleur", "Du fortsätter där du slutade.": "Vous reprenez là où vous vous étiez arrêté.", "Uppföljningen": "Le suivi", "Uppföljningen öppnar om": "Le suivi s'ouvre dans", "Välj nästa test": "Choisir le test suivant"});
-  Object.assign(BUNDLED.de, {"Din text i dina färger": "Dein Text in deinen Farben", "Skriv något och se det i de färger du valde för siffror och bokstäver. Tecken utan färg visas i grått. Det här öppnas först när uppföljningen är gjord, så att färgerna inte påverkar svaren.": "Schreib etwas und sieh es in den Farben, die du für Ziffern und Buchstaben gewählt hast. Zeichen ohne Farbe werden grau angezeigt. Das öffnet sich erst nach der Nachuntersuchung, damit die Farben deine Antworten nicht beeinflussen.", "Din text": "Dein Text", "Hej, jag heter Anna": "Hallo, ich heiße Anna", "Färgneutral version": "Farbneutrale Version", "Visa appen i färg": "App in Farbe anzeigen", "Du fortsätter där du slutade.": "Du machst dort weiter, wo du aufgehört hast.", "Uppföljningen": "Die Nachuntersuchung", "Uppföljningen öppnar om": "Die Nachuntersuchung öffnet in", "Välj nästa test": "Nächsten Test wählen"});
-  Object.assign(BUNDLED.es, {"Din text i dina färger": "Tu texto en tus colores", "Skriv något och se det i de färger du valde för siffror och bokstäver. Tecken utan färg visas i grått. Det här öppnas först när uppföljningen är gjord, så att färgerna inte påverkar svaren.": "Escribe algo y míralo en los colores que elegiste para números y letras. Los caracteres sin color se muestran en gris. Esto se abre solo después del seguimiento, para que los colores no influyan en tus respuestas.", "Din text": "Tu texto", "Hej, jag heter Anna": "Hola, me llamo Anna", "Färgneutral version": "Versión de color neutro", "Visa appen i färg": "Mostrar la app en color", "Du fortsätter där du slutade.": "Continúas donde lo dejaste.", "Uppföljningen": "El seguimiento", "Uppföljningen öppnar om": "El seguimiento se abre en", "Välj nästa test": "Elegir la siguiente prueba"});
+  Object.assign(BUNDLED.fr, {"Hjul": "Roue", "Optimala färger i CIELAB sett ovanifrån": "Couleurs optimales dans CIELAB vues de dessus", "Ljushet": "Luminosité", "En i taget": "Une à la fois", "Förra färgen": "Couleur précédente", "Nästa färg": "Couleur suivante", "Skämt. Det här är inte en riktig färgväljare.": "C'est une blague. Ce n'est pas un vrai sélecteur de couleur.", "Färg {i} av {n}": "Couleur {i} sur {n}", "Om du klickar en gång i sekunden är du igenom alla om {d} dygn.": "Si vous cliquez une fois par seconde, vous les aurez toutes vues dans {d} jours.", "Fält": "Champ", "Färgväljare": "Sélecteur de couleur", "Prova HSV-väljaren": "Essayer le sélecteur TSV", "Byt till färgfältet": "Revenir au champ de couleurs", "Nyans": "Teinte", "Färgruta: mättnad åt sidan, ljushet uppåt och nedåt": "Carré de couleur : saturation sur le côté, luminosité en haut et en bas", "Din text i dina färger": "Votre texte dans vos couleurs", "Skriv något och se det i de färger du valde för siffror och bokstäver. Tecken utan färg visas i grått. Det här öppnas först när uppföljningen är gjord, så att färgerna inte påverkar svaren.": "Écrivez quelque chose et voyez-le dans les couleurs que vous avez choisies pour les chiffres et les lettres. Les caractères sans couleur apparaissent en gris. Cela ne s'ouvre qu'après le suivi, afin que les couleurs n'influencent pas vos réponses.", "Din text": "Votre texte", "Hej, jag heter Anna": "Bonjour, je m'appelle Anna", "Färgneutral version": "Version aux couleurs neutres", "Visa appen i färg": "Afficher l'application en couleur", "Du fortsätter där du slutade.": "Vous reprenez là où vous vous étiez arrêté.", "Uppföljningen": "Le suivi", "Uppföljningen öppnar om": "Le suivi s'ouvre dans", "Välj nästa test": "Choisir le test suivant"});
+  Object.assign(BUNDLED.de, {"Hjul": "Rad", "Optimala färger i CIELAB sett ovanifrån": "Optimale Farben in CIELAB von oben", "Ljushet": "Helligkeit", "En i taget": "Eine nach der anderen", "Förra färgen": "Vorherige Farbe", "Nästa färg": "Nächste Farbe", "Skämt. Det här är inte en riktig färgväljare.": "Ein Scherz. Das ist keine echte Farbauswahl.", "Färg {i} av {n}": "Farbe {i} von {n}", "Om du klickar en gång i sekunden är du igenom alla om {d} dygn.": "Wenn du einmal pro Sekunde klickst, hast du alle in {d} Tagen gesehen.", "Fält": "Feld", "Färgväljare": "Farbauswahl", "Prova HSV-väljaren": "HSV-Auswahl ausprobieren", "Byt till färgfältet": "Zum Farbfeld wechseln", "Nyans": "Farbton", "Färgruta: mättnad åt sidan, ljushet uppåt och nedåt": "Farbquadrat: Sättigung seitlich, Helligkeit nach oben und unten", "Din text i dina färger": "Dein Text in deinen Farben", "Skriv något och se det i de färger du valde för siffror och bokstäver. Tecken utan färg visas i grått. Det här öppnas först när uppföljningen är gjord, så att färgerna inte påverkar svaren.": "Schreib etwas und sieh es in den Farben, die du für Ziffern und Buchstaben gewählt hast. Zeichen ohne Farbe werden grau angezeigt. Das öffnet sich erst nach der Nachuntersuchung, damit die Farben deine Antworten nicht beeinflussen.", "Din text": "Dein Text", "Hej, jag heter Anna": "Hallo, ich heiße Anna", "Färgneutral version": "Farbneutrale Version", "Visa appen i färg": "App in Farbe anzeigen", "Du fortsätter där du slutade.": "Du machst dort weiter, wo du aufgehört hast.", "Uppföljningen": "Die Nachuntersuchung", "Uppföljningen öppnar om": "Die Nachuntersuchung öffnet in", "Välj nästa test": "Nächsten Test wählen"});
+  Object.assign(BUNDLED.es, {"Hjul": "Rueda", "Optimala färger i CIELAB sett ovanifrån": "Colores óptimos en CIELAB vistos desde arriba", "Ljushet": "Luminosidad", "En i taget": "Uno a la vez", "Förra färgen": "Color anterior", "Nästa färg": "Siguiente color", "Skämt. Det här är inte en riktig färgväljare.": "Es una broma. Esto no es un selector de color de verdad.", "Färg {i} av {n}": "Color {i} de {n}", "Om du klickar en gång i sekunden är du igenom alla om {d} dygn.": "Si haces clic una vez por segundo, las habrás visto todas en {d} días.", "Fält": "Campo", "Färgväljare": "Selector de color", "Prova HSV-väljaren": "Probar el selector HSV", "Byt till färgfältet": "Cambiar al campo de color", "Nyans": "Tono", "Färgruta: mättnad åt sidan, ljushet uppåt och nedåt": "Cuadro de color: saturación hacia los lados, brillo arriba y abajo", "Din text i dina färger": "Tu texto en tus colores", "Skriv något och se det i de färger du valde för siffror och bokstäver. Tecken utan färg visas i grått. Det här öppnas först när uppföljningen är gjord, så att färgerna inte påverkar svaren.": "Escribe algo y míralo en los colores que elegiste para números y letras. Los caracteres sin color se muestran en gris. Esto se abre solo después del seguimiento, para que los colores no influyan en tus respuestas.", "Din text": "Tu texto", "Hej, jag heter Anna": "Hola, me llamo Anna", "Färgneutral version": "Versión de color neutro", "Visa appen i färg": "Mostrar la app en color", "Du fortsätter där du slutade.": "Continúas donde lo dejaste.", "Uppföljningen": "El seguimiento", "Uppföljningen öppnar om": "El seguimiento se abre en", "Välj nästa test": "Elegir la siguiente prueba"});
   Object.assign(BUNDLED.fr, { "Kommer upplevelserna av sig själva, utan att du försöker?": "Ces expériences viennent-elles d'elles-mêmes, sans que vous essayiez ?" });
   Object.assign(BUNDLED.de, { "Kommer upplevelserna av sig själva, utan att du försöker?": "Kommen die Erlebnisse von selbst, ohne dass du es versuchst?" });
   Object.assign(BUNDLED.es, { "Kommer upplevelserna av sig själva, utan att du försöker?": "¿Las experiencias vienen por sí solas, sin que lo intentes?" });
@@ -2118,7 +2152,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   document.addEventListener("keydown", e => {
     if (!ARROW_NAV || (e.key !== "ArrowLeft" && e.key !== "ArrowRight") || e.altKey || e.ctrlKey || e.metaKey) return;
     const f = document.activeElement;
-    if (f && (f.matches("input, textarea, select, [contenteditable]") || f.closest("[role=application], .plane, #plane"))) return;
+    if (f && (f.matches("input, textarea, select, [contenteditable]") || f.closest("[role=application], .plane, #plane, #hue-strip"))) return;
     const scr = document.querySelector("section[id^='s-']:not([hidden])");
     if (!scr || scr.id === "s-speed") return;
     const b = [...scr.querySelectorAll(`[id$="-${e.key === "ArrowLeft" ? "prev" : "next"}"]`)].find(x => x.offsetParent && !x.disabled);
@@ -2459,11 +2493,15 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   }
 
   // ---------- picker ----------
-  // Rund färgväljare: ringen väljer nyans, rutan inuti väljer mättnad (åt sidan) och ljushet (uppåt), som i HSV.
+  // Rund färgväljare (Cajsa): ringen väljer nyans, rutan inuti väljer mättnad (åt sidan) och ljushet (uppåt), som i HSV.
   // Det som sparas är fortfarande HSL (pick.h, pick.l och sat), så svar från den förra färgväljaren går att öppna igen.
   // Ringen är fördelad efter hur olika nyanserna ser ut (OKLab-vinkel), så att varje färg får ungefär lika stor plats.
+  // Hjulet är standard. Rickards provväljare (Fält, HSV, Lab, En i taget) väljs med knapparna under väljaren; valet sparas i S.picker.
   const plane = $("plane"), pctx = plane.getContext("2d");
-  let pick = null, pmode = null;
+  let pick = null;
+  const PICKER_TOGGLE = true;
+  if (S.picker === "ok") S.picker = ""; // Jämn (OKLCH) togs bort 2026-10-11
+  let pmode = null;
   const HUE_AT = (() => {
     const lin = v => (v /= 255) <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
     const okh = h => { const [r, g, b] = hslToRgb(h, 100, 50).map(lin);
@@ -2480,10 +2518,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       pos: h => { const i = find(hs, ((h % 360) + 360) % 360), f = (((h % 360) + 360) % 360 - hs[i]) / 0.5; return ((os[i] + f * (os[i + 1] - os[i])) - os[0]) / span; }
     };
   })();
-  const hsvToRgb = (h, s, v) => { const k = n => (n + h / 60) % 6, f = n => v - v * s * Math.max(0, Math.min(k(n), 4 - k(n), 1)); return [Math.round(f(5) * 255), Math.round(f(3) * 255), Math.round(f(1) * 255)]; };
+  const hsv01 = (h, s, v) => { const k = n => (n + h / 60) % 6, f = n => v - v * s * Math.max(0, Math.min(k(n), 4 - k(n), 1)); return [Math.round(f(5) * 255), Math.round(f(3) * 255), Math.round(f(1) * 255)]; };
   const hslToHsv = (l, s) => { l /= 100; s /= 100; const v = l + s * Math.min(l, 1 - l); return { sv: v === 0 ? 0 : 2 * (1 - l / v), v }; };
   const geom = () => { const w = plane.clientWidth, c = w / 2, R = c - 1, T = w * 0.13, Rin = R - T, hs = (Rin - w * 0.04) / Math.SQRT2; return { w, c, R, T, Rin, hs }; };
-  function drawPlane() {
+  function drawWheel() {
     const g0 = geom(), d = window.devicePixelRatio || 1;
     if (!g0.w) return;
     plane.width = plane.height = Math.round(g0.w * d);
@@ -2495,7 +2533,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     for (let y = 0; y < W; y++) for (let x = 0; x < W; x++) {
       const dx = x + 0.5 - c, dy = y + 0.5 - c, r = Math.hypot(dx, dy), i = (y * W + x) * 4;
       if (Math.abs(dx) <= hs && Math.abs(dy) <= hs) {
-        const k = hsvToRgb(curH, (dx + hs) / (2 * hs), 1 - (dy + hs) / (2 * hs));
+        const k = hsv01(curH, (dx + hs) / (2 * hs), 1 - (dy + hs) / (2 * hs));
         img.data[i] = k[0]; img.data[i + 1] = k[1]; img.data[i + 2] = k[2]; img.data[i + 3] = 255;
       } else {
         const a = Math.max(0, Math.min(1, Math.min(R - r, r - Rin) + 0.5));
@@ -2511,9 +2549,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       mark(c - hs + hv.sv * 2 * hs, c + hs - hv.v * 2 * hs, 9 * d, hslToRgb(pick.h, +$("sat").value, pick.l));
     }
   }
-  const curRgb = () => pick ? hslToRgb(pick.h, +$("sat").value, pick.l) : null;
   function setSV(sv, v) { const l = v * (1 - sv / 2), s = (l <= 0 || l >= 1) ? 0 : (v - l) / Math.min(l, 1 - l); pick.l = l * 100; $("sat").value = s * 100; }
-  function setPick(e) {
+  function setWheel(e) {
     const r = plane.getBoundingClientRect(), g = geom(), dx = e.clientX - r.left - g.c, dy = e.clientY - r.top - g.c;
     if (pmode === null) pmode = Math.hypot(dx, dy) >= g.Rin ? "ring" : "square";
     if (pmode === "ring") {
@@ -2526,12 +2563,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     }
     drawPlane(); refreshTrial();
   }
-  plane.addEventListener("pointerdown", e => { pmode = null; plane.setPointerCapture(e.pointerId); setPick(e); });
-  plane.addEventListener("pointermove", e => { if (pmode) setPick(e); });
-  plane.addEventListener("pointerup", () => { pmode = null; });
-  plane.addEventListener("pointercancel", () => { pmode = null; });
-  // Tangentbord: vänster/höger byter nyans, upp/ner ljushet, Alt + vänster/höger mättnad. Skift = större steg.
-  plane.addEventListener("keydown", e => {
+  function wheelKey(e) {
     const st = e.shiftKey ? 10 : 2; if (!pick) { pick = { h: 0, l: 50 }; $("sat").value = 100; }
     const hv = hslToHsv(pick.l, +$("sat").value);
     if ((e.key === "ArrowLeft" || e.key === "ArrowRight") && !e.altKey) pick.h = HUE_AT.hue(HUE_AT.pos(pick.h) + (e.key === "ArrowRight" ? st : -st) / 200);
@@ -2540,7 +2572,217 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     else if (e.key === "ArrowDown") setSV(hv.sv, Math.max(0, hv.v - st / 100));
     else return;
     e.preventDefault(); drawPlane(); refreshTrial();
+  }
+  // ---------- prov: Rickards färgfält (HSL med mjukade övergångar), knappen Fält ----------
+  const fieldMode = () => PICKER_TOGGLE && S.picker === "falt";
+  // Färgfältet i vanlig HSL får skarpa ränder och ett kryssmönster: vid gult, turkos och rosa (och rött, grönt och blått) byter
+  // färgkanalerna riktning tvärt, och likaså på mitten i höjdled där fältet går från att blandas med vitt till att blandas med svart.
+  // Här mjukas övergången ut inom varje sjättedel i sidled och varje halva i höjdled, så att kanterna försvinner.
+  // Alla färger går fortfarande att välja; pick.h och pick.l är samma HSL-värden som förut.
+  // SOFT = hur mycket som mjukas ut (0 = vanlig HSL, 1 = helt platt vid kanterna, vilket i stället ger fläckar).
+  const SOFT = 0.5, LIFT = 0.6;
+  const smooth = (u, n) => { const t = Math.min(Math.max(u, 0), 1) * n, seg = Math.min(n - 1, Math.floor(t)), f = t - seg; return (seg + (1 - SOFT) * f + SOFT * f * f * (3 - 2 * f)) / n; };
+  const unsmooth = (v, n) => { v = Math.min(Math.max(v, 0), 1); let lo = 0, hi = 1; for (let k = 0; k < 30; k++) { const m = (lo + hi) / 2; if (smooth(m, n) < v) lo = m; else hi = m; } return (lo + hi) / 2; };
+  const xToHue = x => 360 * smooth(x, 6), hueToX = h => unsmooth(h / 360, 6);
+  // Gult, grönt och turkos ser mycket ljusare ut än blått på samma höjd, så fältet fick en ljus kupol med en kant (ett upp-och-nervänt U).
+  // Därför ligger den rena färgen högre i fältet för ljusa nyanser och lägre för mörka (efter ljusheten L i OKLab), så att varje rad
+  // ser ungefär lika ljus ut. Varje kolumn går fortfarande från vitt via den rena färgen till svart.
+  const HUE_L = (() => { const lin = v => (v /= 255) <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+    const L = h => { const [r, g, b] = hslToRgb(h, 100, 50).map(lin); return 0.2105 * Math.cbrt(0.4122 * r + 0.5363 * g + 0.0514 * b) + 0.7936 * Math.cbrt(0.2119 * r + 0.6807 * g + 0.1074 * b) - 0.0041 * Math.cbrt(0.0883 * r + 0.2817 * g + 0.6300 * b); };
+    const t = Array.from({ length: 361 }, (_, h) => L(h)), mean = t.reduce((a, x) => a + x, 0) / t.length;
+    return t.map(x => 0.5 - LIFT * (x - mean)); })();
+  const pureY = h => { const i = Math.min(359, Math.max(0, Math.floor(h))); return HUE_L[i] + (HUE_L[i + 1] - HUE_L[i]) * (h - i); };
+  const yToL = (y, h) => { const y0 = pureY(h); y = Math.min(Math.max(y, 0), 1); return 100 * (1 - smooth(y < y0 ? 0.5 * y / y0 : 0.5 + 0.5 * (y - y0) / (1 - y0), 2)); };
+  const lToY = (l, h) => { const y0 = pureY(h), u = unsmooth(1 - l / 100, 2); return u < 0.5 ? 2 * u * y0 : y0 + (2 * u - 1) * (1 - y0); };
+  // ---------- prov: HSV-väljare (nyansremsa + ruta för mättnad och ljushet), som på selecolor.com ----------
+  // Rutan visar bara en nyans åt gången, så ingen stor regnbåge med ränder eller kupol. Alla färger går att välja.
+  const hsvMode = () => PICKER_TOGGLE && S.picker === "hsv";
+  // ---------- skämt: alla 16 777 216 färger, en i taget, med början på svart. Medvetet så o-användarvänlig som möjligt. ----------
+  const seqMode = () => PICKER_TOGGLE && S.picker === "seq";
+  // ---------- prov: optimala färger (teoretiskt högsta kroma för ytfärger) som punktmoln i CIELAB, sett ovanifrån ----------
+  // Punkterna är alla "fyrkantsspektrum" (ett band av våglängder reflekteras helt, resten inte) under D65, räknade med
+  // CIE 1931 2°-observatören i steg om 5 nm (MacAdam 1935). Färgen räknas om till Lab; a* åt höger, b* uppåt.
+  // De flesta optimala färger går inte att visa på en skärm; de ritas och sparas med lägre kroma tills de ryms i sRGB.
+  // Reglaget Ljushet skär bort allt ovanför den ljusheten, så att man ovanifrån ser ner till mörkare färger.
+  const labMode = () => PICKER_TOGGLE && S.picker === "lab";
+  const CMF10 = [[.001368,.000039,.00645],[.004243,.00012,.02005],[.01431,.000396,.06785],[.04351,.00121,.2074],[.13438,.004,.6456],[.2839,.0116,1.3856],[.34828,.023,1.74706],[.3362,.038,1.77211],[.2908,.06,1.6692],[.19536,.09098,1.28764],[.09564,.13902,.81295],[.03201,.20802,.46518],[.0049,.323,.272],[.0093,.503,.1582],[.06327,.71,.07825],[.1655,.862,.04216],[.2904,.954,.0203],[.43345,.99495,.00875],[.5945,.995,.0039],[.7621,.952,.0021],[.9163,.87,.00165],[1.0263,.757,.0011],[1.0622,.631,.0008],[1.0026,.503,.00034],[.85445,.381,.00019],[.6424,.265,.00005],[.4479,.175,.00002],[.2835,.107,0],[.1649,.061,0],[.0874,.032,0],[.04677,.017,0],[.0227,.00821,0],[.011359,.004102,0],[.00579,.002091,0],[.002899,.001047,0],[.00144,.00052,0],[.00069,.000249,0],[.000332,.00012,0],[.000166,.00006,0],[.000083,.00003,0],[.000042,.000015,0]];
+  const D65_10 = [49.98,54.65,82.75,91.49,93.43,86.68,104.86,117.01,117.81,114.86,115.92,108.81,109.35,107.8,104.79,107.69,104.41,104.05,100,96.33,95.79,88.69,90.01,89.6,87.7,83.29,83.7,80.03,80.21,82.28,78.28,69.72,71.61,74.35,61.6,69.89,75.09,63.59,46.42,66.81,63.38];
+  let LAB_PTS = null;
+  function labPoints() {
+    if (LAB_PTS) return LAB_PTS;
+    const n = 81, w = [];   // 5 nm, interpolated from the 10 nm tables
+    for (let i = 0; i < n; i++) { const j = i >> 1, f = (i & 1) / 2, k = Math.min(40, j + 1), c = [0, 1, 2].map(q => CMF10[j][q] * (1 - f) + CMF10[k][q] * f), e = D65_10[j] * (1 - f) + D65_10[k] * f; w.push(c.map(v => v * e)); }
+    const Wn = [0, 1, 2].map(q => w.reduce((a, v) => a + v[q], 0)), Yn = Wn[1], ref = Wn.map(v => v / Yn);
+    const fl = t => t > 216 / 24389 ? Math.cbrt(t) : (24389 / 27 * t + 16) / 116;
+    const toLab = ([X, Y, Z]) => { const fx = fl(X / Yn / ref[0]), fy = fl(Y / Yn), fz = fl(Z / Yn / ref[2]); return [116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)]; };
+    const pts = [];
+    for (let st = 0; st < n; st++) for (let len = 1; len < n; len++) {
+      const X = [0, 0, 0]; for (let q = 0; q < len; q++) { const v = w[(st + q) % n]; X[0] += v[0]; X[1] += v[1]; X[2] += v[2]; }
+      const [L, a, b] = toLab(X); pts.push({ L, a, b, rgb: labToRgbClip(L, a, b) });
+    }
+    pts.sort((p, q) => p.L - q.L);
+    return LAB_PTS = pts;
+  }
+  function labToRgbClip(L, a, b) {
+    const fy = (L + 16) / 116, inv = t => t ** 3 > 216 / 24389 ? t ** 3 : (116 * t - 16) / (24389 / 27);
+    const rgbOf = (aa, bb) => { const X = 0.95047 * inv(fy + aa / 500), Y = inv(fy), Z = 1.08883 * inv(fy - bb / 200);
+      return [3.2404542 * X - 1.5371385 * Y - 0.4985314 * Z, -0.969266 * X + 1.8760108 * Y + 0.041556 * Z, 0.0556434 * X - 0.2040259 * Y + 1.0572252 * Z]; };
+    const ok = c => c.every(v => v >= -1e-4 && v <= 1.0001);
+    let lo = 0, hi = 1; if (ok(rgbOf(a, b))) lo = 1; else for (let k = 0; k < 20; k++) { const m = (lo + hi) / 2; if (ok(rgbOf(a * m, b * m))) lo = m; else hi = m; }
+    return rgbOf(a * lo, b * lo).map(gam);
+  }
+  const LAB_R = 190; // a*/b* at the edge of the disc
+  function labGeom() { const W = plane.width, H = plane.height, R = Math.min(W, H) / 2 - 4 * (window.devicePixelRatio || 1); return { cx: W / 2, cy: H / 2, k: R / LAB_R, R }; }
+  function drawLab() {
+    const d = window.devicePixelRatio || 1;
+    plane.width = Math.round(plane.clientWidth * d); plane.height = Math.round(plane.clientHeight * d);
+    const g = labGeom(), Lmax = +$("labL").value, pts = labPoints();
+    pctx.fillStyle = "#8a8a8a"; pctx.fillRect(0, 0, plane.width, plane.height);
+    pctx.strokeStyle = "rgba(255,255,255,.35)"; pctx.lineWidth = d; pctx.beginPath(); pctx.arc(g.cx, g.cy, g.R, 0, 7); pctx.moveTo(g.cx - g.R, g.cy); pctx.lineTo(g.cx + g.R, g.cy); pctx.moveTo(g.cx, g.cy - g.R); pctx.lineTo(g.cx, g.cy + g.R); pctx.stroke();
+    const r = 2.6 * d;
+    for (const p of pts) { if (p.L > Lmax) break; pctx.fillStyle = css(p.rgb); pctx.beginPath(); pctx.arc(g.cx + p.a * g.k, g.cy - p.b * g.k, r, 0, 7); pctx.fill(); }
+    if (pick && pick.lab) { const p = pts[pick.i]; ring(pctx, g.cx + p.a * g.k, g.cy - p.b * g.k, d); }
+  }
+  function labPickAt(px, py) {
+    const g = labGeom(), Lmax = +$("labL").value, pts = labPoints(); let best = -1, bd = Infinity;
+    // Same order as drawn: the point on top (highest L under the cut) wins among those under the finger.
+    const hit = (3.5 * (window.devicePixelRatio || 1)) ** 2; let top = -1;
+    for (let i = 0; i < pts.length; i++) { const p = pts[i]; if (p.L > Lmax) break; const dd = (g.cx + p.a * g.k - px) ** 2 + (g.cy - p.b * g.k - py) ** 2; if (dd <= hit) top = i; if (dd < bd) { bd = dd; best = i; } }
+    return top >= 0 ? top : best;
+  }
+  const SEQ_N = 256 ** 3;
+  let seqI = 0;
+  const seqRgb = n => [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  function drawSeq() {
+    $("seq-swatch").style.background = css(seqRgb(seqI));
+    $("seq-count").textContent = t("Färg {i} av {n}", { i: (seqI + 1).toLocaleString(S.lang), n: SEQ_N.toLocaleString(S.lang) });
+    const days = (SEQ_N - seqI - 1) / 86400;
+    $("seq-eta").textContent = t("Om du klickar en gång i sekunden är du igenom alla om {d} dygn.", { d: days.toLocaleString(S.lang, { maximumFractionDigits: 1 }) });
+    $("seq-back").disabled = seqI === 0;
+  }
+  $("seq-step").addEventListener("click", () => { seqI = Math.min(SEQ_N - 1, seqI + 1); pick = { seq: seqI }; drawSeq(); refreshTrial(); });
+  $("seq-back").addEventListener("click", () => { seqI = Math.max(0, seqI - 1); pick = { seq: seqI }; drawSeq(); refreshTrial(); });
+  // sRGB-gamma för ett linjärt värde 0–1, används av Lab-väljaren.
+  const gam = x => { x = Math.min(1, Math.max(0, x)); return Math.round((x <= 0.0031308 ? 12.92 * x : 1.055 * x ** (1 / 2.4) - 0.055) * 255); };
+  let hsvH = 0;
+  function hsvToRgb(h, s, v) {
+    s /= 100; v /= 100;
+    const f = n => { const k = (n + h / 60) % 6; return v - v * s * Math.max(0, Math.min(k, 4 - k, 1)); };
+    return [f(5), f(3), f(1)].map(x => Math.round(x * 255));
+  }
+  const hueStrip = $("hue-strip"), hctx = hueStrip.getContext("2d");
+  function ring(ctx, x, y, d) {
+    ctx.lineWidth = 2 * d;
+    ctx.strokeStyle = "#000"; ctx.beginPath(); ctx.arc(x, y, 9 * d, 0, 7); ctx.stroke();
+    ctx.strokeStyle = "#fff"; ctx.beginPath(); ctx.arc(x, y, 7 * d, 0, 7); ctx.stroke();
+  }
+  function drawHue() {
+    const w = hueStrip.clientWidth, h = hueStrip.clientHeight, d = window.devicePixelRatio || 1;
+    if (!w || !h) return;
+    hueStrip.width = Math.round(w * d); hueStrip.height = Math.round(h * d);
+    const g = hctx.createLinearGradient(0, 0, hueStrip.width, 0);
+    for (let i = 0; i <= 12; i++) g.addColorStop(i / 12, css(hsvToRgb(i * 30, 100, 100)));
+    hctx.fillStyle = g; hctx.fillRect(0, 0, hueStrip.width, hueStrip.height);
+    ring(hctx, hsvH / 360 * hueStrip.width, hueStrip.height / 2, d);
+  }
+  function drawSV() {
+    const w = plane.clientWidth, h = plane.clientHeight, d = window.devicePixelRatio || 1;
+    plane.width = Math.round(w * d); plane.height = Math.round(h * d);
+    const img = pctx.createImageData(plane.width, plane.height);
+    for (let y = 0; y < plane.height; y++) for (let x = 0; x < plane.width; x++) {
+      const c = hsvToRgb(hsvH, x / (plane.width - 1) * 100, 100 - y / (plane.height - 1) * 100), i = (y * plane.width + x) * 4;
+      img.data[i] = c[0]; img.data[i + 1] = c[1]; img.data[i + 2] = c[2]; img.data[i + 3] = 255;
+    }
+    pctx.putImageData(img, 0, 0);
+    if (pick && pick.hv) ring(pctx, pick.s / 100 * plane.width, (1 - pick.v / 100) * plane.height, d);
+  }
+  function applyPicker() {
+    $("hue-strip").hidden = !hsvMode(); $("sat-row").hidden = !fieldMode();
+    $("plane").hidden = seqMode(); $("seq").hidden = !seqMode();
+    $("lab-row").hidden = !labMode();
+    plane.classList.toggle("wide", fieldMode() || hsvMode());
+    $("picker-mode").hidden = !PICKER_TOGGLE;
+    $("picker-mode").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.pm === (PICKER_TOGGLE ? S.picker || "" : ""))));
+    $("plane").setAttribute("aria-label", t(hsvMode() ? "Färgruta: mättnad åt sidan, ljushet uppåt och nedåt" : fieldMode() ? "Färgfält: nyans åt sidan, ljushet uppåt och nedåt" : labMode() ? "Optimala färger i CIELAB sett ovanifrån" : "Färghjul: ringen väljer nyans, rutan väljer mättnad och ljushet"));
+  }
+  $("picker-mode").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { if ((S.picker || "") === b.dataset.pm) return; S.picker = b.dataset.pm; save(); pick = null; hsvH = 0; seqI = 0; $("sat").value = 100; applyPicker(); drawPlane(); refreshTrial(); }));
+  $("labL").addEventListener("input", () => { drawPlane(); });
+  function setHue(e) {
+    const r = hueStrip.getBoundingClientRect();
+    hsvH = Math.min(Math.max(e.clientX - r.left, 0), r.width) / r.width * 360;
+    if (pick && pick.hv) pick.h = hsvH;
+    drawPlane(); refreshTrial();
+  }
+  let hdrag = false;
+  hueStrip.addEventListener("pointerdown", e => { hdrag = true; hueStrip.setPointerCapture(e.pointerId); setHue(e); });
+  hueStrip.addEventListener("pointermove", e => { if (hdrag) setHue(e); });
+  hueStrip.addEventListener("pointerup", () => { hdrag = false; });
+  hueStrip.addEventListener("keydown", e => {
+    const st = e.shiftKey ? 10 : 2;
+    if (e.key === "ArrowLeft") hsvH = Math.max(0, hsvH - st * 1.8); else if (e.key === "ArrowRight") hsvH = Math.min(360, hsvH + st * 1.8); else return;
+    if (pick && pick.hv) pick.h = hsvH;
+    e.preventDefault(); drawPlane(); refreshTrial();
   });
+  function drawPlane() {
+    const w = plane.clientWidth, h = plane.clientHeight, d = window.devicePixelRatio || 1;
+    if (!w || !h) return;
+    if (hsvMode()) { drawHue(); drawSV(); return; }
+    if (seqMode()) { drawSeq(); return; }
+    if (labMode()) { drawLab(); return; }
+    if (!fieldMode()) { drawWheel(); return; }
+    plane.width = Math.round(w * d); plane.height = Math.round(h * d);
+    const s = +$("sat").value, img = pctx.createImageData(plane.width, plane.height);
+    const hues = Array.from({ length: plane.width }, (_, x) => xToHue(x / (plane.width - 1)));
+    for (let y = 0; y < plane.height; y++) {
+      const fy = y / (plane.height - 1);
+      for (let x = 0; x < plane.width; x++) {
+        const c = hslToRgb(hues[x], s, yToL(fy, hues[x])), i = (y * plane.width + x) * 4;
+        img.data[i] = c[0]; img.data[i + 1] = c[1]; img.data[i + 2] = c[2]; img.data[i + 3] = 255;
+      }
+    }
+    pctx.putImageData(img, 0, 0);
+    if (pick) {
+      const px = hueToX(pick.h) * plane.width, py = lToY(pick.l, pick.h) * plane.height;
+      pctx.lineWidth = 2 * d;
+      pctx.strokeStyle = "#000"; pctx.beginPath(); pctx.arc(px, py, 9 * d, 0, 7); pctx.stroke();
+      pctx.strokeStyle = "#fff"; pctx.beginPath(); pctx.arc(px, py, 7 * d, 0, 7); pctx.stroke();
+    }
+  }
+  const curRgb = () => !pick ? null : pick.lab ? labPoints()[pick.i].rgb : pick.seq !== undefined ? seqRgb(pick.seq) : pick.hv ? hsvToRgb(pick.h, pick.s, pick.v) : hslToRgb(pick.h, +$("sat").value, pick.l);
+  function setPick(e) {
+    const r = plane.getBoundingClientRect();
+    const x = Math.min(Math.max(e.clientX - r.left, 0), r.width), y = Math.min(Math.max(e.clientY - r.top, 0), r.height);
+    if (!fieldMode() && !hsvMode() && !labMode()) { setWheel(e); return; }
+    if (labMode()) { const d = plane.width / r.width, i = labPickAt(x * d, y * d); if (i >= 0) pick = { lab: 1, i }; }
+    else if (hsvMode()) pick = { hv: 1, h: hsvH, s: x / r.width * 100, v: 100 - y / r.height * 100 };
+    else { const h = xToHue(x / r.width); pick = { h, l: yToL(y / r.height, h) }; }
+    drawPlane(); refreshTrial();
+  }
+  let drag = false;
+  plane.addEventListener("pointerdown", e => { drag = true; pmode = null; plane.setPointerCapture(e.pointerId); setPick(e); });
+  plane.addEventListener("pointermove", e => { if (drag) setPick(e); });
+  plane.addEventListener("pointerup", () => { drag = false; pmode = null; });
+  plane.addEventListener("pointercancel", () => { drag = false; pmode = null; });
+  plane.addEventListener("keydown", e => {
+    const st = e.shiftKey ? 10 : 2;
+    if (labMode() || seqMode()) return;
+    if (!fieldMode() && !hsvMode()) { wheelKey(e); return; }
+    if (hsvMode()) {
+      pick ||= { hv: 1, h: hsvH, s: 100, v: 100 };
+      if (e.key === "ArrowLeft") pick.s = Math.max(0, pick.s - st); else if (e.key === "ArrowRight") pick.s = Math.min(100, pick.s + st);
+      else if (e.key === "ArrowUp") pick.v = Math.min(100, pick.v + st); else if (e.key === "ArrowDown") pick.v = Math.max(0, pick.v - st); else return;
+      e.preventDefault(); drawPlane(); refreshTrial(); return;
+    }
+    pick ||= { h: 0, l: 50 };
+    const ky = lToY(pick.l, pick.h);
+    if (e.key === "ArrowLeft") { pick.h = xToHue(Math.max(0, hueToX(pick.h) - st / 200)); pick.l = yToL(ky, pick.h); }
+    else if (e.key === "ArrowRight") { pick.h = xToHue(Math.min(1, hueToX(pick.h) + st / 200)); pick.l = yToL(ky, pick.h); }
+    else if (e.key === "ArrowUp") pick.l = yToL(Math.max(0, lToY(pick.l, pick.h) - st / 100), pick.h);
+    else if (e.key === "ArrowDown") pick.l = yToL(Math.min(1, lToY(pick.l, pick.h) + st / 100), pick.h);
+    else return;
+    e.preventDefault(); drawPlane(); refreshTrial();
+  });
+  $("sat").addEventListener("input", () => { drawPlane(); refreshTrial(); });
   window.addEventListener("resize", () => { if (!$("s-test").hidden) drawPlane(); });
 
   // ---------- CLaN questionnaire ----------
@@ -2975,9 +3217,12 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   }
   function showTrial() {
     const s = T.list[T.i];
-    T.played = false; T.auto = null; pick = null; $("sat").value = 100;
+    T.played = false; T.auto = null; pick = null; hsvH = 0; seqI = 0; $("sat").value = 100; $("labL").value = 100; applyPicker();
     const prevR = T.responses[T.i];   // already answered (the person went back): show that answer again
-    if (prevR) { if (prevR.p) { pick = { h: prevR.p.h, l: prevR.p.l }; $("sat").value = prevR.p.sat; } if (T.key === "sound") { T.auto = prevR.auto; T.played = true; } }
+    if (prevR) { if (prevR.p && prevR.p.lab && labMode()) { pick = { lab: 1, i: prevR.p.i }; $("labL").value = prevR.p.Lmax; }
+      else if (prevR.p && prevR.p.lab) {}
+      else if (prevR.p && prevR.p.seq !== undefined && seqMode()) { seqI = prevR.p.seq; pick = { seq: seqI }; }
+      else if (prevR.p && prevR.p.seq === undefined && !seqMode() && !!prevR.p.hv === hsvMode() && !prevR.p.ok) { pick = prevR.p.hv ? { hv: 1, h: prevR.p.h, s: prevR.p.s, v: prevR.p.v } : { h: prevR.p.h, l: prevR.p.l }; if (pick.hv) hsvH = pick.h; else $("sat").value = prevR.p.sat; } if (T.key === "sound") { T.auto = prevR.auto; T.played = true; } }
     $("test-count").textContent = `${T.i + 1} / ${T.list.length}`;
     $("test-bar").style.width = `${Math.max(T.i / T.list.length * 100, 2)}%`;
     $("play-hint").textContent = t("Tryck för att lyssna");
@@ -3016,7 +3261,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   }));
   function answer(rgb) {
     const rec = { s: T.list[T.i], rgb, auto: T.key === "sound" ? T.auto : null, ms: Math.round(performance.now() - (T.shown || 0)) };
-    if (rgb && pick) rec.p = { h: pick.h, l: pick.l, sat: +$("sat").value };
+    if (rgb && pick) rec.p = pick.lab ? { lab: 1, i: pick.i, Lmax: +$("labL").value } : pick.seq !== undefined ? { seq: pick.seq } : pick.hv ? { hv: 1, h: pick.h, s: pick.s, v: pick.v } : { h: pick.h, l: pick.l, sat: +$("sat").value };
     if (T.i < T.responses.length) T.responses[T.i] = rec; else T.responses.push(rec);
     T.i++; persist();
     if (T.i < T.list.length) showTrial(); else if (T.key !== "sound" && prepSpeed()) go("s-speed"); else toAfter();

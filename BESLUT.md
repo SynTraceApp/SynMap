@@ -37,3 +37,4 @@ Kort logg över beslut som påverkar framtida arbete. Nyast överst. Format: `- 
 - 2026-10-11 – Piltangenterna för Föregående/Nästa (ARROW_NAV) är bara en testhjälp och ska tas bort före release. – Rickard
 - 2026-10-11 – Vår färgdesign är standard. I menyn finns en Färgneutral version (gråskala) för den som tycker att färgerna är jobbiga. Vi frågar inte om färgobehag. Testytorna och användarens egna valda färger påverkas inte. – Rickard
 - 2026-10-11 – Färgväljaren i färgtesterna är ett färghjul (nyansring med en ruta för mättnad och ljushet), med jämnt fördelade nyanser. Ersätter Rickards färgfält från samma dag (tre ändringar i CHANGELOG, fråga i ARBETE.md). Gå tillbaka med `git revert` på commiten "Ändrar Rickards beslut: färghjul i stället för färgfältet". – Cajsa
+- 2026-10-11 – Cajsas färghjul är standard i färgtesterna. Rickards Fält, HSV och Lab finns kvar som provknappar under väljaren tills ni har jämfört (PICKER_TOGGLE). – Rickard
