@@ -3,9 +3,9 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
-- Föra in snabbtestet som väntar på svar, färgrektangeln i ljudtestet och kontaktadressen som kopieras i app/index.html – Cajsa
 
 ## Klart
+- Snabbtest som väntar på svar, färgrektangel i ljudtestet och kopierbar kontaktadress i app/index.html – Cajsa
 - Börja-knappens plats på startsidan återställd – Cajsa
 - Pseudonymer i upphovsraderna i app/index.html – Cajsa
 - Dämpad orange för Pausat/Påbörjad, spanska profiltexter och Kopiera adress i app/index.html – Cajsa

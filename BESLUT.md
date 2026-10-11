@@ -29,3 +29,4 @@ Kort logg över beslut som påverkar framtida arbete. Nyast överst. Format: `- 
 - 2026-10-11 – Upphovsrader i appen: Koncept (Cajsa), Utveckling (Cajsa och Rickard), Programmering (Rickard), © 2026 Cajsa Gustafsson och Rickard Lundgren samt en rad om att appen byggts med hjälp av AI (Claude, Anthropic). Licens för repot är inte vald än. – Cajsa
 - 2026-10-11 – Testare når oss via synmap@proton.me, som en mailto-länk längst ned i Så fungerar SynMap. Inget kontaktformulär och inget skickas från appen. – Cajsa
 - 2026-10-11 – Upphovsraderna i appen använder pseudonymerna Fiona och Fingal. Ersätter raden om namn i upphovsraderna från tidigare idag. Kontaktadressen och övriga rader är oförändrade. – Cajsa
+- 2026-10-11 – Snabbtestet har ingen tidsgräns per fråga: nästa kommer när man har svarat, men tecknet visas bara en gång i en sekund. Ska granskas av en forskare. – Cajsa
