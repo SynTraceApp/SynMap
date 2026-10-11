@@ -27,3 +27,4 @@ Kort logg över beslut som påverkar framtida arbete. Nyast överst. Format: `- 
 - 2026-10-11 – "Dela med en forskare" (studiekod, filexport och CSV) är borttaget ur appen tills ni har bestämt hur data ska delas. Ersätter beslutet från 9 oktober om studiekod. Svaren sparas fortfarande bara i användarens webbläsare. – Cajsa
 - 2026-10-11 – Alla tester kan göras om efter 7 dagar (uppföljning). Självskattning är avstängd tills vidare. – Cajsa
 - 2026-10-11 – Upphovsrader i appen: Koncept (Cajsa), Utveckling (Cajsa och Rickard), Programmering (Rickard), © 2026 Cajsa Gustafsson och Rickard Lundgren samt en rad om att appen byggts med hjälp av AI (Claude, Anthropic). Licens för repot är inte vald än. – Cajsa
+- 2026-10-11 – Testare når oss via synmap@proton.me, som en mailto-länk längst ned i Så fungerar SynMap. Inget kontaktformulär och inget skickas från appen. – Cajsa

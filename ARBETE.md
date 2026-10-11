@@ -3,9 +3,9 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
-- Föra in länkraden Mina resultat/Min profil/Ändra mina svar, ikonraden och kontaktadressen i app/index.html – Cajsa
 
 ## Klart
+- Länkrad, ikonrad och kontaktadress i app/index.html – Cajsa
 - Cajsas senaste appändringar i app/index.html (Om dig först, uppföljning för alla tester, Så fungerar SynMap, upphovsrader, Dela med en forskare borttaget) – Cajsa
 - Ord → smak ombyggt efter MULTISENSE – Cajsa
 - Personifiering och Ord → smak, Börja-knapp, ny ordning i Om appen – Cajsa
