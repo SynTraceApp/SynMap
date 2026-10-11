@@ -5,6 +5,7 @@ Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sa
 ## Pågår
 
 ## Klart
+- Startskärm, alla tester i Välj test, Så funkar SynMap – Cajsa
 - Projektor–associator-enkät och spegelberöringstest – Rickard
 - Dela med forskare via studiekod i stället för e-post – Rickard
 - Bakgrundsfrågor, färgseende, helhetsbedömning, förklaringssida, fortsätt där du var, tid/paus och engelska – Rickard
