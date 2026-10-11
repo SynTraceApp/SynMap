@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-11
+- **Design** – Ny knapp i menyn på startskärmen: Färgneutral version. Den gör hela appen grå (knappar, ikoner, startbilden, profilens cirklar) och sparas i webbläsaren. Samma knapp heter sedan Visa appen i färg. Testytorna och de färger man själv har valt (färgväljaren, ringarna i profilen) behåller sina färger. Fungerar i ljust och mörkt läge. (Rickard)
 - **App** – Rutan med pausat test överst i Välj test gäller nu alla tester, inte bara färgtesterna och Tid i rummet. Den visar också Personlighet, Ord → smak, Spegelberöring och de två enkäterna när de är påbörjade. Visas det test man senast öppnade, om det är pausat, annars det som pausades senast. Börja om nollställer just det testet. (Rickard)
 - **Resultat** – Min profil: Personlighet, Ord → smak och Spegelberöring får en ring med en procentsiffra i kartan när testet är gjort, som de andra testerna. Siffran är andelen tecken, ord eller klipp som gav en upplevelse. Tidigare syntes de bara som svar på de inledande frågorna. (Rickard)
 - **App** – Välj test: rutan överst med Börja om och Fortsätt visar nu bara det test som pausades senast. Tidigare visades alla pausade tester där i fast ordning. De andra pausade testerna fortsätter man från sina kort i listan, där det står "Pausat vid …". Tester som pausades före den här ändringen har ingen tid sparad och hamnar efter dem som har det. (Rickard)

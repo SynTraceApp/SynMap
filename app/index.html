@@ -43,6 +43,25 @@
   --muted: #9ba3ba; --line: #2c3042; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
   --on-violet: #13121c; --stim-ink: #f3f3f6; color-scheme: dark;
 }
+/* Färgneutral version: samma layout i gråskala. Användarens egna valda färger (testytor, ringar, resultat) behåller sin färg. */
+:root[data-palette="neutral"] {
+  --navy: #2b2d33; --violet: #4a4c55; --violet-2: #3d3f47; --violet-soft: #ececee; --violet-line: #d6d6da;
+  --teal: #6f7278; --orange: #9a9ca2; --page: #f2f2f3; --ink: #2b2d33; --muted: #6b6e75; --line: #e5e5e8;
+  --shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-palette="neutral"]:not([data-theme="light"]) {
+    --navy: #e4e4e7; --violet: #b4b6bd; --violet-2: #a3a5ac; --violet-soft: #2a2b30; --violet-line: #3a3b41;
+    --teal: #9a9da4; --orange: #b0b2b8; --page: #111113; --screen: #19191c; --card: #212125; --ink: #e6e6e9;
+    --muted: #a0a2a8; --line: #2e2f34; --on-violet: #121214;
+  }
+}
+:root[data-palette="neutral"][data-theme="dark"] {
+  --navy: #e4e4e7; --violet: #b4b6bd; --violet-2: #a3a5ac; --violet-soft: #2a2b30; --violet-line: #3a3b41;
+  --teal: #9a9da4; --orange: #b0b2b8; --page: #111113; --screen: #19191c; --card: #212125; --ink: #e6e6e9;
+  --muted: #a0a2a8; --line: #2e2f34; --on-violet: #121214;
+}
+[data-palette="neutral"] .ribbons, [data-palette="neutral"] .icon-disc, [data-palette="neutral"] #profile-circles, [data-palette="neutral"] .logo, [data-palette="neutral"] #s-welcome { filter: grayscale(1); }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html, body { min-height: 100%; }
@@ -429,6 +448,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       <button id="go-about-app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Så fungerar SynMap</button>
       <button id="go-about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01" stroke-linecap="round"/></svg>Om synestesi</button>
       <button id="go-research"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Forskningsunderlag</button>
+      <button id="palette-btn" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg><span id="palette-label">Färgneutral version</span></button>
       <div class="menu-langs" role="group" aria-label="Språk"><button type="button" data-l="sv" aria-pressed="false">Svenska</button><button type="button" data-l="en" aria-pressed="false">English</button><button type="button" data-l="fr" aria-pressed="false">Français</button><button type="button" data-l="de" aria-pressed="false">Deutsch</button><button type="button" data-l="es" aria-pressed="false">Español</button></div><div hidden><select id="lang" aria-label="Språk"><option value="sv">Svenska</option><option value="en">English</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="es">Español</option></select></div>
       <p class="menu-status" id="lang-status" hidden></p>
       <button class="menu-retry" id="lang-retry" hidden>Översätt igen</button>
@@ -1402,6 +1422,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 "Bakom dig": "Behind you",
 "Rummet runt dig, sett uppifrån": "The space around you, seen from above",
 "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "The space seen from above. You stand in the middle, facing forward.",
+"Färgneutral version": "Colour-neutral version",
+"Visa appen i färg": "Show the app in colour",
 "Du fortsätter där du slutade.": "You continue where you left off.",
 "Uppföljningen": "The follow-up",
 "Uppföljningen öppnar om": "The follow-up opens in",
@@ -1759,9 +1781,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   Object.assign(BUNDLED.fr, {"Framför dig": "Devant vous", "Bakom dig": "Derrière vous", "Vänster": "Gauche", "Höger": "Droite", "Rummet runt dig, sett uppifrån": "L'espace autour de vous, vu d'en haut", "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "L'espace vu d'en haut. Vous êtes au centre et regardez devant vous."});
   Object.assign(BUNDLED.de, {"Framför dig": "Vor dir", "Bakom dig": "Hinter dir", "Vänster": "Links", "Höger": "Rechts", "Rummet runt dig, sett uppifrån": "Der Raum um dich, von oben gesehen", "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "Der Raum von oben gesehen. Du stehst in der Mitte und schaust nach vorn."});
   Object.assign(BUNDLED.es, {"Framför dig": "Delante de ti", "Bakom dig": "Detrás de ti", "Vänster": "Izquierda", "Höger": "Derecha", "Rummet runt dig, sett uppifrån": "El espacio a tu alrededor, visto desde arriba", "Rummet sett uppifrån. Du står i mitten och tittar framåt.": "El espacio visto desde arriba. Estás en el centro mirando hacia delante."});
-  Object.assign(BUNDLED.fr, {"Du fortsätter där du slutade.": "Vous reprenez là où vous vous étiez arrêté.", "Uppföljningen": "Le suivi", "Uppföljningen öppnar om": "Le suivi s'ouvre dans", "Välj nästa test": "Choisir le test suivant"});
-  Object.assign(BUNDLED.de, {"Du fortsätter där du slutade.": "Du machst dort weiter, wo du aufgehört hast.", "Uppföljningen": "Die Nachuntersuchung", "Uppföljningen öppnar om": "Die Nachuntersuchung öffnet in", "Välj nästa test": "Nächsten Test wählen"});
-  Object.assign(BUNDLED.es, {"Du fortsätter där du slutade.": "Continúas donde lo dejaste.", "Uppföljningen": "El seguimiento", "Uppföljningen öppnar om": "El seguimiento se abre en", "Välj nästa test": "Elegir la siguiente prueba"});
+  Object.assign(BUNDLED.fr, {"Färgneutral version": "Version aux couleurs neutres", "Visa appen i färg": "Afficher l'application en couleur", "Du fortsätter där du slutade.": "Vous reprenez là où vous vous étiez arrêté.", "Uppföljningen": "Le suivi", "Uppföljningen öppnar om": "Le suivi s'ouvre dans", "Välj nästa test": "Choisir le test suivant"});
+  Object.assign(BUNDLED.de, {"Färgneutral version": "Farbneutrale Version", "Visa appen i färg": "App in Farbe anzeigen", "Du fortsätter där du slutade.": "Du machst dort weiter, wo du aufgehört hast.", "Uppföljningen": "Die Nachuntersuchung", "Uppföljningen öppnar om": "Die Nachuntersuchung öffnet in", "Välj nästa test": "Nächsten Test wählen"});
+  Object.assign(BUNDLED.es, {"Färgneutral version": "Versión de color neutro", "Visa appen i färg": "Mostrar la app en color", "Du fortsätter där du slutade.": "Continúas donde lo dejaste.", "Uppföljningen": "El seguimiento", "Uppföljningen öppnar om": "El seguimiento se abre en", "Välj nästa test": "Elegir la siguiente prueba"});
   Object.assign(BUNDLED.fr, { "Kommer upplevelserna av sig själva, utan att du försöker?": "Ces expériences viennent-elles d'elles-mêmes, sans que vous essayiez ?" });
   Object.assign(BUNDLED.de, { "Kommer upplevelserna av sig själva, utan att du försöker?": "Kommen die Erlebnisse von selbst, ohne dass du es versuchst?" });
   Object.assign(BUNDLED.es, { "Kommer upplevelserna av sig själva, utan att du försöker?": "¿Las experiencias vienen por sí solas, sin que lo intentes?" });
@@ -1844,6 +1866,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("lang").value = S.lang;
     fillFigs();
     document.querySelectorAll(".menu-langs button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.l === S.lang)));
+    applyPalette();
   }
 
   // ---------- runtime translation: Claude translates whatever a language has no built-in text for ----------
@@ -2152,6 +2175,14 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     box.innerHTML = html + `<p class="muted small">${t("Lägre konsistens betyder mer lika färger varje gång.")}</p>`;
   }
   $("go-research").addEventListener("click", () => { setMenu(false); go("s-research"); });
+  // Färgneutral version: vår design är standard, men den som vill kan byta till gråskala. Valet sparas i webbläsaren.
+  function applyPalette() {
+    document.documentElement.dataset.palette = S.palette === "neutral" ? "neutral" : "";
+    $("palette-btn").setAttribute("aria-pressed", S.palette === "neutral");
+    $("palette-label").textContent = t(S.palette === "neutral" ? "Visa appen i färg" : "Färgneutral version");
+  }
+  $("palette-btn").addEventListener("click", () => { S.palette = S.palette === "neutral" ? "" : "neutral"; save(); applyPalette(); drawRibbons(); });
+  applyPalette();
   $("lang").addEventListener("change", e => { S.lang = e.target.value; save(); applyLang(); drawRibbons(); ensureRuntime(S.lang); });
   document.querySelectorAll(".menu-langs button").forEach(b => b.addEventListener("click", () => { $("lang").value = b.dataset.l; $("lang").dispatchEvent(new Event("change")); }));
   $("lang-retry").addEventListener("click", () => ensureRuntime(S.lang));
