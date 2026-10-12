@@ -1139,6 +1139,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     } catch {}
   })();
   const now = () => Date.now() + S.offsetDays * 864e5;
+  // Uppföljningen öppnar vid midnatt samma veckodag en vecka senare (7 kalenderdagar), inte exakt 168 timmar efter testet.
+  // Då stämmer datumet som visas ("Uppföljning öppnar 18 okt") och påminnelsen kl. 09.00 i kalenderfilen med när testet faktiskt går att göra.
+  const dueFrom = t => { const d = new Date(t); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + RETEST_DAYS); return d.getTime(); };
   const fmtDate = d => new Date(d).toLocaleDateString(LOC[S.lang] || "sv-SE", { day: "numeric", month: "long" });
   const dec = (x, d = 1) => {
     if (S.lang === "en") return x.toFixed(d);
@@ -2432,7 +2435,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const p = S.paused[key];
     if (p) return { label: t("Pausat vid {i} av {n}", { i: Math.min(p.i, p.list.length), n: p.list.length }), cls: "orange", open: true };
     if (!ss.length) return { label: t("Ej påbörjat"), cls: "", open: true };
-    const due = ss[ss.length - 1].date + RETEST_DAYS * 864e5;
+    const due = dueFrom(ss[ss.length - 1].date);
     if (now() >= due) return { label: t("Uppföljning {n} kan göras nu", { n: ss.length + 1 }), cls: "teal", open: true, dueNow: true };
     return { label: t("Uppföljning öppnar {d}", { d: fmtDate(due) }), cls: "orange", open: false, due };
   }
@@ -3075,7 +3078,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // Every test can be done again after RETEST_DAYS days (a follow-up). dates = when the earlier rounds were finished.
   function fuInfo(dates) {
     if (!dates.length) return { open: true };
-    const due = dates[dates.length - 1] + RETEST_DAYS * 864e5;
+    const due = dueFrom(dates[dates.length - 1]);
     return now() >= due ? { open: true, dueNow: true, label: t("Uppföljning {n} kan göras nu", { n: dates.length + 1 }), cls: "teal" }
       : { open: false, due, label: t("Uppföljning öppnar {d}", { d: fmtDate(due) }), cls: "orange" };
   }
@@ -3982,18 +3985,29 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   function icsText(due) {
     const d = new Date(due), pad = n => String(n).padStart(2, "0"), ymd = d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate());
     const esc = x => x.replace(/\\/g, "\\\\").replace(/[,;]/g, m => "\\" + m).replace(/\n/g, "\\n");
-    const title = t("Gör uppföljningen i SynTrace"), desc = t("Öppna SynTrace och gör uppföljningen av dina tester. Dina svar finns bara i den webbläsare du använde förra gången.");
+    // RFC 5545: rader längre än 75 byte viks, och fortsättningsraden börjar med ett mellanslag (å, ä och ö är två byte var).
+    const fold = line => { const enc = new TextEncoder(), out = []; let cur = "", n = 0; for (const ch of line) { const b = enc.encode(ch).length; if (n + b > (out.length ? 74 : 75)) { out.push(cur); cur = ""; n = 0; } cur += ch; n += b; } out.push(cur); return out.join("\r\n "); };
+    // Länken till appen följer bara med när appen är öppnad på en vanlig adress (inte inbäddad i claude.ai eller öppnad som fil).
+    let embedded = false; try { embedded = window.self !== window.top; } catch { embedded = true; }
+    const url = !embedded && /^https?:$/.test(location.protocol) ? location.href.split("#")[0] : "";
+    // UID ska inte innehålla något som pekar ut personen (RFC 7986), men vara samma om filen sparas igen så att kalendern inte får dubbletter.
+    if (!S.icsUid) { S.icsUid = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2) + Date.now().toString(36); save(); }
+    const uid = S.icsUid;
+    const title = t("Gör uppföljningen i SynTrace"), desc = t("Öppna SynTrace och gör uppföljningen av dina tester. Dina svar finns bara i den webbläsare du använde förra gången.") + (url ? "\n" + url : "");
     return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//SynTrace//Uppfoljning//SV", "CALSCALE:GREGORIAN", "BEGIN:VEVENT",
-      `UID:${S.pid}-uppfoljning-${ymd}@syntrace`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "")}`,
-      `DTSTART:${ymd}T090000`, `DTEND:${ymd}T091500`, `SUMMARY:${esc(title)}`, `DESCRIPTION:${esc(desc)}`,
-      "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${esc(title)}`, "TRIGGER:PT0M", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n") + "\r\n";
+      `UID:${uid}-${ymd}@syntrace`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "")}`,
+      `DTSTART:${ymd}T090000`, `DTEND:${ymd}T091500`, `SUMMARY:${esc(title)}`, `DESCRIPTION:${esc(desc)}`, ...(url ? [`URL:${url}`] : []),
+      "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${esc(title)}`, "TRIGGER:PT0M", "END:VALARM",
+      // En andra påminnelse dagen efter, för den som inte hann.
+      "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${esc(title)}`, "TRIGGER:P1D", "END:VALARM",
+      "END:VEVENT", "END:VCALENDAR"].map(fold).join("\r\n") + "\r\n";
   }
   async function saveIcs() {
     const due = S.remind; if (!due) return;
     const name = "SynTrace-uppfoljning.ics", text = icsText(due);
     try {
       if (dlCap) await dlCap.save({ filename: name, data: text });
-      else { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: "text/calendar" })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000); }
+      else { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: "text/calendar;charset=utf-8" })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000); }
       remindNote = t("Kalenderfilen är sparad. Öppna den så läggs en påminnelse in i din kalender {d}.", { d: fmtDate(due) });
     } catch (e) {
       remindNote = e && e.code === "declined" ? t("Filen sparades inte.") : t("Det gick inte att spara en fil här. Skriv in {d} i din kalender så länge.", { d: fmtDate(due) });
