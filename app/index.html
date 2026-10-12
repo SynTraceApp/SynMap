@@ -259,6 +259,8 @@ canvas.hero-rib { display: none; }
 #picker-block .pv { width: 100%; height: 36px; border-radius: 12px; border-width: 2px; }
 #s-test .stim-row { min-height: 96px; padding: 8px; }
 #s-test .stim { font-size: 84px; }
+#s-test .stim.word { font-size: 46px; }
+#plane, #hue-strip { -webkit-tap-highlight-color: transparent; }
 .stim { transition: color .12s; text-shadow: 1.5px 0px 0 #000,-1.5px 0px 0 #000,0px 1.5px 0 #000,0px -1.5px 0 #000,1.1px 1.1px 0 #000,1.1px -1.1px 0 #000,-1.1px 1.1px 0 #000,-1.1px -1.1px 0 #000; } /* svart kontur utanför tecknet (text-shadow, inte text-stroke, så att inga linjer syns inuti) */
 /* Fixed neutral test surface: the same mid grey in light and dark mode, so the page colour does not tint what people pick. */
 .stim-row { background: var(--neutral); border-radius: 22px; padding: 14px; }
@@ -2457,7 +2459,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     if (p) return { label: t("Pausat vid {i} av {n}", { i: Math.min(p.i, p.list.length), n: p.list.length }), cls: "orange", open: true };
     if (!ss.length) return { label: t("Ej påbörjat"), cls: "", open: true };
     const due = dueFrom(ss[ss.length - 1].date);
-    if (now() >= due) return { label: t("Uppföljning {n} kan göras nu", { n: ss.length + 1 }), cls: "teal", open: true, dueNow: true };
+    if (now() >= due) return { label: t("Uppföljning {n} kan göras nu", { n: ss.length }), cls: "teal", open: true, dueNow: true };
     return { label: t("Uppföljning öppnar {d}", { d: fmtDate(due) }), cls: "orange", open: false, due };
   }
   function renderChoose() {
@@ -2511,7 +2513,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     // Påminnelse i appen: tester vars uppföljning kan göras nu (7 dagar har gått).
     const dueNames = ALL.filter(k => stateOf(k).dueNow).map(k => KEYS.includes(k) ? t(TESTS[k].title) : $("pick-" + k).querySelector("b").textContent), dc = $("due-card");
     dc.hidden = !dueNames.length;
-    dc.innerHTML = dueNames.length ? `<div class="stack" style="gap:4px"><b>${t(dueNames.length === 1 ? "En uppföljning kan göras nu" : "{n} uppföljningar kan göras nu", { n: dueNames.length })}</b><span class="muted small">${dueNames.join(", ")}. ${t("Det har gått minst 7 dagar sedan förra gången. Gör om dem så ser du om dina svar är likadana.")}</span></div>` : "";
+    dc.innerHTML = dueNames.length ? `<div class="stack" style="gap:4px"><b>${t(dueNames.length === 1 ? "En uppföljning kan göras nu" : "{n} uppföljningar kan göras nu", { n: dueNames.length })}</b><span class="muted small">${dueNames.join(", ")}${/[.?!]$/.test(dueNames[dueNames.length - 1] || "") ? "" : "."} ${t("Det har gått minst 7 dagar sedan förra gången. Gör om dem så ser du om dina svar är likadana.")}</span></div>` : "";
     renderResume();
   }
   // Rough minutes per test, from seconds per item; the colour tests add about a minute for the speed test.
@@ -3121,7 +3123,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   function fuInfo(dates) {
     if (!dates.length) return { open: true };
     const due = dueFrom(dates[dates.length - 1]);
-    return now() >= due ? { open: true, dueNow: true, label: t("Uppföljning {n} kan göras nu", { n: dates.length + 1 }), cls: "teal" }
+    return now() >= due ? { open: true, dueNow: true, label: t("Uppföljning {n} kan göras nu", { n: dates.length }), cls: "teal" }
       : { open: false, due, label: t("Uppföljning öppnar {d}", { d: fmtDate(due) }), cls: "orange" };
   }
   function mtState() {
@@ -3436,7 +3438,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   $("test-prev").addEventListener("click", () => { if (!T || T.i === 0) return; T.i--; persist(); showTrial(); });
   $("test-quit").addEventListener("click", pauseTest);
   $("test-pause").addEventListener("click", pauseTest);
-  document.addEventListener("keydown", e => { if (!$("s-test").hidden && e.key === "Enter" && !$("test-next").disabled) { e.preventDefault(); $("test-next").click(); } });
+  document.addEventListener("keydown", e => { if (!$("s-test").hidden && e.key === "Enter" && !$("test-next").disabled && !(e.target.closest && e.target.closest("button:not(#nocolor), a, input, textarea, select, summary"))) { e.preventDefault(); $("test-next").click(); } });
 
   // ---------- time in space ----------
   let spot = null;
@@ -4241,6 +4243,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // Självskattningen visas som överlappande cirklar, som i profilen: en cirkel per sinne som du kryssade i kopplingar för. Större cirkel = fler kopplingar, överlapp = kopplingar mellan sinnena, streckad cirkel = inga kopplingar ikryssade.
   const SELF_G = ["see", "hear", "lang", "room", "taste", "touch", "mind"];
   const SELF_NAMES = { sv: ["Syn", "Hörsel", "Språk", "Rum", "Smak och doft", "Känsel", "Tankar"], en: ["Sight", "Hearing", "Language", "Space", "Taste and smell", "Touch", "Thoughts"], fr: ["Vue", "Ouïe", "Langage", "Espace", "Goût et odorat", "Toucher", "Pensées"], de: ["Sehen", "Gehör", "Sprache", "Raum", "Geschmack und Geruch", "Tastsinn", "Gedanken"], es: ["Vista", "Oído", "Lenguaje", "Espacio", "Gusto y olfato", "Tacto", "Pensamientos"] };
+  let selfGradN = 0;
   const SELF_COL = ["url(#sc-rainbow)", "#4d8ef0", "#8b7be8", "#47bdb1", "#ffb56b", "#ff6fa8", "#9aa1b5"];
   const SELF_I = { I01: 2, I02: 2, I03: 2, I04: 1, I05: 1, I06: 1, I07: 4, I08: 4, I09: 5, I10: 5, I11: 5, I12: 5, I13: 0, I14: 0, I15: 0, I16: 3, I17: 6, I18: 6, I19: 6 };
   const SELF_C = { C01: 0, C02: 0, C03: 5, C04: 4, C05: 4, C06: 1, C07: 3, C08: 0, C09: 6, C10: 6, C11: 5, C12: 2 };
@@ -4263,8 +4266,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       pos[g] = { x: cx + dd * Math.cos(a), y: cy + dd * Math.sin(a), r };
     });
     const NAMES = SELF_NAMES[S.lang] || SELF_NAMES.sv;
-    let out = `<defs><linearGradient id="sc-rainbow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6fa8"/><stop offset=".35" stop-color="#ffb56b"/><stop offset=".65" stop-color="#47bdb1"/><stop offset="1" stop-color="#8b7be8"/></linearGradient></defs>`;
-    SELF_G.forEach((_, g) => { const c = pos[g], on = cnt[g] > 0; out += `<circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="${c.r.toFixed(1)}" fill="${SELF_COL[g]}" fill-opacity="${on ? .32 : .07}" stroke="${SELF_COL[g]}" stroke-opacity="${on ? .9 : .7}" stroke-width="2"${on ? "" : ' stroke-dasharray="5 4"'}/>`; });
+    const gid = "sc-rainbow-" + (++selfGradN);
+    let out = `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6fa8"/><stop offset=".35" stop-color="#ffb56b"/><stop offset=".65" stop-color="#47bdb1"/><stop offset="1" stop-color="#8b7be8"/></linearGradient></defs>`;
+    const col = g => SELF_COL[g].replace("#sc-rainbow", "#" + gid);
+    SELF_G.forEach((_, g) => { const c = pos[g], on = cnt[g] > 0; out += `<circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="${c.r.toFixed(1)}" fill="${col(g)}" fill-opacity="${on ? .32 : .07}" stroke="${col(g)}" stroke-opacity="${on ? .9 : .7}" stroke-width="2"${on ? "" : ' stroke-dasharray="5 4"'}/>`; });
     SELF_G.forEach((_, g) => { const c = pos[g], big = c.r > 40; const words = NAMES[g].split(" "); const lines = words.length > 2 ? [words.slice(0, 2).join(" "), words.slice(2).join(" ")] : [NAMES[g]];
       lines.forEach((ln, k) => { out += `<text class="cn" x="${c.x.toFixed(1)}" y="${(c.y + (big ? 5 : 4) + (k - (lines.length - 1) / 2) * 14).toFixed(1)}" style="font-size:${big ? 15 : 12}px">${ln}</text>`; }); });
     return `<div class="card map-card"><svg class="selfcircles" viewBox="0 0 358 440" role="img" aria-label="${t("Din självskattning")}" style="width:100%;height:auto;display:block">${out}</svg></div>`;
