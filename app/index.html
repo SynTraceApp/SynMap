@@ -1441,6 +1441,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
  "Svaren var konsekventa: du svarade likadant båda gångerna på de flesta.": "The answers were consistent: you answered the same both times on most.",
  "Inget tydligt konsekvent mönster.": "No clear consistent pattern.",
  "För få svar med upplevelse för att bedöma.": "Too few answers with an experience to assess.",
+ "Du gav nästan samma svar för alla tecken, så det går inte att bedöma.": "You gave almost the same answer for every character, so it cannot be assessed.",
  "Gränsen (minst 4 träffar och 70 % lika svar) är vår egen grova jämförelse, inte forskningens. Resultatet är preliminärt och ingen diagnos.": "The limit (at least 4 hits and 70 % identical answers) is our own rough comparison, not the research's. The result is preliminary and not a diagnosis.",
  "Testat · {a} av {b} gav samma svar båda gångerna · du svarade \"{c}\"": "Tested · {a} of {b} gave the same answer both times · you answered \"{c}\"",
  "Korta ja/nej-frågor om vilka former av synestesi du tror att du har. Det här testet rekommenderar vidare tester åt dig, utifrån dina svar.": "Short yes/no questions about which forms of synesthesia you think you have. This test recommends further tests for you, based on your answers.",
@@ -3221,8 +3222,13 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     sess.trials.forEach(o => (by[o.id] ||= []).push(o));
     let n = 0, same = 0;
     for (const id in by) { const l = by[id]; if (l.some(c.has)) { n++; if (l.length > 1 && l.every(c.has) && l.every(o => c.sig(o) === c.sig(l[0]))) same++; } }
-    const verdict = n < 4 ? "few" : same / n >= 0.7 ? "pos" : "neg";
-    return { n, same, total: c.items.length, verdict };
+    // Spärr som i färgtesterna (högst 60 % samma färg): den som ger samma svar för nästan alla tecken blir "konsekvent" utan att tecknen skiljer sig åt.
+    // Rinaldi m.fl. (2020) uteslöt på samma sätt den som gav samma kön för fler än 20 av 26 bokstäver.
+    const sigs = sess.trials.filter(c.has).map(c.sig), counts = {};
+    sigs.forEach(x => counts[x] = (counts[x] || 0) + 1);
+    const top = sigs.length ? Math.max(...Object.values(counts)) / sigs.length : 0;
+    const verdict = n < 4 ? "few" : top > 0.6 ? "same" : same / n >= 0.7 ? "pos" : "neg";
+    return { n, same, total: c.items.length, verdict, top };
   }
   const trSessions = key => S.tr[key].sessions.filter(s => key !== "lg" || s.fmt === 2);
   function trState(key) {
@@ -3245,7 +3251,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
         <p class="muted small">${t("Ordlistan här är vår egen och översatt. Resultatet är preliminärt och ingen diagnos.")}</p>`;
       return card;
     }
-    const msg = { pos: "Svaren visade ett konsekvent mönster.", neg: "Inget tydligt konsekvent mönster.", few: "För få svar med upplevelse för att bedöma." }[sc.verdict];
+    const msg = { pos: "Svaren visade ett konsekvent mönster.", neg: "Inget tydligt konsekvent mönster.", few: "För få svar med upplevelse för att bedöma.", same: "Du gav nästan samma svar för alla tecken, så det går inte att bedöma." }[sc.verdict];
     card.innerHTML = head + `<div class="fac"><div class="fac-top"><b>${t(c.labels[0])}</b><span>${sc.n} / ${sc.total}</span></div><div class="bar"><i style="width:${sc.n / sc.total * 100}%"></i></div></div>
       <div class="fac"><div class="fac-top"><b>${t(c.labels[1])}</b><span>${sc.same} / ${sc.n}</span></div><div class="bar"><i style="width:${sc.n ? sc.same / sc.n * 100 : 0}%"></i></div></div>
       ${ss.length > 1 ? `<p class="muted small">${t("Uppföljning {n}: förra gången {a}, nu {b}", { n: ss.length - 1, a: trScore(key, ss[ss.length - 2]).same + " / " + trScore(key, ss[ss.length - 2]).n, b: sc.same + " / " + sc.n })}</p>` : ""}
