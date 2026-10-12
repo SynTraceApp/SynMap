@@ -440,7 +440,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 #profile-map .tc, .pm .tc { fill: var(--navy); font-family: var(--font); font-size: 15px; font-weight: 800; }
 #profile-map .pc, .pm .pc { fill: var(--navy); font-family: var(--mono); font-size: 12px; font-weight: 500; }
 #profile-circles { width: 100%; height: auto; display: block; }
-#profile-circles .cn { fill: var(--ink); font-family: var(--font); font-weight: 700; text-anchor: middle; paint-order: stroke; stroke: var(--card); stroke-width: 3px; stroke-linejoin: round; }
+#profile-circles .cn, .selfcircles .cn { fill: var(--ink); font-family: var(--font); font-weight: 700; text-anchor: middle; paint-order: stroke; stroke: var(--card); stroke-width: 3px; stroke-linejoin: round; }
 .prow { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
 .prow:first-child { border-top: 0; }
 .prow .icon-disc { width: 40px; height: 40px; }
@@ -477,6 +477,16 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 .map-type { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; }
 .map-type b { color: var(--navy); }
 #s-map .chip { margin-top: 0; }
+/* Självskattningens resultat är tydligt skilt från testresultaten: streckad ram, en stark etikett och en förklaring att det inte är ett riktigt test. */
+.due-card { border: 2px solid var(--teal); background: color-mix(in srgb, var(--teal) 12%, var(--card)); }
+.selfbox { border: 2px dashed var(--violet-line); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 10px; background: color-mix(in srgb, var(--violet-soft) 45%, transparent); }
+.selfbox .tag { align-self: flex-start; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: 5px 11px; border-radius: 999px; background: color-mix(in srgb, var(--orange) 45%, transparent); color: var(--ink); }
+.selfbox h3 { margin: 0; font-size: 18px; color: var(--navy); }
+.selfbox .warn { margin: 0; font-size: 14px; line-height: 1.45; color: var(--ink); font-weight: 600; }
+.selfbox .selfrow { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; padding: 6px 0; border-top: 1px solid var(--line); }
+.selfbox .selfrow b { color: var(--navy); font-size: 15px; }
+.selfbox .selfbtns { display: flex; gap: 8px; flex-wrap: wrap; }
+.selfbox .selfbtns .btn { width: auto; flex: 1 1 140px; padding: 11px 16px; font-size: 14px; }
 </style>
 
 <div class="app">
@@ -619,6 +629,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <h1>Välj test</h1>
     <p class="lead">Välj det område du vill utforska. Du kan göra flera.</p>
     <div class="links-row nav-links"><button class="text-btn" data-nav="s-choose">Välj test</button><button class="text-btn" data-nav="s-results">Mina resultat</button><button class="text-btn" data-nav="s-profile">Min profil</button></div>
+    <div class="card due-card" id="due-card" hidden></div>
     <div class="card resume" id="resume-card" hidden></div>
     <p class="sub-h" id="rec-h"></p>
     <div id="rec-list" class="stack" style="gap:12px"></div>
@@ -756,9 +767,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   <section class="screen" id="s-map-done" hidden>
     <div class="topbar"><button class="back" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
     <h1>Din självskattning</h1>
+    <div id="map-banner"></div>
     <p class="lead">Kopplingarna du kryssade i, ordnade efter den form av synestesi de kan tyda på. Det är din egen beskrivning och en första indikation, inget riktigt test och ingen diagnos. Den är för eget bruk och påverkar inte vilka tester som föreslås.</p>
     <p class="sub-h" id="map-sum"></p>
-    <div class="stack" id="map-list"></div>
+    <div id="map-svg"></div>
+    <details id="map-all"><summary>Visa alla kopplingar</summary><div class="stack" id="map-list" style="margin-top:10px"></div></details>
     <div id="map-notes" class="stack"></div>
     <p class="hint">Nästa steg är att undersöka om kopplingarna är automatiska och likadana varje gång. Färgtesterna i appen gör det redan för bokstäver, siffror, ljud och tid.</p>
     <div class="grow"></div>
@@ -899,6 +912,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       <span class="muted small" id="follow-date"></span>
       <button class="btn primary" id="remind">Påminn mig</button>
       <p class="small" id="remind-msg" hidden></p>
+      <button class="btn soft" id="remind-ics" hidden>Spara kalenderfilen igen</button>
     </div>
     <button class="btn soft" id="skip-follow">Välj nästa test</button>
     <div class="demo">
@@ -936,6 +950,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <p class="muted small">Ringarna runt testade typer visar färgerna du valde. Siffran i mitten är hur stor andel av tecknen eller ljuden som gav en färg. Streckade cirklar är typer du bara har svarat på i de inledande frågorna.</p>
     <div class="card kind" id="profile-kind" hidden></div>
     <div class="card" id="profile-list" style="padding-block:6px"></div>
+    <div id="prof-map"></div>
     <div class="card stack" id="ctext" hidden>
       <b>Din text i dina färger</b>
       <span class="muted small">Skriv något och se det i de färger du valde för siffror och bokstäver. Tecken utan färg visas i grått. Det här öppnas först när uppföljningen är gjord, så att färgerna inte påverkar svaren.</span>
@@ -1931,6 +1946,12 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   Object.assign(BUNDLED.de, {"Färghjul: ringen väljer nyans, rutan väljer mättnad och ljushet": "Farbrad: Der Ring wählt den Farbton, das Quadrat Sättigung und Helligkeit"});
   Object.assign(BUNDLED.es, {"Färghjul: ringen väljer nyans, rutan väljer mättnad och ljushet": "Rueda de color: el anillo elige el tono, el cuadrado la saturación y el brillo"});
   Object.assign(BUNDLED.es, {"Koncept": "Concepto", "Utveckling": "Desarrollo", "Programmering": "Programación", "och": "y"});
+  Object.assign(BUNDLED.fr, {"En uppföljning kan göras nu": "Un suivi peut être fait maintenant", "{n} uppföljningar kan göras nu": "{n} suivis peuvent être faits maintenant", "Det har gått minst 7 dagar sedan förra gången. Gör om dem så ser du om dina svar är likadana.": "Au moins 7 jours se sont écoulés depuis la dernière fois. Refaites-les pour voir si vos réponses sont les mêmes.", "Spara kalenderfilen igen": "Enregistrer à nouveau le fichier de calendrier", "Appen kan inte skicka aviseringar. Spara en kalenderfil så får du påminnelsen från din kalender {d}.": "L'appli ne peut pas envoyer de notifications. Enregistrez un fichier de calendrier et votre calendrier vous le rappellera le {d}.", "Gör uppföljningen i SynTrace": "Faire le suivi dans SynTrace", "Öppna SynTrace och gör uppföljningen av dina tester. Dina svar finns bara i den webbläsare du använde förra gången.": "Ouvrez SynTrace et faites le suivi de vos tests. Vos réponses ne sont enregistrées que dans le navigateur utilisé la dernière fois.", "Kalenderfilen är sparad. Öppna den så läggs en påminnelse in i din kalender {d}.": "Le fichier de calendrier est enregistré. Ouvrez-le pour ajouter un rappel à votre calendrier le {d}.", "Det gick inte att spara en fil här. Skriv in {d} i din kalender så länge.": "Impossible d'enregistrer un fichier ici. Notez le {d} dans votre calendrier en attendant."});
+  Object.assign(BUNDLED.de, {"En uppföljning kan göras nu": "Eine Wiederholung kann jetzt gemacht werden", "{n} uppföljningar kan göras nu": "{n} Wiederholungen können jetzt gemacht werden", "Det har gått minst 7 dagar sedan förra gången. Gör om dem så ser du om dina svar är likadana.": "Seit dem letzten Mal sind mindestens 7 Tage vergangen. Mach sie noch einmal, um zu sehen, ob deine Antworten gleich sind.", "Spara kalenderfilen igen": "Kalenderdatei erneut speichern", "Appen kan inte skicka aviseringar. Spara en kalenderfil så får du påminnelsen från din kalender {d}.": "Die App kann keine Benachrichtigungen senden. Speichere eine Kalenderdatei, dann erinnert dich dein Kalender am {d}.", "Gör uppföljningen i SynTrace": "Wiederholung in SynTrace machen", "Öppna SynTrace och gör uppföljningen av dina tester. Dina svar finns bara i den webbläsare du använde förra gången.": "Öffne SynTrace und wiederhole deine Tests. Deine Antworten sind nur in dem Browser gespeichert, den du beim letzten Mal benutzt hast.", "Kalenderfilen är sparad. Öppna den så läggs en påminnelse in i din kalender {d}.": "Die Kalenderdatei ist gespeichert. Öffne sie, dann wird am {d} eine Erinnerung in deinen Kalender eingetragen.", "Det gick inte att spara en fil här. Skriv in {d} i din kalender så länge.": "Hier konnte keine Datei gespeichert werden. Trage den {d} vorerst selbst in deinen Kalender ein."});
+  Object.assign(BUNDLED.es, {"En uppföljning kan göras nu": "Ya se puede hacer un seguimiento", "{n} uppföljningar kan göras nu": "Ya se pueden hacer {n} seguimientos", "Det har gått minst 7 dagar sedan förra gången. Gör om dem så ser du om dina svar är likadana.": "Han pasado al menos 7 días desde la última vez. Hazlos de nuevo para ver si tus respuestas son iguales.", "Spara kalenderfilen igen": "Guardar de nuevo el archivo de calendario", "Appen kan inte skicka aviseringar. Spara en kalenderfil så får du påminnelsen från din kalender {d}.": "La app no puede enviar notificaciones. Guarda un archivo de calendario y tu calendario te lo recordará el {d}.", "Gör uppföljningen i SynTrace": "Hacer el seguimiento en SynTrace", "Öppna SynTrace och gör uppföljningen av dina tester. Dina svar finns bara i den webbläsare du använde förra gången.": "Abre SynTrace y haz el seguimiento de tus pruebas. Tus respuestas solo están guardadas en el navegador que usaste la última vez.", "Kalenderfilen är sparad. Öppna den så läggs en påminnelse in i din kalender {d}.": "El archivo de calendario está guardado. Ábrelo para añadir un recordatorio a tu calendario el {d}.", "Det gick inte att spara en fil här. Skriv in {d} i din kalender så länge.": "No se pudo guardar un archivo aquí. Apunta el {d} en tu calendario por ahora."});
+  Object.assign(BUNDLED.fr, {"Visa alla kopplingar": "Afficher toutes les associations", "Varje cirkel är ett sinne som du kryssade i kopplingar för. Större cirkel = fler kopplingar, överlapp = kopplingar mellan sinnena, streckad cirkel = inga ikryssade kopplingar. Cirklarna visar bara vad dina ikryss kan tyda på.": "Grand cercle et trait épais = plus d'associations cochées. Le chiffre est le nombre d'associations.", "Din självskattning": "Votre auto-évaluation", "Inte ett riktigt test": "Pas un vrai test", "Det här är din egen beskrivning av vad du upplever, inte ett test. Inget mäts och dina svar jämförs inte med något. Resultatet visar bara vad dina ikryss kan tyda på och säger inget om du har synestesi. Använd det som en första fingervisning.": "Ceci est votre propre description de ce que vous ressentez, pas un test. Rien n'est mesuré et vos réponses ne sont comparées à rien. Le résultat montre seulement ce que vos cases cochées peuvent indiquer et ne dit rien sur le fait que vous ayez ou non une synesthésie. Utilisez-le comme une première piste.", "Gjord {d}": "Fait le {d}", "1 koppling": "1 association", "{n} kopplingar": "{n} associations", "och {n} till": "et {n} de plus", "Visa hela självskattningen": "Voir toute l'auto-évaluation"});
+  Object.assign(BUNDLED.de, {"Visa alla kopplingar": "Alle Verknüpfungen anzeigen", "Varje cirkel är ett sinne som du kryssade i kopplingar för. Större cirkel = fler kopplingar, överlapp = kopplingar mellan sinnena, streckad cirkel = inga ikryssade kopplingar. Cirklarna visar bara vad dina ikryss kan tyda på.": "Großer Kreis und dicke Linie = mehr angekreuzte Verknüpfungen. Die Zahl ist die Anzahl der Verknüpfungen.", "Din självskattning": "Deine Selbsteinschätzung", "Inte ett riktigt test": "Kein echter Test", "Det här är din egen beskrivning av vad du upplever, inte ett test. Inget mäts och dina svar jämförs inte med något. Resultatet visar bara vad dina ikryss kan tyda på och säger inget om du har synestesi. Använd det som en första fingervisning.": "Das ist deine eigene Beschreibung dessen, was du erlebst, kein Test. Es wird nichts gemessen und deine Antworten werden mit nichts verglichen. Das Ergebnis zeigt nur, worauf deine Kreuze hindeuten können, und sagt nichts darüber aus, ob du Synästhesie hast. Nutze es als ersten Hinweis.", "Gjord {d}": "Gemacht am {d}", "1 koppling": "1 Verknüpfung", "{n} kopplingar": "{n} Verknüpfungen", "och {n} till": "und {n} weitere", "Visa hela självskattningen": "Ganze Selbsteinschätzung anzeigen"});
+  Object.assign(BUNDLED.es, {"Visa alla kopplingar": "Mostrar todos los vínculos", "Varje cirkel är ett sinne som du kryssade i kopplingar för. Större cirkel = fler kopplingar, överlapp = kopplingar mellan sinnena, streckad cirkel = inga ikryssade kopplingar. Cirklarna visar bara vad dina ikryss kan tyda på.": "Círculo grande y línea gruesa = más vínculos marcados. El número es la cantidad de vínculos.", "Din självskattning": "Tu autoevaluación", "Inte ett riktigt test": "No es una prueba real", "Det här är din egen beskrivning av vad du upplever, inte ett test. Inget mäts och dina svar jämförs inte med något. Resultatet visar bara vad dina ikryss kan tyda på och säger inget om du har synestesi. Använd det som en första fingervisning.": "Esta es tu propia descripción de lo que experimentas, no una prueba. No se mide nada y tus respuestas no se comparan con nada. El resultado solo muestra lo que pueden indicar tus marcas y no dice nada sobre si tienes sinestesia. Úsalo como una primera pista.", "Gjord {d}": "Hecho el {d}", "1 koppling": "1 vínculo", "{n} kopplingar": "{n} vínculos", "och {n} till": "y {n} más", "Visa hela självskattningen": "Ver toda la autoevaluación"});
   Object.assign(BUNDLED.es, {"Inget test än · du svarade \"{a}\"": "Aún sin prueba · respondiste «{a}»", "Inte testat än · du svarade \"{a}\" i de inledande frågorna": "Aún sin probar · respondiste «{a}» en las preguntas iniciales", "Testat · {a} av {b} klipp med människor gav beröring · du svarade \"{c}\"": "Probado · {a} de {b} clips con personas provocaron tacto · respondiste «{c}»"});
   Object.assign(BUNDLED.fr, {"Tecknet visas bara en gång. Nästa kommer först när du har svarat.": "Le caractère n'apparaît qu'une seule fois. Le suivant n'arrive qu'après votre réponse."});
   Object.assign(BUNDLED.de, {"Tecknet visas bara en gång. Nästa kommer först när du har svarat.": "Das Zeichen wird nur einmal gezeigt. Das nächste kommt erst, wenn du geantwortet hast."});
@@ -2201,7 +2222,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     if (id === "s-choose") renderChoose();
     if (id === "s-results") { renderResults(); }
     if (id === "s-follow") renderFollow();
-    if (id === "s-profile") renderProfile();
+    if (id === "s-profile") { renderProfile(); renderSelfBoxes(); }
     if (id === "s-bg") renderBg();
     if (id === "s-research") renderResearch();
     if (id === "s-map-done") renderMapDone();
@@ -2394,7 +2415,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     if (p) return { label: t("Pausat vid {i} av {n}", { i: Math.min(p.i, p.list.length), n: p.list.length }), cls: "orange", open: true };
     if (!ss.length) return { label: t("Ej påbörjat"), cls: "", open: true };
     const due = ss[ss.length - 1].date + RETEST_DAYS * 864e5;
-    if (now() >= due) return { label: t("Uppföljning {n} kan göras nu", { n: ss.length + 1 }), cls: "teal", open: true };
+    if (now() >= due) return { label: t("Uppföljning {n} kan göras nu", { n: ss.length + 1 }), cls: "teal", open: true, dueNow: true };
     return { label: t("Uppföljning öppnar {d}", { d: fmtDate(due) }), cls: "orange", open: false, due };
   }
   function renderChoose() {
@@ -2414,7 +2435,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const waits = k => stateOf(k).open === false ? 1 : 0;
     const order = ALL.map((k, i) => [k, i]).sort((a, b) => waits(a[0]) - waits(b[0]) || score(b[0]) - score(a[0]) || mins(a[0]) - mins(b[0]) || a[1] - b[1]).map(([k]) => k);
     for (const k of order) (all || recd.has(k) || started(k) ? $("rec-list") : $("more-list")).appendChild($("pick-" + k));
-    $("rec-list").prepend($("pick-intro")); $("rec-list").prepend($("pick-map")); $("pick-map").style.display = "none"; // self-rating is switched off for now
+    $("rec-list").prepend($("pick-intro"));
+    // Självskattningen ligger alltid under "Fler tester", sist, och påverkar inga rekommendationer.
+    $("pick-map").style.display = ""; $("more-list").appendChild($("pick-map"));
     $("more-tests").hidden = !$("more-list").children.length;
     $("rec-h").hidden = true;
     for (const k of [...KEYS, "mirror", "ol", "clan", "pa", "lg"]) {
@@ -2443,6 +2466,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const mps = mapState();
     $("chip-map").textContent = mps.label; $("chip-map").className = "chip " + mps.cls;
     $("est-map").textContent = S.map.done ? "" : t("ca {m} min", { m: 6 });
+    // Påminnelse i appen: tester vars uppföljning kan göras nu (7 dagar har gått).
+    const dueNames = ALL.filter(k => stateOf(k).dueNow).map(k => KEYS.includes(k) ? t(TESTS[k].title) : $("pick-" + k).querySelector("b").textContent), dc = $("due-card");
+    dc.hidden = !dueNames.length;
+    dc.innerHTML = dueNames.length ? `<div class="stack" style="gap:4px"><b>${t(dueNames.length === 1 ? "En uppföljning kan göras nu" : "{n} uppföljningar kan göras nu", { n: dueNames.length })}</b><span class="muted small">${dueNames.join(", ")}. ${t("Det har gått minst 7 dagar sedan förra gången. Gör om dem så ser du om dina svar är likadana.")}</span></div>` : "";
     renderResume();
   }
   // Rough minutes per test, from seconds per item; the colour tests add about a minute for the speed test.
@@ -3031,7 +3058,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   function fuInfo(dates) {
     if (!dates.length) return { open: true };
     const due = dates[dates.length - 1] + RETEST_DAYS * 864e5;
-    return now() >= due ? { open: true, label: t("Uppföljning {n} kan göras nu", { n: dates.length + 1 }), cls: "teal" }
+    return now() >= due ? { open: true, dueNow: true, label: t("Uppföljning {n} kan göras nu", { n: dates.length + 1 }), cls: "teal" }
       : { open: false, due, label: t("Uppföljning öppnar {d}", { d: fmtDate(due) }), cls: "orange" };
   }
   function mtState() {
@@ -3907,6 +3934,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const dues = KEYS.map(k => testState(k)).concat([mtState(), trState("ol"), trState("lg"), qnState("clan"), qnState("pa")]).filter(s => s.due).map(s => s.due);
     return dues.length ? Math.min(...dues) : null;
   }
+  let remindNote = "";
   function renderFollow() {
     const due = nextDue();
     const days = due ? Math.ceil((due - now()) / 864e5) : 0;
@@ -3915,13 +3943,37 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("follow-date").textContent = days > 0 ? t("Öppnar {d}", { d: fmtDate(due) }) : t("Du kan göra uppföljningen direkt.");
     $("remind").textContent = t(days > 0 ? "Påminn mig" : "Gör uppföljningen");
     $("remind-msg").hidden = !S.remind;
-    if (S.remind) $("remind-msg").textContent = t("Prototypen kan inte skicka aviseringar än. Skriv in {d} i din kalender så länge.", { d: fmtDate(S.remind) });
+    $("remind-ics").hidden = !S.remind;
+    if (S.remind) $("remind-msg").textContent = remindNote || t("Appen kan inte skicka aviseringar. Spara en kalenderfil så får du påminnelsen från din kalender {d}.", { d: fmtDate(S.remind) });
+  }
+  // Kalenderfil (.ics) med en påminnelse klockan 09.00 den dag uppföljningen öppnar. Inget skickas från appen; det är kalenderappen som påminner.
+  function icsText(due) {
+    const d = new Date(due), pad = n => String(n).padStart(2, "0"), ymd = d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate());
+    const esc = x => x.replace(/\\/g, "\\\\").replace(/[,;]/g, m => "\\" + m).replace(/\n/g, "\\n");
+    const title = t("Gör uppföljningen i SynTrace"), desc = t("Öppna SynTrace och gör uppföljningen av dina tester. Dina svar finns bara i den webbläsare du använde förra gången.");
+    return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//SynTrace//Uppfoljning//SV", "CALSCALE:GREGORIAN", "BEGIN:VEVENT",
+      `UID:${S.pid}-uppfoljning-${ymd}@syntrace`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "")}`,
+      `DTSTART:${ymd}T090000`, `DTEND:${ymd}T091500`, `SUMMARY:${esc(title)}`, `DESCRIPTION:${esc(desc)}`,
+      "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${esc(title)}`, "TRIGGER:PT0M", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n") + "\r\n";
+  }
+  async function saveIcs() {
+    const due = S.remind; if (!due) return;
+    const name = "SynTrace-uppfoljning.ics", text = icsText(due);
+    try {
+      if (dlCap) await dlCap.save({ filename: name, data: text });
+      else { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: "text/calendar" })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000); }
+      remindNote = t("Kalenderfilen är sparad. Öppna den så läggs en påminnelse in i din kalender {d}.", { d: fmtDate(due) });
+    } catch (e) {
+      remindNote = e && e.code === "declined" ? t("Filen sparades inte.") : t("Det gick inte att spara en fil här. Skriv in {d} i din kalender så länge.", { d: fmtDate(due) });
+    }
+    renderFollow();
   }
   $("remind").addEventListener("click", () => {
     const due = nextDue();
     if (!due || due <= now()) { go("s-choose"); return; }
-    S.remind = due; save(); renderFollow();
+    S.remind = due; save(); remindNote = ""; renderFollow(); saveIcs();
   });
+  $("remind-ics").addEventListener("click", saveIcs);
   $("skip-follow").addEventListener("click", () => go("s-choose"));
   $("demo-skip").addEventListener("click", () => { S.offsetDays += RETEST_DAYS; S.remind = null; save(); renderFollow(); });
 
@@ -4073,10 +4125,69 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const notes = [];
     if (!mapAttOk()) notes.push(t("Kontrollfrågan besvarades inte som tänkt, så svaren kan vara mindre säkra."));
     if (cells.length > 110) notes.push(t("Du kryssade i väldigt många kopplingar. Det kan betyda att frågorna lästes brett, så tolka resultatet försiktigt."));
+    $("map-banner").innerHTML = `<div class="selfbox"><span class="tag">${t("Inte ett riktigt test")}</span><p class="warn">${selfWarn()}</p></div>`;
     $("map-sum").textContent = cells.length ? t("Ikryssade kopplingar: {k}", { k: cells.length }) : "";
     $("map-list").innerHTML = html;
+    $("map-svg").innerHTML = selfMapSvg(7) + (cells.length ? `<p class="muted small">${t("Varje cirkel är ett sinne som du kryssade i kopplingar för. Större cirkel = fler kopplingar, överlapp = kopplingar mellan sinnena, streckad cirkel = inga ikryssade kopplingar. Cirklarna visar bara vad dina ikryss kan tyda på.")}</p>` : "");
+    $("map-all").hidden = !cells.length && !others.length;
     $("map-notes").innerHTML = notes.map(n => `<p class="hint">${n}</p>`).join("");
   }
+  // Självskattningens resultat visas som ett eget kort i Min profil (inte i Mina resultat, som bara har riktiga tester), skilt från testresultaten, och tydligt som något annat än ett riktigt test.
+  const selfWarn = () => t("Det här är din egen beskrivning av vad du upplever, inte ett test. Inget mäts och dina svar jämförs inte med något. Resultatet visar bara vad dina ikryss kan tyda på och säger inget om du har synestesi. Använd det som en första fingervisning.");
+  function mapGroupsData() {
+    const rest = t("Övriga korsade kopplingar"), groups = {};
+    mapCells().forEach(([i, c]) => { const n = MAP_NAME_OF[i + "-" + c] ? t(MAP_NAME_OF[i + "-" + c]) : rest; (groups[n] ||= []).push(mapPair(i, c)); });
+    const names = Object.keys(groups).sort((a, b) => (a === rest) - (b === rest) || groups[b].length - groups[a].length || a.localeCompare(b));
+    return { groups, names };
+  }
+  // Självskattningen visas som överlappande cirklar, som i profilen: en cirkel per sinne som du kryssade i kopplingar för. Större cirkel = fler kopplingar, överlapp = kopplingar mellan sinnena, streckad cirkel = inga kopplingar ikryssade.
+  const SELF_G = ["see", "hear", "lang", "room", "taste", "touch", "mind"];
+  const SELF_NAMES = { sv: ["Syn", "Hörsel", "Språk", "Rum", "Smak och doft", "Känsel", "Tankar"], en: ["Sight", "Hearing", "Language", "Space", "Taste and smell", "Touch", "Thoughts"], fr: ["Vue", "Ouïe", "Langage", "Espace", "Goût et odorat", "Toucher", "Pensées"], de: ["Sehen", "Gehör", "Sprache", "Raum", "Geschmack und Geruch", "Tastsinn", "Gedanken"], es: ["Vista", "Oído", "Lenguaje", "Espacio", "Gusto y olfato", "Tacto", "Pensamientos"] };
+  const SELF_COL = ["url(#sc-rainbow)", "#4d8ef0", "#8b7be8", "#47bdb1", "#ffb56b", "#ff6fa8", "#9aa1b5"];
+  const SELF_I = { I01: 2, I02: 2, I03: 2, I04: 1, I05: 1, I06: 1, I07: 4, I08: 4, I09: 5, I10: 5, I11: 5, I12: 5, I13: 0, I14: 0, I15: 0, I16: 3, I17: 6, I18: 6, I19: 6 };
+  const SELF_C = { C01: 0, C02: 0, C03: 5, C04: 4, C05: 4, C06: 1, C07: 3, C08: 0, C09: 6, C10: 6, C11: 5, C12: 2 };
+  function selfCircles() {
+    const cells = mapCells(); if (!cells.length) return null;
+    const n = SELF_G.length, cnt = Array(n).fill(0), link = Array.from({ length: n }, () => Array(n).fill(0));
+    cells.forEach(([i, c]) => { const a = SELF_I[i], b = SELF_C[c]; if (a === undefined || b === undefined) return; cnt[a]++; if (b !== a) { cnt[b]++; link[a][b]++; link[b][a]++; } });
+    return { cnt, link };
+  }
+  function selfMapSvg() {
+    const d = selfCircles(); if (!d) return "";
+    const { cnt, link } = d, n = SELF_G.length, cx = 179, cy = 215, R0 = 66;
+    const lens = (dd, a, b) => { if (dd >= a + b) return 0; if (dd <= Math.abs(a - b)) return Math.PI * Math.min(a, b) ** 2; const p = a * a * Math.acos((dd * dd + a * a - b * b) / (2 * dd * a)), q = b * b * Math.acos((dd * dd + b * b - a * a) / (2 * dd * b)); return p + q - .5 * Math.sqrt((-dd + a + b) * (dd + a - b) * (dd - a + b) * (dd + a + b)); };
+    const dist = (a, b, f) => { const tg = f * Math.PI * Math.min(a, b) ** 2; let lo = Math.abs(a - b), hi = a + b; for (let k = 0; k < 40; k++) { const m = (lo + hi) / 2; if (lens(m, a, b) > tg) lo = m; else hi = m; } return (lo + hi) / 2; };
+    const mid = cnt.indexOf(Math.max(...cnt)), others = SELF_G.map((_, i) => i).filter(i => i !== mid);
+    const pos = { [mid]: { x: cx, y: cy, r: R0 } };
+    others.forEach((g, k) => {
+      const r = cnt[g] ? 30 + Math.min(cnt[g], 12) * 1.4 : 28, a = (-100 + k * 360 / others.length) * Math.PI / 180, l = link[mid][g];
+      const dd = l > 0 ? dist(R0, r, Math.min(.45, .08 + l * .05)) : cnt[g] ? R0 + r : R0 + r + 6;
+      pos[g] = { x: cx + dd * Math.cos(a), y: cy + dd * Math.sin(a), r };
+    });
+    const NAMES = SELF_NAMES[S.lang] || SELF_NAMES.sv;
+    let out = `<defs><linearGradient id="sc-rainbow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6fa8"/><stop offset=".35" stop-color="#ffb56b"/><stop offset=".65" stop-color="#47bdb1"/><stop offset="1" stop-color="#8b7be8"/></linearGradient></defs>`;
+    SELF_G.forEach((_, g) => { const c = pos[g], on = cnt[g] > 0; out += `<circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="${c.r.toFixed(1)}" fill="${SELF_COL[g]}" fill-opacity="${on ? .32 : .07}" stroke="${SELF_COL[g]}" stroke-opacity="${on ? .9 : .7}" stroke-width="2"${on ? "" : ' stroke-dasharray="5 4"'}/>`; });
+    SELF_G.forEach((_, g) => { const c = pos[g], big = c.r > 40; const words = NAMES[g].split(" "); const lines = words.length > 2 ? [words.slice(0, 2).join(" "), words.slice(2).join(" ")] : [NAMES[g]];
+      lines.forEach((ln, k) => { out += `<text class="cn" x="${c.x.toFixed(1)}" y="${(c.y + (big ? 5 : 4) + (k - (lines.length - 1) / 2) * 14).toFixed(1)}" style="font-size:${big ? 15 : 12}px">${ln}</text>`; }); });
+    return `<div class="card map-card"><svg class="selfcircles" viewBox="0 0 358 440" role="img" aria-label="${t("Din självskattning")}" style="width:100%;height:auto;display:block">${out}</svg></div>`;
+  }
+  function renderSelfBox(host, max) {
+    host.innerHTML = "";
+    if (!S.map || !S.map.done) return;
+    const n = mapCells().length;
+    host.innerHTML = `<div class="selfbox" role="group" aria-label="${t("Din självskattning")}">
+      <span class="tag">${t("Inte ett riktigt test")}</span>
+      <h3>${t("Din självskattning")}</h3>
+      <p class="warn">${selfWarn()}</p>
+      <span class="muted small">${t("Gjord {d}", { d: fmtDate(S.map.done) })}${n ? " · " + t("Ikryssade kopplingar: {k}", { k: n }) : ""}</span>
+      ${selfMapSvg(max) || `<p class="muted" style="margin:0">${t("Du kryssade inte i några kopplingar. Det är vanligt, de flesta har ingen synestesi.")}</p>`}
+      <p class="muted small" style="margin:0">${t("Varje cirkel är ett sinne som du kryssade i kopplingar för. Större cirkel = fler kopplingar, överlapp = kopplingar mellan sinnena, streckad cirkel = inga ikryssade kopplingar. Cirklarna visar bara vad dina ikryss kan tyda på.")}</p>
+      <div class="selfbtns"><button class="btn soft" data-self="open">${t("Visa hela självskattningen")}</button><button class="btn soft" data-self="redo">${t("Gör om")}</button></div>
+    </div>`;
+    host.querySelector('[data-self="open"]').addEventListener("click", () => { mapFlow = false; renderMapDone(); go("s-map-done"); });
+    host.querySelector('[data-self="redo"]').addEventListener("click", () => { mapFlow = false; openMap(true); });
+  }
+  const renderSelfBoxes = () => renderSelfBox($("prof-map"), 7);
   $("pick-map").addEventListener("click", () => { mapFlow = false; openMap(false); });
   $("map-prev").addEventListener("click", () => { if (mi > 0) { mi--; showMap(); } });
   $("map-back").addEventListener("click", () => { if (mi > 0) { mi--; showMap(); } else go(mapFlow ? "s-welcome" : "s-choose", false); });
@@ -4089,6 +4200,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   $("map-skip").addEventListener("click", () => { S.map.skipped = true; save(); mapFlow = false; startFlow(); });
 
   Object.assign(EN, MAP_EN);
+  Object.assign(EN, {"En uppföljning kan göras nu": "A follow-up can be done now", "{n} uppföljningar kan göras nu": "{n} follow-ups can be done now", "Det har gått minst 7 dagar sedan förra gången. Gör om dem så ser du om dina svar är likadana.": "At least 7 days have passed since last time. Do them again to see whether your answers are the same.", "Spara kalenderfilen igen": "Save the calendar file again", "Appen kan inte skicka aviseringar. Spara en kalenderfil så får du påminnelsen från din kalender {d}.": "The app cannot send notifications. Save a calendar file and your calendar will remind you on {d}.", "Gör uppföljningen i SynTrace": "Do the follow-up in SynTrace", "Öppna SynTrace och gör uppföljningen av dina tester. Dina svar finns bara i den webbläsare du använde förra gången.": "Open SynTrace and do the follow-up of your tests. Your answers are only stored in the browser you used last time.", "Kalenderfilen är sparad. Öppna den så läggs en påminnelse in i din kalender {d}.": "The calendar file is saved. Open it to add a reminder to your calendar on {d}.", "Det gick inte att spara en fil här. Skriv in {d} i din kalender så länge.": "It was not possible to save a file here. Add {d} to your calendar for now."});
+  Object.assign(EN, {"Inte ett riktigt test": "Not a real test", "Det här är din egen beskrivning av vad du upplever, inte ett test. Inget mäts och dina svar jämförs inte med något. Resultatet visar bara vad dina ikryss kan tyda på och säger inget om du har synestesi. Använd det som en första fingervisning.": "This is your own description of what you experience, not a test. Nothing is measured and your answers are not compared with anything. The result only shows what your ticks may point to and says nothing about whether you have synaesthesia. Use it as a first hint.", "Gjord {d}": "Done {d}", "1 koppling": "1 link", "{n} kopplingar": "{n} links", "och {n} till": "and {n} more", "Visa alla kopplingar": "Show all links", "Varje cirkel är ett sinne som du kryssade i kopplingar för. Större cirkel = fler kopplingar, överlapp = kopplingar mellan sinnena, streckad cirkel = inga ikryssade kopplingar. Cirklarna visar bara vad dina ikryss kan tyda på.": "Each circle is a sense you ticked links for. Bigger circle = more links, overlap = links between the senses, dashed circle = no links ticked. The circles only show what your ticks may point to.", "Visa hela självskattningen": "Show the whole self-rating"});
   applyLang();
   ensureRuntime(S.lang);
   drawRibbons();
