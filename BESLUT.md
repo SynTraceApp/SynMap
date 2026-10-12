@@ -44,3 +44,4 @@ Kort logg över beslut som påverkar framtida arbete. Nyast överst. Format: `- 
 - 2026-10-12 – Upphovsraderna visar riktiga namn: Cajsa G och Rickard Lundgren. Ersätter pseudonymerna Fiona och Fingal från 2026-10-11. Rickard behöver godkänna att hans namn blir offentligt. – Cajsa
 - 2026-10-12 – Kontaktraden längst ner i Så fungerar hänvisar till formuläret i Mina resultat och har ingen e-postlänk. Ersätter raden från 2026-10-11 om mailto-länken (redan delvis ersatt av Rickard). – Cajsa
 - 2026-10-12 – Appen heter SynTrace. Ersätter namnet Synesthesium från samma dag. Adressen synmap@proton.me, lagringsnycklarna och repots namn behålls. – Cajsa
+- 2026-10-12 – Den färgneutrala versionen är högkontrast (mörk text, tydliga linjer och kanter). Det finns ingen separat mjuk gråskala. Ändrar utseendet på valet från 2026-10-11 (Rickards färgneutrala version); valet i menyn är oförändrat. – Cajsa

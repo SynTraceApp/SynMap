@@ -43,25 +43,35 @@
   --muted: #9ba3ba; --line: #2c3042; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
   --on-violet: #13121c; --stim-ink: #f3f3f6; color-scheme: dark;
 }
-/* Färgneutral version: samma layout i gråskala. Användarens egna valda färger (testytor, ringar, resultat) behåller sin färg. */
+/* Färgneutral version: samma layout i gråskala med högre kontrast (mörkare text, tydligare linjer och kanter). Användarens egna valda färger (testytor, ringar, resultat) behåller sin färg. */
 :root[data-palette="neutral"] {
-  --navy: #2b2d33; --violet: #4a4c55; --violet-2: #3d3f47; --violet-soft: #ececee; --violet-line: #d6d6da;
-  --teal: #6f7278; --orange: #9a9ca2; --page: #f2f2f3; --ink: #2b2d33; --muted: #6b6e75; --line: #e5e5e8;
-  --shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.06);
+  --navy: #0d0e11; --violet: #26272c; --violet-2: #17181b; --violet-soft: #e1e1e4; --violet-line: #8d8e94;
+  --teal: #4f5157; --orange: #6a6c72; --page: #f7f7f8; --ink: #0d0e11; --muted: #494b51; --line: #b4b5ba;
+  --shadow: 0 0 0 1px rgba(0,0,0,.18), 0 8px 24px rgba(0,0,0,.08);
 }
 @media (prefers-color-scheme: dark) {
   :root[data-palette="neutral"]:not([data-theme="light"]) {
-    --navy: #e4e4e7; --violet: #b4b6bd; --violet-2: #a3a5ac; --violet-soft: #2a2b30; --violet-line: #3a3b41;
-    --teal: #9a9da4; --orange: #b0b2b8; --page: #111113; --screen: #19191c; --card: #212125; --ink: #e6e6e9;
-    --muted: #a0a2a8; --line: #2e2f34; --on-violet: #121214;
+    --navy: #ffffff; --violet: #e6e7ea; --violet-2: #f4f4f6; --violet-soft: #34353b; --violet-line: #74767d;
+    --teal: #c2c4ca; --orange: #d2d4d9; --page: #000000; --screen: #0b0b0d; --card: #17171a; --ink: #ffffff;
+    --muted: #c6c8ce; --line: #54565c; --on-violet: #000000; --shadow: 0 0 0 1px rgba(255,255,255,.22), 0 8px 24px rgba(0,0,0,.4);
   }
 }
 :root[data-palette="neutral"][data-theme="dark"] {
-  --navy: #e4e4e7; --violet: #b4b6bd; --violet-2: #a3a5ac; --violet-soft: #2a2b30; --violet-line: #3a3b41;
-  --teal: #9a9da4; --orange: #b0b2b8; --page: #111113; --screen: #19191c; --card: #212125; --ink: #e6e6e9;
-  --muted: #a0a2a8; --line: #2e2f34; --on-violet: #121214;
+  --navy: #ffffff; --violet: #e6e7ea; --violet-2: #f4f4f6; --violet-soft: #34353b; --violet-line: #74767d;
+  --teal: #c2c4ca; --orange: #d2d4d9; --page: #000000; --screen: #0b0b0d; --card: #17171a; --ink: #ffffff;
+  --muted: #c6c8ce; --line: #54565c; --on-violet: #000000; --shadow: 0 0 0 1px rgba(255,255,255,.22), 0 8px 24px rgba(0,0,0,.4);
 }
 [data-palette="neutral"] .ribbons, [data-palette="neutral"] .icon-disc, [data-palette="neutral"] #profile-circles, [data-palette="neutral"] .logo, [data-palette="neutral"] #s-welcome { filter: grayscale(1); }
+/* Högkontrast i den färgneutrala versionen: synliga kanter runt knappar och val, och en vit startknapp på den mörka startsidan. */
+[data-palette="neutral"] .btn.soft, [data-palette="neutral"] .chip, [data-palette="neutral"] .seg button { border: 1.5px solid var(--violet-line); }
+[data-palette="neutral"] .opt { border: 1.5px solid var(--line); }
+[data-palette="neutral"] .opt[aria-checked="true"] { border-color: var(--violet); border-width: 2px; }
+[data-palette="neutral"] .fld input, [data-palette="neutral"] textarea, [data-palette="neutral"] select { border: 1.5px solid var(--violet-line); }
+[data-palette="neutral"] :focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+[data-palette="neutral"] #s-welcome .btn.primary { background: #fff; color: #000; }
+[data-palette="neutral"] #s-welcome .tagline, [data-palette="neutral"] #s-welcome .start-wait { color: #fff; }
+[data-palette="neutral"] #s-welcome .credit { color: rgba(255, 255, 255, .9); }
+[data-palette="neutral"] #s-welcome .credit .nm { color: #fff; }
 * { box-sizing: border-box; }
 .ctext-out { font-family: var(--stimulus); font-weight: 700; font-size: 20px; line-height: 1.4; letter-spacing: .04em; word-break: break-word; background: var(--stage-light); border-radius: 12px; padding: 8px 12px; color: var(--neutral); }
 .ctext-out.big { font-size: 30px; min-height: 58px; }

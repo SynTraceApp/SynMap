@@ -37,3 +37,4 @@ Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sa
 - Lägga in prototyp, underlag och samarbetsregler – Rickard
 - Frågan ovanför tecknet, namnbyte till Synesthesium, riktiga namn i upphovsraderna och ny kontaktrad – Cajsa (2026-10-12)
 - Namnbyte till SynTrace – Cajsa (2026-10-12)
+- Högkontrast i den färgneutrala versionen – Cajsa (2026-10-12)
