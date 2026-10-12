@@ -4329,6 +4329,41 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   applyLang();
   ensureRuntime(S.lang);
   drawRibbons();
+  // ---------- självtest: öppna appen med ?test sist i adressen (till exempel index.html?test) ----------
+  // Kontrollerar poängsättningen med påhittade svar och visar resultatet i en ruta överst. Vanliga användare märker inget.
+  // Lägg till ett fall här när ni ändrar en gräns eller en beräkning, så märks det direkt om den andras Claude råkar ändra den.
+  if (/[?&]test\b/.test(location.search)) {
+    const res = [], check = (name, fn) => { try { const [pass, info] = fn(); res.push({ name, pass: !!pass, info: info ?? "" }); } catch (e) { res.push({ name, pass: false, info: String(e) }); } };
+    const near = (a, b, e = 0.05) => Math.abs(a - b) <= e;
+    const hue = (h, l = 50) => hslToRgb(((h % 360) + 360) % 360, 80, l);
+    const digitsSess = f => ({ date: 0, responses: "0123456789".split("").flatMap((d, i) => [0, 1, 2].map(k => ({ s: d, rgb: f(i, k) }))) });
+    check("Rött blir CIELUV (53,24; 175,01; 37,76)", () => { const r = rgbToLuv([255, 0, 0]); return [near(r[0], 53.24) && near(r[1], 175.01) && near(r[2], 37.76), r.map(x => x.toFixed(2)).join("; ")]; });
+    check("Samma färg tre gånger ger konsistens 0", () => { const w = within(digitsSess(i => hue(i * 36))); return [w.n === 10 && near(w.mean, 0), w.mean]; });
+    check("Konsistens är summan av tre parvisa avstånd", () => { const a = hue(0), b = hue(0), c = hue(200), w = within({ responses: [{ s: "1", rgb: a }, { s: "1", rgb: b }, { s: "1", rgb: c }] }), L = [a, b, c].map(rgbToLuv); return [near(w.mean, dist(L[0], L[1]) + dist(L[0], L[2]) + dist(L[1], L[2])), w.mean.toFixed(1)]; });
+    check("Gränsen för konsistens är 135,3 (Rothen m.fl. 2013)", () => [LIM_LUV === 135.3, LIM_LUV]);
+    check("Uppföljning med samma färger ger 0", () => { const a = digitsSess(i => hue(i * 36)), b = between(a, a); return [b && near(b.mean, 0), b && b.mean]; });
+    check("Inkonsekventa svar klarar inte uppföljningen", () => { const a = digitsSess((i, k) => hue(i * 36 + [0, 70, -70][k])), b = digitsSess((i, k) => hue(i * 36 + [35, -35, 105][k])), r = between(a, b); return [r.mean >= LIM_FOLLOW, `${r.mean.toFixed(1)} mot gränsen ${LIM_FOLLOW}`]; });
+    check("Konsekvent person med liten förskjutning klarar uppföljningen", () => { const a = digitsSess((i, k) => hue(i * 36 + [0, 4, -4][k])), b = digitsSess((i, k) => hue(i * 36 + 8 + [0, 4, -4][k])), r = between(a, b); return [r.mean < LIM_FOLLOW, `${r.mean.toFixed(1)} mot gränsen ${LIM_FOLLOW}`]; });
+    check("Spärr: färre än 4 kompletta tecken kan inte bedömas", () => { const s = digitsSess(i => hue(i * 36)); s.responses = s.responses.filter(r => +r.s < 3); return [!validity(s).ok]; });
+    check("Spärr: 70 % samma färg kan inte bedömas", () => [!validity(digitsSess(i => i < 7 ? hue(0) : hue(i * 36))).ok]);
+    check("Spärr: bara grått kan inte bedömas", () => [!validity(digitsSess(i => [i * 25, i * 25, i * 25])).ok]);
+    check("Personlighet: samma svar på allt kan inte bedömas", () => { const s = { trials: TR.ol.items.flatMap(id => [0, 1].map(() => ({ id, trait: "Glad", gender: "Kvinna" }))) }, r = trScore("ol", s); return [r.verdict !== "pos", r.verdict]; });
+    check("Personlighet: olika men stabila svar ger mönster", () => { const tr = ["Snäll", "Elak", "Blyg", "Glad", "Envis", "Lugn", "Allvarlig", "Busig"], s = { trials: TR.ol.items.flatMap((id, i) => [0, 1].map(() => ({ id, trait: tr[i % 8], gender: i % 2 ? "Man" : "Kvinna" }))) }, r = trScore("ol", s); return [r.verdict === "pos", r.verdict]; });
+    check("Uppföljningen öppnar samma veckodag nästa vecka", () => { if (typeof dueFrom !== "function") return [true, "saknas"]; const d = new Date(dueFrom(new Date(2026, 9, 12, 20, 14).getTime())); return [d.getDate() === 19 && d.getHours() === 0, d.toString()]; });
+    check("Kalenderfilen: CRLF och högst 75 byte per rad", () => { const x = icsText(new Date(2026, 9, 19).getTime()), l = x.split("\r\n"); return [!/[^\r]\n/.test(x) && l.every(r => new TextEncoder().encode(r).length <= 75) && l.some(r => r === "DTSTART:20261019T090000"), l.length + " rader"]; });
+    check("Konsekvent men Nej i inledande frågan ger inte Svagt stöd", () => {
+      const keep = S; S = Object.assign(blank(), { answers: { graph: "Nej" }, map: keep.map, tr: keep.tr, mt: keep.mt });
+      S.sessions.digits = [digitsSess(i => hue(i * 36))];
+      const a = assess("digits"); S = keep; return [a.level === "moderate", a.level];
+    });
+    const bad = res.filter(r => !r.pass).length, box = document.createElement("div");
+    box.setAttribute("role", "status");
+    box.style.cssText = "position:fixed;inset:8px 8px auto 8px;z-index:9999;max-height:70vh;overflow:auto;background:#fff;color:#111;border:3px solid " + (bad ? "#c62828" : "#2e7d32") + ";border-radius:14px;padding:12px 14px;font:13px/1.45 system-ui,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.25)";
+    box.innerHTML = `<b style="font-size:15px">Självtest: ${res.length - bad} av ${res.length} gröna</b> <button style="float:right" onclick="this.parentElement.remove()">Stäng</button>` +
+      res.map(r => `<div style="margin-top:4px">${r.pass ? "🟢" : "🔴"} ${r.name} <span style="color:#666">${r.info}</span></div>`).join("");
+    document.body.append(box);
+    console[bad ? "error" : "log"](`Självtest: ${res.length - bad} av ${res.length} gröna`, res);
+  }
 })();
 </script>
 
