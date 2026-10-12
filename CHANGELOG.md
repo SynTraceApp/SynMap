@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-12
+- **App** – Dela dina svar: om mejllänken blir längre än 1 900 tecken kopieras texten i stället och mejlet öppnas med en rad om att klistra in, eftersom en del mejlprogram kapar längre länkar vid cirka 2 000 tecken. Texten visas alltid, så den går att kopiera om inget mejlprogram öppnas. (Rickard)
 - **Repo** – Självtest av poängsättningen: öppna `app/index.html?test` så räknas 15 kontroller med påhittade svar och resultatet visas överst. Vanliga användare märker inget. (Rickard)
 - **Resultat** – Samma färger inom testet ger Måttligt stöd även om man svarade Nej eller Vet inte i de inledande frågorna. Förut kunde man få "Svagt stöd: inget tydligt mönster" bredvid en bock för samma färger. Ibland och Vet inte ger varken bock eller kryss. Gå tillbaka med `git revert` på commiten "Samma färger inom testet ger Måttligt stöd". (Rickard)
 - **Design** – Färghjulet reagerar snabbare: ringen ritas en gång, rutan med två färgövergångar, och hjulet ritas högst en gång per bildruta. I ett prov gick det från ungefär 340 till 18 ms per fingerrörelse på en långsam telefon. Samma färg för samma fingerposition som förut. (Rickard)

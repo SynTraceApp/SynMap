@@ -1484,6 +1484,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
  "mina svar": "my answers",
  "Texten är kopierad. Klistra in den i ett mejl till {a}.": "The text is copied. Paste it into an e-mail to {a}.",
  "Kopiera texten nedan och klistra in den i ett mejl till {a}.": "Copy the text below and paste it into an e-mail to {a}.",
+ "Texten är kopierad. Klistra in den i mejlet som öppnas.": "The text is copied. Paste it into the e-mail that opens.",
+ "Klistra in texten från SynTrace här. Den är redan kopierad.": "Paste the text from SynTrace here. It is already copied.",
+ "Klistra in texten från SynTrace här.": "Paste the text from SynTrace here.",
+ "Om inget mejl öppnades: kopiera texten nedan och skicka den till {a}.": "If no e-mail opened: copy the text below and send it to {a}.",
  "Exporterade data": "Exported data",
  "Vad betyder resultatet?": "What does the result mean?",
  "Visa min profil": "Show my profile",
@@ -2322,6 +2326,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   }
   // ---------- sharing by e-mail: the person's own mail program sends it, nothing is sent from the app ----------
   const SHARE_MAIL_ON = true, SHARE_TO = "syntrace_2026@proton.me";
+  // Längsta mejllänk som öppnas direkt. Många mejlprogram klarar runt 2 000 tecken; längre text kopieras i stället.
+  const MAIL_MAX = 1900;
   $("res-share").hidden = !SHARE_MAIL_ON;
   function shareBody() {
     const d = summary();
@@ -2339,11 +2345,20 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   $("share-send").addEventListener("click", () => {
     const body = shareBody(), subject = "SynTrace – " + t("mina svar");
     let embedded = false; try { embedded = window.self !== window.top; } catch { embedded = true; }
-    if (!embedded) { location.href = "mailto:" + SHARE_TO + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body); return; }
-    // Inside claude.ai a mail link does nothing, so the text is copied and shown for pasting into a mail.
+    // RFC 6068: radbrytningar ska vara %0D%0A i mejllänken.
+    const mailto = text => "mailto:" + SHARE_TO + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(text.replace(/\r?\n/g, "\r\n"));
     const msg = $("share-msg2"), ta = $("share-text");
+    // Texten visas alltid här, så att den går att kopiera om inget mejlprogram öppnas (det märker appen inte).
     ta.value = body; ta.hidden = false; msg.hidden = false;
-    const shown = ok => { msg.textContent = t(ok ? "Texten är kopierad. Klistra in den i ett mejl till {a}." : "Kopiera texten nedan och klistra in den i ett mejl till {a}.", { a: SHARE_TO }); if (!ok) { ta.focus(); ta.select(); } };
+    // Långa mejllänkar kapas tyst av en del mejlprogram, och då blir datadelen oläslig. Under gränsen öppnas mejlet med allt i.
+    if (!embedded && mailto(body).length <= MAIL_MAX) { msg.textContent = t("Om inget mejl öppnades: kopiera texten nedan och skicka den till {a}.", { a: SHARE_TO }); location.href = mailto(body); return; }
+    // Annars kopieras texten. Utanför claude.ai öppnas mejlet också, med en kort rad om att klistra in texten.
+    // (Inne i claude.ai fungerar mejllänkar inte alls.)
+    const shown = ok => {
+      msg.textContent = t(ok ? (embedded ? "Texten är kopierad. Klistra in den i ett mejl till {a}." : "Texten är kopierad. Klistra in den i mejlet som öppnas.") : "Kopiera texten nedan och klistra in den i ett mejl till {a}.", { a: SHARE_TO });
+      if (!ok) { ta.focus(); ta.select(); }
+      if (!embedded) location.href = mailto(t(ok ? "Klistra in texten från SynTrace här. Den är redan kopierad." : "Klistra in texten från SynTrace här."));
+    };
     try { navigator.clipboard.writeText(body).then(() => shown(true), () => shown(false)); } catch { shown(false); }
   });
   async function renderResearch() {
