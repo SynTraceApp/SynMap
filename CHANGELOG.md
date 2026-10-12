@@ -9,6 +9,9 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Skriv för en människa, inte för en dator. Säg vad användaren märker eller vad den andra behöver veta, inte vilka rader som ändrats.
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
+## 2026-10-12
+- **Design** – Färgtesterna: Föregående och Nästa sitter nu ovanför färgväljaren, direkt under tecknet, så att allt ryms på samma skärm på en vanlig mobil och man kommer vidare snabbare. Tecknet är lite mindre (84 i stället för 120 px) och färghjulet anpassar sig efter höjden. I ljudtestet ligger knapparna kvar nederst tills man har svarat Ja på färgfrågan. På mycket låga skärmar behövs fortfarande en liten skroll. Gäller även Rickards provväljare (HSV, Lab, En i taget). Gå tillbaka med `git revert` på commiten "Flyttar Föregående och Nästa ovanför färgväljaren". (Cajsa)
+
 ## 2026-10-11
 - **Underlag** – Nytt skript `docs/SynMap-formular.gs` som skapar ett Google-formulär med frågor till testanvändare efter testet (vad de gjorde, hur det fungerade, resultaten, om dem, till sist). Klistras in i script.google.com och körs med skapaFormular. Det är fristående: ingen länk finns i appen och inga svar skickas från appen. Frågorna ligger som en lista överst i filen. Ofärdigt: skriptet är inte körd av oss mot Google ännu när det skrevs. (Cajsa)
 - **App** – Bakåtpilen på Min profil och Mina resultat går nu tillbaka till testlistan. Tidigare lades varje byte med länkraden (Välj test / Mina resultat / Min profil) till i historiken, så pilen kunde hamna på fel skärm. Bytena fyller inte längre historiken. (Cajsa)

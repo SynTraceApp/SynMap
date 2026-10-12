@@ -218,7 +218,7 @@ canvas.hero-rib { display: none; }
 .seq-swatch { width: 100%; height: 170px; border-radius: 16px; background: #000; }
 .seq-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
 #hue-strip { width: 100%; height: 30px; border-radius: 10px; touch-action: none; cursor: crosshair; display: block; }
-#plane { width: min(100%, 320px); aspect-ratio: 1; height: auto; margin: 0 auto; touch-action: none; cursor: pointer; display: block; }
+#plane { width: min(100%, 320px, max(200px, calc(100svh - 520px))); aspect-ratio: 1; height: auto; margin: 0 auto; touch-action: none; cursor: pointer; display: block; }
 /* Rickards provväljare (Fält, HSV, Lab) använder en rektangulär yta i stället för hjulet. */
 #plane.wide { width: 100%; aspect-ratio: auto; height: 170px; border-radius: 16px; cursor: crosshair; }
 .slider-row { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--muted); }
@@ -231,6 +231,8 @@ canvas.hero-rib { display: none; }
 /* The chosen colour sits in a long bar just above the colour field, so a right-handed finger on the field does not cover it. */
 #picker-block .q-row { flex-direction: column; align-items: stretch; gap: 8px; margin-bottom: -4px; }
 #picker-block .pv { width: 100%; height: 36px; border-radius: 12px; border-width: 2px; }
+#s-test .stim-row { min-height: 96px; padding: 8px; }
+#s-test .stim { font-size: 84px; }
 .stim { transition: color .12s; text-shadow: 1.5px 0px 0 #000,-1.5px 0px 0 #000,0px 1.5px 0 #000,0px -1.5px 0 #000,1.1px 1.1px 0 #000,1.1px -1.1px 0 #000,-1.1px 1.1px 0 #000,-1.1px -1.1px 0 #000; } /* svart kontur utanför tecknet (text-shadow, inte text-stroke, så att inga linjer syns inuti) */
 /* Fixed neutral test surface: the same mid grey in light and dark mode, so the page colour does not tint what people pick. */
 .stim-row { background: var(--neutral); border-radius: 22px; padding: 14px; }
@@ -3206,6 +3208,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("auto-block").hidden = !sound || !T.played;
     const showPicker = !sound || T.auto === "ja";
     $("picker-block").hidden = !showPicker;
+    // Föregående/Nästa sitter ovanför färgväljaren, så att allt ryms på samma skärm och man kommer vidare snabbare.
+    { const nav = document.querySelector("#s-test .nav-row"), pb = $("picker-block");
+      if (showPicker) { if (nav.nextElementSibling !== pb) pb.before(nav); } else if (nav.nextElementSibling) $("s-test").append(nav); }
     if (showPicker && sound) requestAnimationFrame(drawPlane);
     const rgb = curRgb();
     // Digits: the digit itself takes the chosen colour, so the answer sits right where the eye already is.
