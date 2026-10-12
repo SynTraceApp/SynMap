@@ -2637,12 +2637,16 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const v = per.filter(p => p.score !== null);
     return { per, mean: v.length ? v.reduce((t, p) => t + p.score, 0) / v.length : null, n: v.length, total: per.length };
   }
-  // Between sessions: distance between each stimulus' mean colour in the first and the latest session.
+  // Between sessions: a cross-session score on the same scale as 135.3. Per stimulus, the mean of all distances between each answer
+  // in the first and each answer in the latest session (3 × 3 = 9 pairs), times 3, as if the two sessions were one test.
+  // Before 2026-10 this compared the two mean colours, which vary far less than single answers (about a fifth of the within score),
+  // so the limit 45 let almost everyone through. See BESLUT.md.
   function between(a, b) {
     const ma = {}, mb = {};
     for (const r of a.responses) if (r.rgb) (ma[r.s] ||= []).push(r.rgb);
     for (const r of b.responses) if (r.rgb) (mb[r.s] ||= []).push(r.rgb);
-    const ds = Object.keys(ma).filter(s => mb[s]).map(s => dist(meanLuv(ma[s]), meanLuv(mb[s])));
+    const cross = (xs, ys) => { const la = xs.map(rgbToLuv), lb = ys.map(rgbToLuv); let tot = 0; for (const x of la) for (const y of lb) tot += dist(x, y); return 3 * tot / (la.length * lb.length); };
+    const ds = Object.keys(ma).filter(s => mb[s]).map(s => cross(ma[s], mb[s]));
     return ds.length ? { mean: ds.reduce((t, x) => t + x, 0) / ds.length, n: ds.length } : null;
   }
 
@@ -3594,7 +3598,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // ---------- overall assessment ----------
   // Combines self-report, consistency, speed test and follow-up into one level. Never a diagnosis.
   const LIM_LUV = 135.3;   // Rothen m.fl. 2013, sum of three pairwise distances
-  const LIM_FOLLOW = 45;   // the same limit per pair (135,3 / 3), for mean colour first vs latest session
+  const LIM_FOLLOW = LIM_LUV; // cross-session score (see between) uses the same scale and limit as the within-session score
   const LIM_SPEED = .8;    // between Eagleman's 94 % (synesthetes) and 67 % (controls)
   const LIM_MOVE = 10;     // space: mean shift of a place between sessions, % of the field
   const COLOUR = ["sound", "digits", "letters", "time"];

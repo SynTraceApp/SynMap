@@ -10,7 +10,7 @@ Kort logg över beslut som påverkar framtida arbete. Nyast överst. Format: `- 
 - 2026-10-09 – Färger: marinblå #28365B (text), violett #7657D5 (knappar), turkos #47BDB1, varm orange #FFB56B, ljus neutral bakgrund. Mobil först, svenska först. – Rickard
 - 2026-10-09 – Appen är en enda HTML-fil utan byggsteg. Svar sparas bara lokalt i webbläsaren. – Rickard
 - 2026-10-09 – Inga betalda utvecklingskostnader eller åtaganden innan forskare eller ett universitet är med. – Rickard
-- 2026-10-09 – Samlad bedömning per test i fyra nivåer (Starkt/Måttligt/Svagt stöd, Kan inte bedömas). Starkt stöd kräver godkänd uppföljning. Gränser: konsistens 135,3, uppföljning 45 (135,3/3), snabbtest 80 % rätt, Tid i rummet 0,2029 % och flytt under 10 %. Ordet diagnos används aldrig. – Rickard
+- 2026-10-09 – Samlad bedömning per test i fyra nivåer (Starkt/Måttligt/Svagt stöd, Kan inte bedömas). Starkt stöd kräver godkänd uppföljning. Gränser: konsistens 135,3, uppföljning 45 (135,3/3), snabbtest 80 % rätt, Tid i rummet 0,2029 % och flytt under 10 %. Ordet diagnos används aldrig. – Rickard (uppföljningsgränsen ersatt 2026-10-12 av Rickard, se nedan)
 - 2026-10-09 – Testytan är alltid neutral grå #8a8a8a, oberoende av ljust eller mörkt läge. – Rickard
 - 2026-10-09 – Appen är tvåspråkig (svenska och engelska). Stimuli sparas alltid på svenska; engelska bokstavstestet är A–Z. – Rickard
 - 2026-10-09 – Tester och frågor ska bygga på etablerad forskning där det går, med källan angiven i appen. – Rickard
@@ -52,3 +52,4 @@ Kort logg över beslut som påverkar framtida arbete. Nyast överst. Format: `- 
 - 2026-10-12 – Syn är en egen cirkel bland sinnena i profilen, och Känsel överlappar Syn efter spegelberöringen (andel klipp med människor som gav beröring: 60 % eller mer starkt, 30 % måttligt, minst ett klipp svagt). Färg är kvar i mitten som färgupplevelsen. Det är vår indelning och en grov bild. – Cajsa
 - 2026-10-12 – "7 dagar" till uppföljningen räknas i kalenderdagar: den öppnar vid midnatt samma veckodag en vecka efter testet. – Rickard
 - 2026-10-12 – Testverktygen (Hoppa fram 7 dagar, piltangenter och provknapparna HSV, Lab och En i taget) syns bara i testläget: fem snabba tryck på loggan på startsidan, eller ?dev i adressen. Hjul är den enda färgväljaren för vanliga användare. Ersätter att provknapparna syns för alla (2026-10-11, Rickard och Cajsa). – Rickard
+- 2026-10-12 – Uppföljningen poängsätts korsvis: medel av alla avstånd mellan svaren i första och senaste omgången, gånger 3, mot samma gräns 135,3. Ersätter gränsen 45 (2026-10-09). Det är vår egen tillämpning av Rothen m.fl. (2013) och bör granskas av en forskare. – Rickard
