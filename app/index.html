@@ -2328,7 +2328,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     if (S.pa.done) d.pa = paScore();
     if (S.mt.sessions.length) d.mirror = S.mt.sessions.length;
     for (const k of ["ol", "lg"]) if (trSessions(k).length) d[k] = trSessions(k).length;
-    const cmp = selfCompare(); if (cmp.length) d.cmp = cmp.map(r => ({ t: r.k, self: r.ticked ? 1 : 0, ...(r.raw ? { test: r.raw } : {}) }));
+    const cmp = selfCompare(); if (cmp.length) d.cmp = cmp.map(r => ({ t: r.k, self: r.ticked ? 1 : 0, ...(r.intro ? { intro: r.intro } : {}), ...(r.selfFirst !== null ? { first: r.selfFirst ? "self" : "test" } : {}), ...(r.raw ? { test: r.raw } : {}) }));
     const note = $("share-note").value.trim();
     return t("Synpunkter:") + "\n" + (note || "–") + "\n\n--- " + t("SynTrace-data, ändra inte här nedanför") + " ---\n" + JSON.stringify(d);
   }
@@ -4234,10 +4234,12 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   }
   // Jämförelse mellan självskattningen och testerna: för varje typ som har ett test, vad man kryssade i och vad testet visade. Bara en jämförelse, inget mått på synestesi; den följer också med i det som skickas, så att frågorna kan valideras mot testerna.
   const CMP_ROWS = [
-    { k: "letters", name: "Bokstav → färg", cells: ["I01-C01"] }, { k: "digits", name: "Siffra → färg", cells: ["I02-C01"] },
-    { k: "sound", name: "Ljud → färg", cells: ["I04-C01"] }, { k: "time", name: "Dag/månad → färg", cells: ["I16-C01"] },
-    { k: "space", name: "Tid i rummet", cells: ["I16-C07"] }, { k: "ol", name: "Personlighet", cells: ["I01-C09", "I02-C09"] },
-    { k: "lg", name: "Ord → smak", cells: ["I03-C04"] }, { k: "mirror", name: "Spegelberöring", cells: ["I12-C11"] }
+    // intro = frågan i Inledande frågor för samma typ, så att även de frågorna kan jämföras mot testerna.
+    // Tid i rummet visar också siffrorna 0–9 (talform, I02-C07), och Personlighet visar också veckodagar (I16-C09).
+    { k: "letters", name: "Bokstav → färg", cells: ["I01-C01"], intro: "graph" }, { k: "digits", name: "Siffra → färg", cells: ["I02-C01"], intro: "graph" },
+    { k: "sound", name: "Ljud → färg", cells: ["I04-C01"], intro: "sound" }, { k: "time", name: "Dag/månad → färg", cells: ["I16-C01"], intro: "timecol" },
+    { k: "space", name: "Tid i rummet", cells: ["I16-C07", "I02-C07"], intro: "space" }, { k: "ol", name: "Personlighet", cells: ["I01-C09", "I02-C09", "I16-C09"], intro: "pers" },
+    { k: "lg", name: "Ord → smak", cells: ["I03-C04"], intro: "taste" }, { k: "mirror", name: "Spegelberöring", cells: ["I12-C11"], intro: "touch" }
   ];
   function selfCompare() {
     if (!S.map || !S.map.done) return [];
@@ -4257,7 +4259,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       } else if (r.k === "ol" && trSessions("ol").length) { const ss = trSessions("ol"), m = trScore("ol", ss[ss.length - 1]); tested = true; text = t("{a} av {b} samma svar båda gångerna", { a: m.same, b: m.n }); raw = { same: m.same, n: m.n }; }
       else if (r.k === "lg" && trSessions("lg").length) { const ss = trSessions("lg"), m = lgScore(ss[ss.length - 1]); tested = true; text = t("konsistens {a} %", { a: m.score === null ? "–" : Math.round(m.score) }); raw = { score: m.score === null ? null : Math.round(m.score) }; }
       else if (r.k === "mirror" && S.mt.sessions.length) { const m = mtScore(S.mt.sessions[S.mt.sessions.length - 1]); tested = true; text = t("{a} av {b} klipp med människor gav beröring", { a: m.human, b: m.nHuman }); raw = { h: m.human, n: m.nHuman }; }
-      return { k: r.k, name: r.name, ticked, tested, text, raw };
+      // Gjordes självskattningen före eller efter testet? Efter ett test kan svaren i testet påverka vad man kryssar i.
+      const firstTest = (KEYS.includes(r.k) ? S.sessions[r.k] : r.k === "mirror" ? S.mt.sessions : trSessions(r.k))[0];
+      const selfFirst = tested && firstTest ? S.map.done < firstTest.date : null;
+      return { k: r.k, name: r.name, ticked, tested, text, raw, intro: S.answers[r.intro] || null, selfFirst };
     }).filter(r => r.ticked || r.tested);
   }
   function selfCompareHtml() {
