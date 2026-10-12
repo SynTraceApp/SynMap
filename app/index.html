@@ -61,7 +61,9 @@
   --teal: #c2c4ca; --orange: #d2d4d9; --page: #000000; --screen: #0b0b0d; --card: #17171a; --ink: #ffffff;
   --muted: #c6c8ce; --line: #54565c; --on-violet: #000000; --shadow: 0 0 0 1px rgba(255,255,255,.22), 0 8px 24px rgba(0,0,0,.4);
 }
-[data-palette="neutral"] .ribbons, [data-palette="neutral"] .icon-disc, [data-palette="neutral"] #profile-circles, [data-palette="neutral"] .logo, [data-palette="neutral"] #s-welcome { filter: grayscale(1); }
+[data-palette="neutral"] .ribbons, [data-palette="neutral"] .icon-disc, [data-palette="neutral"] #profile-circles, [data-palette="neutral"] .logo, [data-palette="neutral"] #s-welcome > :not(.menu) { filter: grayscale(1); }
+/* Startsidans bakgrundsbild görs grå med luminosity-blandning mot bakgrundsfärgen, så att menyn inuti startsidan kan behålla sin färg. */
+[data-palette="neutral"] #s-welcome { background-blend-mode: luminosity; }
 /* Högkontrast i den färgneutrala versionen: synliga kanter runt knappar och val, och en vit startknapp på den mörka startsidan. */
 [data-palette="neutral"] .btn.soft, [data-palette="neutral"] .chip, [data-palette="neutral"] .seg button { border: 1.5px solid var(--violet-line); }
 [data-palette="neutral"] .opt { border: 1.5px solid var(--line); }
@@ -152,6 +154,15 @@ canvas.hero-rib { display: none; }
 .menu > button, .menu > label { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; font-size: 16px; font-weight: 600; color: var(--ink); text-align: left; width: 100%; }
 .menu > button:hover, .menu > label:hover { background: var(--violet-soft); }
 .menu svg { width: 18px; height: 18px; color: var(--muted); flex: none; }
+/* Knappen som byter version visar vad man får: den som leder till den färgneutrala versionen är i gråskala, den som leder till färgversionen är i färg. */
+#palette-btn { background: var(--violet-soft); }
+#palette-btn svg { color: var(--violet); }
+:root:not([data-palette="neutral"]) #palette-btn { filter: grayscale(1); }
+:root[data-palette="neutral"] #palette-btn { --navy: #28365b; --ink: #28365b; --violet: #6b4fd8; --violet-soft: #efebfd; --muted: #69718a; }
+@media (prefers-color-scheme: dark) {
+  :root[data-palette="neutral"]:not([data-theme="light"]) #palette-btn { --navy: #dfe4f7; --ink: #e6e9f5; --violet: #9a82f5; --violet-soft: #2a2546; --muted: #9ba3ba; }
+}
+:root[data-palette="neutral"][data-theme="dark"] #palette-btn { --navy: #dfe4f7; --ink: #e6e9f5; --violet: #9a82f5; --violet-soft: #2a2546; --muted: #9ba3ba; }
 .menu-btn.busy::after { content: ""; position: absolute; top: 7px; right: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--violet); animation: pulse 1s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .25; } }
 .start-wait { font-size: 13px; color: var(--muted); max-width: 260px; margin: -4px 0 0; }
