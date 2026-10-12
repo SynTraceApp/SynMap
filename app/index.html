@@ -2680,31 +2680,47 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   const hsv01 = (h, s, v) => { const k = n => (n + h / 60) % 6, f = n => v - v * s * Math.max(0, Math.min(k(n), 4 - k(n), 1)); return [Math.round(f(5) * 255), Math.round(f(3) * 255), Math.round(f(1) * 255)]; };
   const hslToHsv = (l, s) => { l /= 100; s /= 100; const v = l + s * Math.min(l, 1 - l); return { sv: v === 0 ? 0 : 2 * (1 - l / v), v }; };
   const geom = () => { const w = plane.clientWidth, c = w / 2, R = c - 1, T = w * 0.13, Rin = R - T, hs = (Rin - w * 0.04) / Math.SQRT2; return { w, c, R, T, Rin, hs }; };
-  function drawWheel() {
-    const g0 = geom(), d = window.devicePixelRatio || 1;
-    if (!g0.w) return;
-    plane.width = plane.height = Math.round(g0.w * d);
-    const W = plane.width, c = W / 2, R = (g0.R) * d, Rin = g0.Rin * d, hs = g0.hs * d;
+  // Hjulet ritas i lager, med samma färger som förut: ringen räknas ut en gång per storlek och sparas som bild,
+  // rutan ritas med två färgövergångar (vitt → nyans åt sidan, genomskinligt → svart nedåt, vilket är exakt HSV),
+  // och markörerna ritas ovanpå. Tidigare räknades nästan en miljon bildpunkter om vid varje fingerrörelse.
+  // Skärpan begränsas till 2×; det som sparas räknas fortfarande fram ur fingerpositionen, inte ur bilden.
+  const wheelCache = { W: 0, ring: null };
+  let wheelRaf = 0;
+  function wheelRing(W, c, R, Rin) {
+    if (wheelCache.W === W) return wheelCache.ring;
     const BLUE_I = Math.round(HUE_AT.pos(240) * 720) % 720;
-    const img = pctx.createImageData(W, W), raw = Array.from({ length: 720 }, (_, i) => hslToRgb(HUE_AT.hue(i / 720), 100, 50)),
+    const raw = Array.from({ length: 720 }, (_, i) => hslToRgb(HUE_AT.hue(i / 720), 100, 50)),
       // lätt utjämning runt ringen så att inga skarpa kanter syns där en färgkanal byter riktning
       ringCol = raw.map((_, i) => {
         // extra bred utjämning kring blått, där ringen annars får en skarp kant mot ljusblått
         const R = Math.round(36 + 70 * Math.exp(-Math.pow(((((i - BLUE_I) % 720) + 1080) % 720 - 360) / 90, 2)));
         return [0, 1, 2].map(ch => { let t = 0, ws = 0; for (let k = -R; k <= R; k++) { const w = 1 - Math.abs(k) / (R + 1); t += w * raw[(i + k + 720) % 720][ch]; ws += w; } return Math.round(t / ws); });
       });
-    const curH = pick ? pick.h : 0;
+    const cv = document.createElement("canvas"); cv.width = cv.height = W;
+    const cx = cv.getContext("2d"), img = cx.createImageData(W, W);
     for (let y = 0; y < W; y++) for (let x = 0; x < W; x++) {
-      const dx = x + 0.5 - c, dy = y + 0.5 - c, r = Math.hypot(dx, dy), i = (y * W + x) * 4;
-      if (Math.abs(dx) <= hs && Math.abs(dy) <= hs) {
-        const k = hsv01(curH, (dx + hs) / (2 * hs), 1 - (dy + hs) / (2 * hs));
-        img.data[i] = k[0]; img.data[i + 1] = k[1]; img.data[i + 2] = k[2]; img.data[i + 3] = 255;
-      } else {
-        const a = Math.max(0, Math.min(1, Math.min(R - r, r - Rin) + 0.5));
-        if (a > 0) { const t = ((Math.atan2(dy, dx) + Math.PI / 2) / (2 * Math.PI) + 1) % 1, k = ringCol[Math.floor(t * 720) % 720]; img.data[i] = k[0]; img.data[i + 1] = k[1]; img.data[i + 2] = k[2]; img.data[i + 3] = Math.round(a * 255); }
-      }
+      const dx = x + 0.5 - c, dy = y + 0.5 - c, r = Math.hypot(dx, dy);
+      if (r < Rin - 1 || r > R + 1) continue;
+      const a = Math.max(0, Math.min(1, Math.min(R - r, r - Rin) + 0.5));
+      if (a > 0) { const i = (y * W + x) * 4, t = ((Math.atan2(dy, dx) + Math.PI / 2) / (2 * Math.PI) + 1) % 1, k = ringCol[Math.floor(t * 720) % 720]; img.data[i] = k[0]; img.data[i + 1] = k[1]; img.data[i + 2] = k[2]; img.data[i + 3] = Math.round(a * 255); }
     }
-    pctx.putImageData(img, 0, 0);
+    cx.putImageData(img, 0, 0);
+    wheelCache.W = W; wheelCache.ring = cv;
+    return cv;
+  }
+  function drawWheel() {
+    const g0 = geom(), d = Math.min(window.devicePixelRatio || 1, 2);
+    if (!g0.w) return;
+    const W = Math.round(g0.w * d);
+    if (plane.width !== W) plane.width = plane.height = W;
+    const c = W / 2, R = (g0.R) * d, Rin = g0.Rin * d, hs = g0.hs * d;
+    pctx.clearRect(0, 0, W, W);
+    pctx.drawImage(wheelRing(W, c, R, Rin), 0, 0);
+    const curH = pick ? pick.h : 0, full = hsv01(curH, 1, 1);
+    const gx = pctx.createLinearGradient(c - hs, 0, c + hs, 0); gx.addColorStop(0, "#fff"); gx.addColorStop(1, `rgb(${full})`);
+    pctx.fillStyle = gx; pctx.fillRect(c - hs, c - hs, 2 * hs, 2 * hs);
+    const gy = pctx.createLinearGradient(0, c - hs, 0, c + hs); gy.addColorStop(0, "rgba(0,0,0,0)"); gy.addColorStop(1, "#000");
+    pctx.fillStyle = gy; pctx.fillRect(c - hs, c - hs, 2 * hs, 2 * hs);
     if (pick) {
       const ang = HUE_AT.pos(pick.h) * 2 * Math.PI - Math.PI / 2, rm = (Rin + R) / 2, mr = (R - Rin) * 0.5;
       const hv = hslToHsv(pick.l, +$("sat").value);
@@ -2872,7 +2888,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     if (hsvMode()) { drawHue(); drawSV(); return; }
     if (seqMode()) { drawSeq(); return; }
     if (labMode()) { drawLab(); return; }
-    drawWheel();
+    // Högst en ritning per bildruta, hur många fingerrörelser webbläsaren än skickar.
+    if (!wheelRaf) wheelRaf = requestAnimationFrame(() => { wheelRaf = 0; drawWheel(); });
   }
   const curRgb = () => !pick ? null : pick.lab ? labPoints()[pick.i].rgb : pick.seq !== undefined ? seqRgb(pick.seq) : pick.hv ? hsvToRgb(pick.h, pick.s, pick.v) : hslToRgb(pick.h, +$("sat").value, pick.l);
   function setPick(e) {

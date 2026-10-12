@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-12
+- **Design** – Färghjulet reagerar snabbare: ringen ritas en gång, rutan med två färgövergångar, och hjulet ritas högst en gång per bildruta. I ett prov gick det från ungefär 340 till 18 ms per fingerrörelse på en långsam telefon. Samma färg för samma fingerposition som förut. (Rickard)
 - **Resultat** – Jämförelsen mellan självskattningen och testerna räknar nu också talformer (Tid i rummet) och veckodagar (Personlighet), och det som skickas med Dela dina svar tar med svaret på den inledande frågan och om självskattningen gjordes före eller efter testet. Kompletterar Cajsas jämförelse. (Rickard)
 - **Resultat** – Personlighet kan inte bedömas när över 60 % av svaren är samma kombination (till exempel "Glad, Kvinna" på allt). Förut gav det "konsekvent mönster". Kompletterar Cajsas gräns för Personlighet. (Rickard)
 - **Resultat** – Uppföljningen jämför varje svar i första och senaste omgången (korsvis poäng) mot samma gräns som konsistensen, 135,3. Förut jämfördes medelfärgerna mot gränsen 45, och eftersom medelfärger varierar mycket mindre än enskilda svar klarade nästan alla uppföljningen, även med inkonsekventa svar (77 % i en simulering, 1 % med den nya poängen). Gå tillbaka med `git revert` på commiten "Uppföljningen poängsätts korsvis". (Rickard)
