@@ -3275,6 +3275,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("auto-block").hidden = !sound || !T.played;
     const showPicker = !sound || T.auto === "ja";
     $("picker-block").hidden = !showPicker;
+    // Frågan (Vilken färg förknippar du med bokstaven?) står ovanför tecknet; i ljudtestet, som saknar tecken, står den kvar i väljaren.
+    { const pq = $("picker-q"), sr = $("stim-row");
+      if (!sound) { if (pq.nextElementSibling !== sr) sr.before(pq); pq.style.marginBottom = "-8px"; }
+      else if (pq.parentElement !== document.querySelector("#picker-block .q-row")) { document.querySelector("#picker-block .q-row").prepend(pq); pq.style.marginBottom = ""; } }
     // Föregående/Nästa sitter ovanför färgväljaren, så att allt ryms på samma skärm och man kommer vidare snabbare.
     { const nav = document.querySelector("#s-test .nav-row"), pb = $("picker-block");
       if (showPicker) { if (nav.nextElementSibling !== pb) pb.before(nav); } else if (nav.nextElementSibling) $("s-test").append(nav); }
