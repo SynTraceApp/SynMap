@@ -40,3 +40,4 @@ Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sa
 - Högkontrast i den färgneutrala versionen – Cajsa (2026-10-12)
 - Knappen för färgneutral version i gråskala, knappen för färg i färg – Cajsa (2026-10-12)
 - Självskattningen under Fler tester med eget resultat i Min profil, påminnelser om uppföljning – Cajsa (2026-10-12)
+- Ny mejladress syntrace_2026@proton.me – Cajsa (2026-10-12)
