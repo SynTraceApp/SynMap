@@ -1601,6 +1601,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 
  "Du beskriver upplevelsen själv": "You describe the experience yourself",
  "inte besvarat": "not answered",
+ "du svarade Ibland": "you answered Sometimes",
+ "du svarade Vet inte": "you answered Don't know",
  "Samma platser varje gång i testet": "Same places each time in the test",
  "Samma färger varje gång i testet": "Same colours each time in the test",
  "kan inte bedömas": "can't be assessed",
@@ -3641,10 +3643,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       const w = within(last); valid = validity(last).ok; cons = valid && w.n >= 3 ? w.mean < LIM_LUV : null;
       if (ss.length > 1) { const b = between(first, last); follow = b ? b.mean < LIM_FOLLOW : null; }
     }
-    const selfOk = self ? isYes(self) : null;
+    // Bara "Ja, tydligt" ger en bock och bara "Nej" ett kryss. "Ibland" leder fortfarande till testet (isYes), men varken det eller "Vet inte" ger bock eller kryss.
+    const selfOk = self === "Ja, tydligt" ? true : self === "Nej" ? false : null;
     const sp = ss.slice().reverse().find(x => x.speed)?.speed;
     const speedOk = sp ? sp.acc >= LIM_SPEED : null;
-    const sig = [{ label: "Du beskriver upplevelsen själv", ok: selfOk, wait: "inte besvarat" },
+    const sig = [{ label: "Du beskriver upplevelsen själv", ok: selfOk, wait: self === "Ibland" ? "du svarade Ibland" : self === "Vet inte" ? "du svarade Vet inte" : "inte besvarat" },
       { label: key === "space" ? "Samma platser varje gång i testet" : "Samma färger varje gång i testet", ok: cons, wait: "kan inte bedömas" }];
     if (key !== "sound" && key !== "space") sig.push({ label: "Snabbtestet", ok: speedOk, wait: "inte gjort" });
     sig.push({ label: "Samma svar vid uppföljning", ok: follow, wait: "återstår" });
@@ -3653,8 +3656,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     if (!valid || cons === null) level = "na";
     else if (follow === false || !cons) level = "weak";
     else if (follow && (selfOk || speedOk)) level = "strong";
-    else if (selfOk || speedOk || follow) level = "moderate";
-    else level = "weak";
+    // Samma färger inom testet är forskningens screeningkriterium (Rothen m.fl. 2013) och räcker för Måttligt stöd, preliminärt tills uppföljningen är gjord.
+    // Den egna beskrivningen ändrar inte nivån: den som testar sig tror oftast redan att hen har synestesi. Tidigare kunde den som var konsekvent
+    // men svarade Nej i inledande frågorna få "Svagt stöd: inget tydligt mönster" bredvid bocken "Samma färger varje gång".
+    else level = "moderate";
     const notes = [];
     if (COLOUR.includes(key) && S.bg.cv === "Ja") notes.push("Du har angett nedsatt färgseende, vilket kan påverka färgtesterna.");
     if (COLOUR.includes(key) && S.bg.night === "Ja") notes.push("Du har angett att nattläge eller blåljusfilter är på, vilket ändrar hur färgerna ser ut.");
