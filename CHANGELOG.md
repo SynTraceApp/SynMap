@@ -11,6 +11,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 
 ## 2026-10-13
 - **Test** – Svar som betyder att man inte har någon upplevelse går nu vidare till nästa fråga av sig själva, efter ungefär en tredjedels sekund så att man ser valet: Ingen smak (Ord → smak), Ingen personlighet + Inget kön (Personlighet, först när båda är valda), Nej (Spegelberöring), Nej på "Upplevde du en färg automatiskt?" (Ljud → färg), Inget av detta (Självskattning) och Nej (Inledande frågor). Ingen färg och Har ingen plats gick redan vidare direkt. Sista frågan i ett test avslutas aldrig automatiskt. Går tillbaka med `git revert` på commiten. (Cajsa)
+- **Design** – Hans Zimmer och Daniel Tammet har bytt bakgrundsfärg (Zimmer har nu den gyllene och Tammet den gröna). Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Nabokovs hår är gjort lite mörkare i illustrationen. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Vladimir Nabokov har fått en ny illustration (Cajsas bild) i Kända personer med synestesi, med samma röda bakgrund som den gamla bilden. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Hans Zimmer har fått en ny illustration (Cajsas bild) i Kända personer med synestesi. Bakgrunden är bytt till samma gröna som den gamla bilden hade. Går tillbaka med `git revert` på commiten. (Cajsa)
