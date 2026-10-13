@@ -952,7 +952,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     <h1>Din synestesiprofil</h1>
     <p class="lead">Alla dina tester och svar samlade i en bild. Profilen är preliminär och ingen diagnos.</p>
     <div class="links-row nav-links"><button class="text-btn" data-nav="s-choose">Välj test</button><button class="text-btn" data-nav="s-results">Mina resultat</button><button class="text-btn" data-nav="s-profile">Min profil</button></div>
-    <div class="card map-card"><svg id="profile-circles" viewBox="0 0 358 440" role="img" aria-label="Dina sinnen som överlappande cirklar"></svg></div>
+    <div class="card map-card"><svg id="profile-circles" viewBox="0 0 400 480" role="img" aria-label="Dina sinnen som överlappande cirklar"></svg></div>
     <p class="muted small">Stor cirkel = primär upplevelse, den som ger upphov till de andra. Liten cirkel = sekundär upplevelse, som följer av en primär. Överlappet visar hur starkt stödet för sambandet är i dina svar (se listan längre ned). Det sinne som ligger i mitten är det som har flest samband med dina övriga upplevelser. Streckad cirkel = inte testad än.</p>
     <div class="card map-card"><svg id="profile-map" viewBox="-10 -6 380 384" role="img" aria-label="Karta över dina synestesityper"></svg></div>
     <p class="muted small">Ringarna runt testade typer visar färgerna du valde. Siffran i mitten är hur stor andel av tecknen eller ljuden som gav en färg. Streckade cirklar är typer du bara har svarat på i de inledande frågorna.</p>
@@ -2016,7 +2016,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     document.querySelectorAll("img[data-fig]").forEach(i => { if (!i.getAttribute("src")) i.src = FIGS[i.dataset.fig]; });
     document.querySelectorAll("[data-pm]").forEach(e => { if (!e.firstChild) e.innerHTML = PM[e.dataset.pm]; });
     document.querySelectorAll("svg[data-pc]").forEach((e, i) => {
-      const st = { col: true, hear: .45, lang: .3, room: .15, taste: null, touch: null };
+      const st = { col: true, hear: .45, lang: .3, room: .15, taste: null, touch: null, pers: null };
       e.innerHTML = circlesSvg(st, "pcd" + i);
       const C = Object.values(layoutCircles(st)), x0 = Math.min(...C.map(c => c.x - c.r)) - 6, x1 = Math.max(...C.map(c => c.x + c.r)) + 6, y0 = Math.min(...C.map(c => c.y - c.r)) - 6, y1 = Math.max(...C.map(c => c.y + c.r)) + 6;
       e.setAttribute("viewBox", `${x0} ${y0} ${x1 - x0} ${y1 - y0}`);
@@ -3835,8 +3835,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   }
   // ---------- profile: senses as overlapping circles ----------
   // Overlap = how strongly the answers support the link (share of the smaller circle). Untested circles are dashed and do not overlap.
-  function layoutCircles(st) { // st: {hear,lang,room,taste,touch: null|0..1, col: bool}
-    const W = 358, H = 440, cx = 179, cy = 215;
+  function layoutCircles(st) { // st: {hear,lang,room,taste,touch,pers: null|0..1, col: bool}
+    const W = 400, H = 480, cx = 200, cy = 240;
     const lens = (d, a, b) => {
       if (d >= a + b) return 0;
       if (d <= Math.abs(a - b)) return Math.PI * Math.min(a, b) ** 2;
@@ -3852,23 +3852,28 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     // Ostestade cirklar är lika stora (R0) och grå. De får sin storlek, färg och plats först när testerna är gjorda.
     const R0 = 36, R = st.col ? 66 : R0, rh = st.hear !== null ? 52 : R0, rl = st.lang !== null ? 52 : R0;
     const C = { col: { r: R, x: cx, y: cy, on: st.col } };
-    if (!st.col && st.hear === null && st.lang === null && st.room === null && st.taste === null && st.touch === null) {
-      // Inget är testat: alla sju cirklarna ligger där från början, lika stora, som ett blommönster runt mitten.
-      const d = 2 * R0 + 4;
-      [["room", -90], ["lang", -30], ["taste", 30], ["touch", 90], ["sight", 150], ["hear", 210]].forEach(([k, a]) => { C[k] = { r: R0, x: cx + d * Math.cos(a * Math.PI / 180), y: cy + d * Math.sin(a * Math.PI / 180), on: false }; });
+    if (!st.col && [st.hear, st.lang, st.room, st.taste, st.touch, st.pers].every(v => v === null)) {
+      // Inget är testat: alla tio cirklarna ligger där från början, lika stora, i en ring runt mitten. Besläktade sinnen ligger bredvid varandra.
+      const d = 112;
+      ["room", "lang", "pers", "emo", "taste", "smell", "touch", "sight", "hear"].forEach((k, i) => { const a = (-90 + i * 40) * Math.PI / 180; C[k] = { r: R0, x: cx + d * Math.cos(a), y: cy + d * Math.sin(a), on: false }; });
       return C;
     }
     const free = (x, y, r, skip) => Object.keys(C).every(k => k === "col" || k === skip || Math.hypot(C[k].x - x, C[k].y - y) >= C[k].r + r + 2);
     const put = (k, r, ang, s, on) => {
-      const d = dd(R, r, s);
       let best = null;
-      for (let i = 0; i < 40 && !best; i++) {
-        for (const sg of i ? [1, -1] : [1]) {
-          const a = (ang + sg * i * 3) * Math.PI / 180;
-          const x = Math.min(W - r - 3, Math.max(r + 3, cx + d * Math.cos(a))), y = cy + d * Math.sin(a);
-          if (y - r >= 0 && y + r <= H && free(x, y, r)) { best = { r, x, y, on }; break; }
+      // Cirklar utan test (s = null) skjuts längre ut om det är trångt, så att inget överlappar av misstag.
+      for (const ex of s === null ? [0, 14, 28, 42, 56, 70, 84] : [0]) {
+        const d = dd(R, r, s) + ex;
+        for (let i = 0; i < 40 && !best; i++) {
+          for (const sg of i ? [1, -1] : [1]) {
+            const a = (ang + sg * i * 3) * Math.PI / 180;
+            const x = Math.min(W - r - 3, Math.max(r + 3, cx + d * Math.cos(a))), y = cy + d * Math.sin(a);
+            if (y - r >= 0 && y + r <= H && free(x, y, r)) { best = { r, x, y, on }; break; }
+          }
         }
+        if (best) break;
       }
+      const d = dd(R, r, s);
       C[k] = best || { r, x: Math.min(W - r - 3, Math.max(r + 3, cx + d * Math.cos(ang * Math.PI / 180))), y: cy + d * Math.sin(ang * Math.PI / 180), on };
     };
     put("lang", rl, -8, st.lang, st.lang !== null);
@@ -3887,30 +3892,35 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     C.taste = { r: rt, x: Math.min(W - rt - 3, sm[0]), y: sm[1], on: st.taste !== null };
     put("hear", rh, 172, st.hear, st.hear !== null);
     put("room", 36, -90, st.room, st.room !== null);
-    put("sight", 36, 125, null, st.touch !== null);
-    {
-      // Känsel hänger ihop med Syn (spegelberöring: man ser att någon blir berörd): den läggs vid Syn, med överlapp efter stödet.
-      const S0 = C.sight, d = dd(36, 36, st.touch), base = Math.atan2(S0.y - cy, S0.x - cx) * 180 / Math.PI;
-      const ok = (x, y) => x - 36 >= 3 && x + 36 <= W - 3 && y - 36 >= 0 && y + 36 <= H && Math.hypot(x - cx, y - cy) >= R + 36 + 2 && Object.keys(C).every(k => k === "col" || k === "sight" || Math.hypot(C[k].x - x, C[k].y - y) >= C[k].r + 36 + 2);
+    // Cirklar som hör ihop med en annan läggs vid den, med överlapp efter stödet: Känsel vid Syn (spegelberöring: man ser att någon blir berörd),
+    // Personlighet vid Språk (bokstäver och siffror med personlighet) och Lukt vid Smak.
+    const relPut = (k, r, ref, s, base, on) => {
+      const S0 = C[ref], d = dd(S0.r, r, s);
+      const ok = (x, y) => x - r >= 3 && x + r <= W - 3 && y - r >= 0 && y + r <= H && Math.hypot(x - cx, y - cy) >= R + r + 2 && Object.keys(C).every(q => q === "col" || q === ref || Math.hypot(C[q].x - x, C[q].y - y) >= C[q].r + r + 2);
       let best = null;
-      for (let i = 0; i < 120 && !best; i++) for (const sg of i ? [1, -1] : [1]) {
-        const a = (base + sg * i * 3) * Math.PI / 180, x = S0.x + d * Math.cos(a), y = S0.y + d * Math.sin(a);
-        if (ok(x, y)) { best = { r: 36, x, y, on: st.touch !== null }; break; }
+      for (const ex of s === null ? [0, 14, 28, 42] : [0]) for (let i = 0; i < 120 && !best; i++) for (const sg of i ? [1, -1] : [1]) {
+        const a = (base + sg * i * 3) * Math.PI / 180, x = S0.x + (d + ex) * Math.cos(a), y = S0.y + (d + ex) * Math.sin(a);
+        if (ok(x, y)) { best = { r, x, y, on }; break; }
       }
-      C.touch = best || { r: 36, x: Math.min(W - 39, Math.max(39, S0.x + d)), y: Math.min(H - 36, S0.y + d), on: st.touch !== null };
-    }
+      C[k] = best || { r, x: Math.min(W - r - 3, Math.max(r + 3, S0.x + d)), y: Math.min(H - r, S0.y + d), on };
+    };
+    put("sight", R0, 125, null, st.touch !== null);
+    relPut("touch", R0, "sight", st.touch, Math.atan2(C.sight.y - cy, C.sight.x - cx) * 180 / Math.PI, st.touch !== null);
+    relPut("pers", R0, "lang", st.pers, Math.atan2(C.lang.y - cy, C.lang.x - cx) * 180 / Math.PI, st.pers !== null);
+    relPut("smell", R0, "taste", null, Math.atan2(C.taste.y - cy, C.taste.x - cx) * 180 / Math.PI, false);
+    put("emo", R0, 20, null, false);
     return C;
   }
   
   const anyTested = () => KEYS.some(k => S.sessions[k].length) || S.mt.sessions.length > 0 || trSessions("ol").length > 0 || trSessions("lg").length > 0;
   function circlesSvg(st, gid) {
     const C = layoutCircles(st);
-    const NAMES = { sv: ["Färg", "Hörsel", "Språk", "Rum", "Smak", "Känsel", "Syn"], en: ["Colour", "Hearing", "Language", "Space", "Taste", "Touch", "Sight"], fr: ["Couleur", "Ouïe", "Langage", "Espace", "Goût", "Toucher", "Vue"], de: ["Farbe", "Gehör", "Sprache", "Raum", "Geschmack", "Tastsinn", "Sehen"], es: ["Color", "Oído", "Lenguaje", "Espacio", "Gusto", "Tacto", "Vista"] }[S.lang] || ["Färg", "Hörsel", "Språk", "Rum", "Smak", "Känsel", "Syn"];
+    const NAMES = { sv: ["Färg", "Hörsel", "Språk", "Rum", "Smak", "Känsel", "Syn", "Personlighet", "Lukt", "Känslor"], en: ["Colour", "Hearing", "Language", "Space", "Taste", "Touch", "Sight", "Personality", "Smell", "Emotions"], fr: ["Couleur", "Ouïe", "Langage", "Espace", "Goût", "Toucher", "Vue", "Personnalité", "Odorat", "Émotions"], de: ["Farbe", "Gehör", "Sprache", "Raum", "Geschmack", "Tastsinn", "Sehen", "Persönlichkeit", "Geruch", "Gefühle"], es: ["Color", "Oído", "Lenguaje", "Espacio", "Gusto", "Tacto", "Vista", "Personalidad", "Olfato", "Emociones"] }[S.lang] || ["Färg", "Hörsel", "Språk", "Rum", "Smak", "Känsel", "Syn", "Personlighet", "Lukt", "Känslor"];
     const OFF = "#9aa0a6";
-    const order = [["col", 0, `url(#${gid})`], ["hear", 1, "#4d8ef0"], ["lang", 2, "#8b7be8"], ["room", 3, "#47bdb1"], ["taste", 4, "#ffb56b"], ["touch", 5, "#ff6fa8"], ["sight", 6, "#f2c94c"]];
+    const order = [["col", 0, `url(#${gid})`], ["hear", 1, "#4d8ef0"], ["lang", 2, "#8b7be8"], ["room", 3, "#47bdb1"], ["taste", 4, "#ffb56b"], ["touch", 5, "#ff6fa8"], ["sight", 6, "#f2c94c"], ["pers", 7, "#9c6b4e"], ["smell", 8, "#8bc34a"], ["emo", 9, "#e8636b"]];
     let out = `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6fa8"/><stop offset=".35" stop-color="#ffb56b"/><stop offset=".65" stop-color="#47bdb1"/><stop offset="1" stop-color="#8b7be8"/></linearGradient></defs>`;
     for (const [k, , col] of order) { const c = C[k]; out += `<circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="${c.r}" fill="${c.on ? col : OFF}" fill-opacity="${c.on ? .32 : .12}" stroke="${c.on ? col : OFF}" stroke-opacity="${c.on ? .9 : .8}" stroke-width="2"${c.on ? "" : ' stroke-dasharray="5 4"'}/>`; }
-    for (const [k, i] of order) { const c = C[k]; out += `<text class="${c.on ? "cn" : "cn off"}" x="${c.x.toFixed(1)}" y="${(c.y + (c.r > 40 ? 5 : 4)).toFixed(1)}" style="font-size:${c.r > 40 ? 15 : 12}px">${NAMES[i]}</text>`; }
+    for (const [k, i] of order) { const c = C[k]; out += `<text class="${c.on ? "cn" : "cn off"}" x="${c.x.toFixed(1)}" y="${(c.y + (c.r > 40 ? 5 : 4)).toFixed(1)}" style="font-size:${c.r > 40 ? 15 : Math.max(8, Math.min(12, 64 / (NAMES[i].length * .58))).toFixed(1)}px">${NAMES[i]}</text>`; }
     return out;
   }
   function renderCircles() {
@@ -3919,7 +3929,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const top = (...v) => { v = v.filter(x => x !== null); return v.length ? Math.max(...v) : null; };
     const lgS = trSessions("lg");
     const taste = lgS.length ? (() => { const sc = lgScore(lgS[lgS.length - 1]).score; return sc === null ? 0 : sc >= 26 ? .3 : .1; })() : null;
-    const st = { col: KEYS.some(k => S.sessions[k].length && k !== "space"), hear: lv("sound"), lang: top(lv("digits"), lv("letters"), lv("time")), room: lv("space"), taste, touch: S.mt.sessions.length ? (() => { const m = mtScore(S.mt.sessions[S.mt.sessions.length - 1]), f = m.nHuman ? m.human / m.nHuman : 0; return f >= .6 ? .45 : f >= .3 ? .3 : m.human >= 1 ? .15 : 0; })() : null };
+    const st = { col: KEYS.some(k => S.sessions[k].length && k !== "space"), hear: lv("sound"), lang: top(lv("digits"), lv("letters"), lv("time")), room: lv("space"), taste, pers: trSessions("ol").length ? (() => { const v = trScore("ol", trSessions("ol")[trSessions("ol").length - 1]).verdict; return v === "pos" ? .3 : v === "neg" ? .1 : 0; })() : null, touch: S.mt.sessions.length ? (() => { const m = mtScore(S.mt.sessions[S.mt.sessions.length - 1]), f = m.nHuman ? m.human / m.nHuman : 0; return f >= .6 ? .45 : f >= .3 ? .3 : m.human >= 1 ? .15 : 0; })() : null };
     $("profile-circles").innerHTML = circlesSvg(st, "pc-rainbow");
   }
   // Personlighet, Ord → smak och Spegelberöring får en ring i kartan när testet är gjort: andelen tecken, ord eller klipp som gav en upplevelse.

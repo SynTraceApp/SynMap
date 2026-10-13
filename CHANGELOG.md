@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-13
+- **Resultat** – Cirklarna i Min profil är nu tio: Färg, Syn, Hörsel, Smak, Lukt, Känsel, Språk, Rum, Personlighet och Känslor. Personlighet har fått en egen cirkel som hör ihop med Språk och får färg och överlapp när Personlighetstestet är gjort. Lukt och Känslor har inget test än och är därför kvar som grå cirklar tills det finns ett. Alla börjar lika stora och grå i en ring, och cirklar utan test skjuts längre ut om det blir trångt så att inget överlappar av misstag. (Cajsa)
 - **Resultat** – Cirklarna i Min profil ligger nu där från början: alla sju sinnena (Färg, Hörsel, Språk, Rum, Smak, Känsel, Syn) som lika stora, grå, streckade cirklar med grå text. Varje cirkel får färg, storlek och plats i förhållande till de andra först när testerna för den är gjorda. Förut visades bara en enda streckad cirkel innan något var testat, och ostestade cirklar hade egen färg och storlek. (Cajsa)
 
 ## 2026-10-12
