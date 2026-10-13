@@ -1641,6 +1641,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
  "för få färgsvar": "too few colour answers",
  "Skillnad mot första sessionen": "Difference from the first session",
  "Talen är färgavstånd, inte procent. Lägre värde betyder att du valde mer lika färger varje gång, högre värde att färgerna skilde sig mer åt.": "The numbers are colour distances, not percentages. A lower value means you chose more similar colours each time; a higher value means the colours differed more.",
+ "Värden under cirka {x} är ett mönster som är vanligt vid synestesi, och högre värden är vanligare hos andra. Det är preliminärt och ingen diagnos.": "Values below about {x} are a pattern that is common in synesthesia, and higher values are more common in others. It is preliminary and not a diagnosis.",
  "För ljud finns ingen etablerad gräns ännu.": "There is no established limit for sound yet.",
  "Som jämförelse har forskning om bokstäver och siffror använt gränsen {l} (Rothen m.fl., 2013).": "For comparison, research on letters and digits has used the limit {l} (Rothen et al., 2013).",
  "För dagar och månader går den bara att använda som en grov jämförelse.": "For days and months it can only serve as a rough comparison.",
@@ -1994,8 +1995,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   Object.assign(BUNDLED.es, {"Här kan du ändra dina svar. Det påverkar vilka tester som rekommenderas.": "Aquí puedes cambiar tus respuestas. Esto influye en qué pruebas se recomiendan."});
   Object.assign(BUNDLED.fr, { "Självskattning": "Auto-évaluation" }); Object.assign(BUNDLED.de, { "Självskattning": "Selbsteinschätzung" }); Object.assign(BUNDLED.es, { "Självskattning": "Autoevaluación" });
   Object.assign(BUNDLED.fr, {"Korta ja/nej-frågor om vilka former av synestesi du tror att du har. Det här testet rekommenderar vidare tester åt dig, utifrån dina svar.": "De courtes questions oui/non sur les formes de synesthésie que vous pensez avoir. Ce test vous recommande d'autres tests, selon vos réponses.", "Rekommenderas": "Recommandé"});
+  Object.assign(BUNDLED.fr, {"Värden under cirka {x} är ett mönster som är vanligt vid synestesi, och högre värden är vanligare hos andra. Det är preliminärt och ingen diagnos.": "Les valeurs inférieures à environ {x} correspondent à un schéma fréquent dans la synesthésie, et les valeurs plus élevées sont plus fréquentes chez les autres. C’est préliminaire et ce n’est pas un diagnostic."});
   Object.assign(BUNDLED.de, {"Korta ja/nej-frågor om vilka former av synestesi du tror att du har. Det här testet rekommenderar vidare tester åt dig, utifrån dina svar.": "Kurze Ja/Nein-Fragen dazu, welche Formen von Synästhesie du zu haben glaubst. Dieser Test empfiehlt dir weitere Tests, abhängig von deinen Antworten.", "Rekommenderas": "Empfohlen"});
+  Object.assign(BUNDLED.de, {"Värden under cirka {x} är ett mönster som är vanligt vid synestesi, och högre värden är vanligare hos andra. Det är preliminärt och ingen diagnos.": "Werte unter etwa {x} sind ein Muster, das bei Synästhesie häufig ist; höhere Werte sind bei anderen häufiger. Das ist vorläufig und keine Diagnose."});
   Object.assign(BUNDLED.es, {"Korta ja/nej-frågor om vilka former av synestesi du tror att du har. Det här testet rekommenderar vidare tester åt dig, utifrån dina svar.": "Preguntas breves de sí/no sobre qué formas de sinestesia crees tener. Esta prueba te recomienda otras pruebas, según tus respuestas.", "Rekommenderas": "Recomendado"});
+  Object.assign(BUNDLED.es, {"Värden under cirka {x} är ett mönster som är vanligt vid synestesi, och högre värden är vanligare hos andra. Det är preliminärt och ingen diagnos.": "Los valores por debajo de aproximadamente {x} son un patrón frecuente en la sinestesia, y los valores más altos son más frecuentes en otras personas. Es preliminar y no es un diagnóstico."});
   const trv = (l, k) => BUNDLED[l]?.[k] ?? RT[l]?.[k];
   function t(str, vars) {
     let out = S.lang === "sv" ? str : (S.lang === "en" ? undefined : (BUNDLED[S.lang]?.[str] ?? RT[S.lang]?.[str])) ?? EN[str] ?? str;
@@ -3748,7 +3752,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       if (ss.length > 1) { const b = between(ss[0], last); rows += kv(t("Skillnad mot första sessionen"), b ? n1(b.mean) : "–"); }
       let note = `<p class="muted small">${t("Talen är färgavstånd, inte procent. Lägre värde betyder att du valde mer lika färger varje gång, högre värde att färgerna skilde sig mer åt.")}`;
       if (key === "sound") note += `</p><p class="muted small">${t("A2–Eb6 är pianotoner från låg till hög. De andra är samma ton (C4) på piano, stråkar, flöjt, klarinett och som ren ton.")}`;
-      else if (w.n >= 3) note += " " + t("Värdet är ingen bedömning av dig.");
+      else if (w.n >= 3) note += " " + t("Värdet är ingen bedömning av dig.") + " " + t("Värden under cirka {x} är ett mönster som är vanligt vid synestesi, och högre värden är vanligare hos andra. Det är preliminärt och ingen diagnos.", { x: Math.round(LIM_LUV) });
       note += "</p>";
       if (last.speed) {
         rows += kv(t("Snabbtest, rätt svar"), t("{a} av {b} ({p} %)", { a: last.speed.correct, b: last.speed.n, p: Math.round(last.speed.acc * 100) }));
