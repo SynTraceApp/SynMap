@@ -800,6 +800,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   <section class="screen" id="s-mirror" hidden>
     <div class="topbar"><button class="back" id="mt-quit" aria-label="Pausa testet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="track"><span id="mt-bar"></span></div><span class="count" id="mt-count"></span></div>
     <h1>Spegelberöring</h1>
+    <div class="nav-row" id="mt-nav" hidden><button class="btn soft" id="mt-prev" disabled>Föregående</button><button class="btn primary" id="mt-next" disabled>Nästa</button></div>
     <div id="mt-intro" class="stack" style="gap:14px">
       <div class="card howto">
         <p>Du får se 20 korta tecknade klipp där en person eller ett föremål blir berört.</p>
@@ -824,30 +825,29 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     </div>
     <div class="grow"></div>
     <button class="btn primary" id="mt-start">Starta</button>
-    <div class="nav-row" id="mt-nav" hidden><button class="btn soft" id="mt-prev" disabled>Föregående</button><button class="btn primary" id="mt-next" disabled>Nästa</button></div>
   </section>
 
   <!-- Personifiering och Ord → smak: två omgångar med samma ord -->
   <section class="screen" id="s-trial" hidden>
     <div class="topbar"><button class="back" id="tr-quit" aria-label="Pausa testet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="track"><span id="tr-bar"></span></div><span class="count" id="tr-count"></span></div>
     <h1 id="tr-title"></h1>
+    <div class="nav-row" id="tr-nav" hidden><button class="btn soft" id="tr-prev" disabled>Föregående</button><button class="btn primary" id="tr-next" disabled>Nästa</button></div>
     <div id="tr-intro" class="stack" style="gap:14px"><div class="card howto" id="tr-how"></div><p class="muted small" id="tr-src"></p></div>
     <div id="tr-trial" class="stack" hidden><div class="tr-stim" id="tr-stim"></div><div class="stack" id="tr-qs" style="gap:14px"></div></div>
     <div class="grow"></div>
     <button class="btn primary" id="tr-start">Starta</button>
-    <div class="nav-row" id="tr-nav" hidden><button class="btn soft" id="tr-prev" disabled>Föregående</button><button class="btn primary" id="tr-next" disabled>Nästa</button></div>
   </section>
 
   <!-- Tid i rummet (sequence-space, Rothen m.fl. 2016) -->
   <section class="screen" id="s-space" hidden>
     <div class="topbar"><button class="back" id="space-quit" aria-label="Pausa testet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="track"><span id="space-bar"></span></div><span class="count" id="space-count"></span><button class="text-btn pause" id="space-pause">Pausa</button></div>
     <div class="stack" style="gap:6px"><h1>Tid i rummet</h1><p class="muted small">Tryck där du upplever att följande tidsangivelse befinner sig i rummet. Mitten är du.</p><p class="muted small">Du kan pausa när du vill. Svaren sparas.</p></div>
+    <div class="nav-row"><button class="btn soft" id="space-prev" disabled>Föregående</button><button class="btn primary" id="space-next" disabled>Nästa</button></div>
     <div class="space-item" id="space-item" aria-live="polite"></div>
     <div class="space-field" id="space-field" role="application" aria-label="Rummet runt dig, sett uppifrån"><span class="sp-dir sp-front">Framför dig</span><span class="sp-dir sp-back">Bakom dig</span><span class="sp-dir sp-left">Vänster</span><span class="sp-dir sp-right">Höger</span><span class="you"><svg viewBox="0 0 40 34" aria-hidden="true"><ellipse cx="20" cy="22" rx="17" ry="7"/><circle cx="20" cy="15" r="8"/><path d="M17 7.5l3-5 3 5z"/></svg>du</span></div>
     <p class="muted small" style="text-align:center;margin-top:-4px">Rummet sett uppifrån. Du står i mitten och tittar framåt.</p>
     <button class="nocolor" id="space-none"><span class="o"></span>Har ingen plats</button>
     <div class="grow"></div>
-    <div class="nav-row"><button class="btn soft" id="space-prev" disabled>Föregående</button><button class="btn primary" id="space-next" disabled>Nästa</button></div>
   </section>
 
   <!-- Del 2: snabbtest (speeded congruency, Eagleman m.fl. 2007) -->

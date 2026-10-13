@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-13
+- **Design** – Föregående och Nästa ligger nu över bilden i Spegelberöring, Personlighet, Ord → smak och Tid i rummet, precis som i färgtesterna, så att man slipper skrolla upp och ned mellan bilden och knapparna. (Cajsa)
 - **Design** – Cirklarna som är testade är större i Min profil (mitten störst, primära sinnen näst störst, sekundära större än förut), medan ostestade är kvar små och grå. De ostestade fördelas jämnt i en yttre ring runt de testade, så att bilden fylls ut bättre och de testade syns tydligare. (Cajsa)
 - **Resultat** – Det sinne som visar sig mest primärt i testerna ligger nu alltid i mitten av cirkelbilden och är störst. Det är det som har flest samband med de andra testade sinnena, och vid lika många går Färg före. Är bara Syn och Känsel testade ligger Syn i mitten som den stora cirkeln och Känsel som en mindre cirkel som överlappar den. Primära sinnen (Språk, Hörsel, Syn) är större än sekundära. Förut låg alltid Färg i mitten. (Cajsa)
 - **Resultat** – Cirklar som inte är testade eller inte är aktuella ligger kvar i den yttre ringen i Min profil, lika stora och grå, även när andra är testade. De testade cirklarna får färg, storlek och plats innanför ringen, runt mitten som är reserverad för Färg. Ringen blir större när de testade cirklarna tar mer plats, och bilden anpassar sig efter det. (Cajsa)
