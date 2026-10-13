@@ -2037,7 +2037,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       e.setAttribute("viewBox", circlesView(st));
     });
     document.querySelectorAll("[data-ill]").forEach(e => { if (!e.firstChild) e.innerHTML = ILL[e.dataset.ill]; });
-    document.querySelectorAll("#s-about-app .faq > details, #s-about-syn .faq > details").forEach(d => { const s = d.querySelector("summary"), first = d === d.parentElement.querySelector(":scope > details"); d.classList.toggle("ab-plain", !!s && !first && !/^\s*\d+\./.test(s.textContent)); d.classList.toggle("ab-short", first); if (first) { d.open = true; if (!s.dataset.lock) { s.dataset.lock = "1"; s.addEventListener("click", e => e.preventDefault()); } } });
+    document.querySelectorAll("#s-about-app .faq > details, #s-about-syn .faq > details").forEach(d => { const s = d.querySelector("summary"), first = d === d.parentElement.querySelector(":scope > details"); d.classList.toggle("ab-plain", !!s && !first && !/^\s*\d+\./.test(s.textContent) && !d.closest("#s-about-syn")); d.classList.toggle("ab-short", first); if (first) { d.open = true; if (!s.dataset.lock) { s.dataset.lock = "1"; s.addEventListener("click", e => e.preventDefault()); } } });
     document.querySelectorAll("[data-pm] text").forEach(x => { if (x.dataset.o === undefined) x.dataset.o = x.textContent; x.textContent = t(x.dataset.o); });
     document.querySelectorAll("[data-ico]").forEach(e => { if (!e.firstChild) { const v = document.querySelector("#pick-" + e.dataset.ico + " .icon-disc svg"); if (v) e.innerHTML = v.outerHTML; } });
   }
