@@ -2417,6 +2417,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   document.querySelectorAll(".menu-langs button").forEach(b => b.addEventListener("click", () => { $("lang").value = b.dataset.l; $("lang").dispatchEvent(new Event("change")); }));
   $("lang-retry").addEventListener("click", () => ensureRuntime(S.lang));
 
+  // Ett svar som betyder "ingen upplevelse" går vidare till nästa fråga av sig självt, efter en kort stund så att man ser valet.
+  // still() kollar att man står kvar på samma fråga med samma svar; sista frågan avslutas aldrig automatiskt.
+  const autoNext = (still, btn) => setTimeout(() => { const b = $(btn); if (still() && b && b.offsetParent && !b.disabled) b.click(); }, 350);
+
   // ---------- intro questions ----------
   let qi = 0;
   function showIntro() {
@@ -2425,7 +2429,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     $("intro-count").textContent = `${qi + 1} / ${list.length}`;
     $("intro-q").textContent = t(q.q);
     $("intro-opts").innerHTML = q.opts.map(o => `<button class="opt" role="radio" aria-checked="${S.answers[q.id] === o}"><span class="r"></span>${t(o)}</button>`).join("");
-    $("intro-opts").querySelectorAll(".opt").forEach((b, i) => b.addEventListener("click", () => { S.answers[q.id] = q.opts[i]; save(); showIntro(); }));
+    $("intro-opts").querySelectorAll(".opt").forEach((b, i) => b.addEventListener("click", () => { S.answers[q.id] = q.opts[i]; save(); showIntro();
+      const at = qi; if (q.opts === YES && q.opts[i] === "Nej" && at < introList().length - 1) autoNext(() => qi === at && S.answers[q.id] === "Nej" && !$("s-intro").hidden, "intro-next"); }));
     $("intro-next").disabled = !S.answers[q.id];
     $("intro-next").textContent = t(qi === list.length - 1 ? "Klar" : "Nästa");
     // On the first question the button leads back to About you, except when editing from the links.
@@ -3094,7 +3099,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       $(box).innerHTML = opts.map(o => `<button aria-pressed="${val === o}">${t(o)}</button>`).join("");
       $(box).querySelectorAll("button").forEach((b, i) => b.addEventListener("click", () => { set(opts[i]); save(); mtShow(); }));
     };
-    seg("mt-yes", ["Ja", "Nej"], cur.yes === undefined ? null : cur.yes ? "Ja" : "Nej", v => { cur.yes = v === "Ja"; if (!cur.yes) { delete cur.kind; delete cur.where; delete cur.intensity; } else cur.intensity ??= 5; });
+    seg("mt-yes", ["Ja", "Nej"], cur.yes === undefined ? null : cur.yes ? "Ja" : "Nej", v => { cur.yes = v === "Ja"; if (!cur.yes) { delete cur.kind; delete cur.where; delete cur.intensity; const at = r.i; if (at < n - 1) autoNext(() => S.mt.run === r && r.i === at && cur.yes === false && !$("s-mirror").hidden, "mt-next"); } else cur.intensity ??= 5; });
     $("mt-more").hidden = !cur.yes;
     seg("mt-kind", MT_KIND, cur.kind, v => cur.kind = v);
     seg("mt-where", MT_WHERE, cur.where, v => cur.where = v);
@@ -3201,7 +3206,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       wrap.querySelector(".pie-sl").appendChild(row);
     });
     box.appendChild(wrap);
-    $("pie-none").addEventListener("click", () => { if (cur.none) delete cur.none; else { cur.none = true; delete cur.v; wrap.querySelectorAll("input").forEach(x => x.value = 0); } save(); $("pie-none").setAttribute("aria-pressed", !!cur.none); paint(); });
+    $("pie-none").addEventListener("click", () => { if (cur.none) delete cur.none; else { cur.none = true; delete cur.v; wrap.querySelectorAll("input").forEach(x => x.value = 0); } save(); $("pie-none").setAttribute("aria-pressed", !!cur.none); paint();
+      const at = r.i; if (cur.none && at < r.order.length - 1) autoNext(() => S.tr.lg.run === r && r.i === at && cur.none && !$("s-trial").hidden, "tr-next"); });
     paint();
     $("tr-next").textContent = t(r.i === r.order.length - 1 ? "Klar" : "Nästa");
     $("tr-prev").disabled = r.i === 0;
@@ -3219,7 +3225,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       wrap.innerHTML = `<p class="q">${t(q.q)}</p><div class="seg"></div>`;
       q.opts.forEach(o => {
         const b = document.createElement("button"); b.setAttribute("aria-pressed", cur[q.id] === o); b.textContent = q.raw ? o : t(o);
-        b.addEventListener("click", () => { cur[q.id] = o; save(); trShow(); }); wrap.lastChild.appendChild(b);
+        b.addEventListener("click", () => { cur[q.id] = o; save(); trShow();
+          const at = r.i, done = c.qs.every(x => (x.when && !x.when(cur)) || cur[x.id]);
+          if (done && c.has && !c.has(cur) && at < n - 1) autoNext(() => S.tr[trKey].run === r && r.i === at && !c.has(cur) && !$("s-trial").hidden, "tr-next"); }); wrap.lastChild.appendChild(b);
       });
       box.appendChild(wrap);
     });
@@ -3439,6 +3447,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     T.auto = b.dataset.v;
     $("auto-opts").querySelectorAll(".opt").forEach(x => x.setAttribute("aria-checked", x === b));
     refreshTrial();
+    const tt = T, at = T.i; if (T.auto === "nej" && at < T.list.length - 1) autoNext(() => T === tt && T.i === at && T.auto === "nej" && !$("s-test").hidden, "test-next");
   }));
   function answer(rgb) {
     const rec = { s: T.list[T.i], rgb, auto: T.key === "sound" ? T.auto : null, ms: Math.round(performance.now() - (T.shown || 0)) };
@@ -4230,6 +4239,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       if (a.length) S.map.a[id] = a; else delete S.map.a[id];
       save(); showMap();
       const again = $("map-opts").querySelector(`[data-c="${c}"]`); if (again) again.focus();
+      const at = mi; if (c === "none" && a.includes("none") && id !== MAP_ATT && at < order.length - 1) autoNext(() => mi === at && (S.map.a[id] || []).includes("none") && !$("s-map").hidden, "map-next");
     }));
     const inp = $("map-other");
     if (inp) inp.addEventListener("input", e => { S.map.other[id] = e.target.value.trim(); save(); });

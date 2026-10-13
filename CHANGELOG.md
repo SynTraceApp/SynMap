@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-13
+- **Test** – Svar som betyder att man inte har någon upplevelse går nu vidare till nästa fråga av sig själva, efter ungefär en tredjedels sekund så att man ser valet: Ingen smak (Ord → smak), Ingen personlighet + Inget kön (Personlighet, först när båda är valda), Nej (Spegelberöring), Nej på "Upplevde du en färg automatiskt?" (Ljud → färg), Inget av detta (Självskattning) och Nej (Inledande frågor). Ingen färg och Har ingen plats gick redan vidare direkt. Sista frågan i ett test avslutas aldrig automatiskt. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Pharrell Williams och Daniel Tammet har bytt plats i Kända personer med synestesi. Bakgrundsfärgerna ligger kvar på sina platser. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Billie Eilish och Daniel Tammet har bytt plats i Kända personer med synestesi. Bakgrundsfärgerna ligger kvar på sina platser (Billie har nu den blå, Tammet den rosa). Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Nikola Tesla och Billie Eilish har bytt plats i Kända personer med synestesi. Bakgrundsfärgerna ligger kvar på sina platser (Tesla har nu den lila och Billie den rosa). Går tillbaka med `git revert` på commiten. (Cajsa)
