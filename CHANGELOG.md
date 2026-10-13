@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-13
+- **Design** – Bakgrunderna på illustrationerna i Kända personer med synestesi är nu mättade, i appens egna färger (samma som personernas tidigare silhuettrutor, fast i full styrka), i stället för blekt pastell. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Beyoncés hudfärg i illustrationen är gjord mörkare. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Kända personer med synestesi visas nu med tolv färdiga illustrationer (Cajsas bilder) i stället för silhuetter. Bakgrunden på varje bild har bytts till den färg som personens tidigare silhuettruta hade, så rutnätet är enhetligt. Bilderna är inbäddade i `app/index.html` (ca 6 kB var), inget byggsteg. Noten under rutnätet säger nu "Bilderna är illustrationer och inga foton" på alla fem språk. Bakgrundsbytet är automatiskt och kan ha små kantfel (t.ex. Tammets axlar, en liten blå rest vid Teslas krage). Silhuetterna finns kvar som reserv i koden. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Text** – Itzhak Perlman är tillagd i Kända personer med synestesi (Ljud → färg, enligt Psychology Today: "The red of his E string"). Han finns inte i Wikipedias lista, så introtexten säger nu "Wikipedias lista och andra källor" på alla fem språk. (Cajsa)
