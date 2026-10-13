@@ -3853,9 +3853,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const R0 = 36, R = st.col ? 66 : R0, rh = st.hear !== null ? 52 : R0, rl = st.lang !== null ? 52 : R0;
     const C = { col: { r: R, x: cx, y: cy, on: st.col } };
     if (!st.col && [st.hear, st.lang, st.room, st.taste, st.touch, st.pers].every(v => v === null)) {
-      // Inget är testat: alla tio cirklarna ligger där från början, lika stora, i en ring runt mitten. Besläktade sinnen ligger bredvid varandra.
-      const d = 112;
-      ["room", "lang", "pers", "emo", "taste", "smell", "touch", "sight", "hear"].forEach((k, i) => { const a = (-90 + i * 40) * Math.PI / 180; C[k] = { r: R0, x: cx + d * Math.cos(a), y: cy + d * Math.sin(a), on: false }; });
+      // Inget är testat: alla tio cirklarna ligger där från början, lika stora, i en ring utan cirkel i mitten. Besläktade sinnen ligger bredvid varandra.
+      const d = 124;
+      ["room", "lang", "pers", "emo", "taste", "smell", "touch", "sight", "hear", "col"].forEach((k, i) => { const a = (-90 + i * 36) * Math.PI / 180; C[k] = { r: R0, x: cx + d * Math.cos(a), y: cy + d * Math.sin(a), on: false }; });
       return C;
     }
     const free = (x, y, r, skip) => Object.keys(C).every(k => k === "col" || k === skip || Math.hypot(C[k].x - x, C[k].y - y) >= C[k].r + r + 2);
