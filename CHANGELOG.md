@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-13
+- **Design** – Sista bakgrundsresterna vid Billies hår och Tammets hårfäste är borttagna. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Illustrationerna i Kända personer med synestesi: Perlmans stråkhår är tillbaka (det vita tappades när bakgrunden byttes), mörka konturer längs ytterkanten på David är borttagna, den mörkblå bakgrunden bredvid Tammets hals är borta, och småprickar vid Billie och Tammet är bortrensade. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Rättat bakgrundsfärger som blödde in i illustrationerna i Kända personer med synestesi: rester av gammal bakgrund i håret (Billie), vid konturen (Tesla, Pharrell, Tammet) och vid stråken (Perlman). Kanterna är också renare mot bakgrunden. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Bakgrunderna på illustrationerna i Kända personer med synestesi är lite mörkare. Går tillbaka med `git revert` på commiten. (Cajsa)
