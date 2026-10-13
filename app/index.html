@@ -3835,7 +3835,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // ---------- profile: senses as overlapping circles ----------
   // Overlap = how strongly the answers support the link (share of the smaller circle). Untested circles are dashed and do not overlap.
   function layoutCircles(st) { // st: {hear,lang,room,taste,touch,pers: null|0..1, col: bool}
-    const W = 640, H = 640, cx = 320, cy = 320;
+    const W = 900, H = 900, cx = 450, cy = 450;
     const lens = (d, a, b) => {
       if (d >= a + b) return 0;
       if (d <= Math.abs(a - b)) return Math.PI * Math.min(a, b) ** 2;
@@ -3849,22 +3849,23 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     };
     const dd = (r1, r2, s) => s === null ? r1 + r2 + 4 : s <= 0 ? r1 + r2 : dist(r1, r2, s);
     // Ostestade cirklar är lika stora (R0) och grå och ligger i en yttre ring. De testade läggs innanför, med det mest primära sinnet i mitten.
-    const R0 = 36, RH = 66, RP = 52;
+    const R0 = 36, RH = 96, RP = 70, RS = 50; // R0 = ostestad, RH = i mitten, RP = primär, RS = sekundär (testade)
     const ALL = ["room", "lang", "pers", "emo", "taste", "smell", "touch", "sight", "hear", "col"];
     const on = { col: !!st.col, hear: st.hear !== null, lang: st.lang !== null, room: st.room !== null, taste: st.taste !== null, touch: st.touch !== null, sight: st.touch !== null, pers: st.pers !== null, smell: false, emo: false };
     const tested = ALL.filter(k => on[k]), C = {};
-    if (!tested.length) {
-      // Inget är testat: alla tio cirklarna ligger där från början, lika stora, i en ring utan cirkel i mitten. Besläktade sinnen ligger bredvid varandra.
-      ALL.forEach((k, i) => { const a = (-90 + i * 36) * Math.PI / 180; C[k] = { r: R0, x: cx + 124 * Math.cos(a), y: cy + 124 * Math.sin(a), on: false }; });
-      return C;
-    }
+    // Ostestade cirklar fördelas jämnt i en yttre ring runt de testade (eller runt mitten om inget är testat), så att bilden fylls ut.
+    const ring = (rcx, rcy, ext) => {
+      const un = ALL.filter(k => !on[k]), n = un.length, Rr = Math.max(ext + R0 + 6, n * (2 * R0 + 6) / (2 * Math.PI));
+      un.forEach((k, i) => { const a = (-90 + i * 360 / n) * Math.PI / 180; C[k] = { r: R0, x: rcx + Rr * Math.cos(a), y: rcy + Rr * Math.sin(a), on: false }; });
+    };
+    if (!tested.length) { ring(cx, cy, 0); return C; }
     // Samband mellan cirklar (överlappet = stödet i testerna). Det sinne som har flest samband ligger i mitten och är störst; vid lika många går Färg före.
     const edges = [["col", "lang", st.lang], ["col", "hear", st.hear], ["col", "room", st.room], ["lang", "taste", st.taste], ["lang", "pers", st.pers], ["sight", "touch", st.touch]].filter(([a, b]) => on[a] && on[b]);
     const deg = k => edges.filter(e => e[0] === k || e[1] === k).length;
     const PRI = ["col", "lang", "sight", "hear", "room", "taste", "pers", "touch"];
     const byPri = tested.slice().sort((a, b) => deg(b) - deg(a) || PRI.indexOf(a) - PRI.indexOf(b));
     const hub = byPri[0];
-    const rad = k => k === hub ? RH : ["lang", "hear", "sight"].includes(k) ? RP : R0; // primära sinnen är större än sekundära
+    const rad = k => k === hub ? RH : ["lang", "hear", "sight"].includes(k) ? RP : RS; // primära sinnen är större än sekundära
     const DEF = { lang: -8, hear: 172, room: -90, taste: 50, sight: 125, touch: 125, pers: -45, col: 200 };
     C[hub] = { r: RH, x: cx, y: cy, on: true };
     const place = (k, parent, level) => {
@@ -3893,9 +3894,9 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     grow();
     for (const k of byPri) if (!vis.has(k)) { place(k, hub, null); vis.add(k); grow(); } // testad men utan samband med de andra: läggs vid mitten
     // Cirklar utan test (eller som inte är aktuella) stannar kvar i den yttre ringen, utanför de testade.
-    const ext = Math.max(...tested.map(k => Math.hypot(C[k].x - cx, C[k].y - cy) + C[k].r));
-    const Rr = Math.max(124, ext + R0 + 8);
-    ALL.forEach((k, i) => { if (on[k]) return; const a = (-90 + i * 36) * Math.PI / 180; C[k] = { r: R0, x: cx + Rr * Math.cos(a), y: cy + Rr * Math.sin(a), on: false }; });
+    const bx0 = Math.min(...tested.map(k => C[k].x - C[k].r)), bx1 = Math.max(...tested.map(k => C[k].x + C[k].r)), by0 = Math.min(...tested.map(k => C[k].y - C[k].r)), by1 = Math.max(...tested.map(k => C[k].y + C[k].r));
+    const rcx = (bx0 + bx1) / 2, rcy = (by0 + by1) / 2;
+    ring(rcx, rcy, Math.max(...tested.map(k => Math.hypot(C[k].x - rcx, C[k].y - rcy) + C[k].r)));
     return C;
   }
   
@@ -3911,7 +3912,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const order = [["col", 0, `url(#${gid})`], ["hear", 1, "#4d8ef0"], ["lang", 2, "#8b7be8"], ["room", 3, "#47bdb1"], ["taste", 4, "#ffb56b"], ["touch", 5, "#ff6fa8"], ["sight", 6, "#f2c94c"], ["pers", 7, "#9c6b4e"], ["smell", 8, "#8bc34a"], ["emo", 9, "#e8636b"]];
     let out = `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6fa8"/><stop offset=".35" stop-color="#ffb56b"/><stop offset=".65" stop-color="#47bdb1"/><stop offset="1" stop-color="#8b7be8"/></linearGradient></defs>`;
     for (const [k, , col] of order.slice().sort((p, q) => C[q[0]].r - C[p[0]].r)) { const c = C[k]; out += `<circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="${c.r}" fill="${c.on ? col : OFF}" fill-opacity="${c.on ? .32 : .12}" stroke="${c.on ? col : OFF}" stroke-opacity="${c.on ? .9 : .8}" stroke-width="2"${c.on ? "" : ' stroke-dasharray="5 4"'}/>`; }
-    for (const [k, i] of order) { const c = C[k]; out += `<text class="${c.on ? "cn" : "cn off"}" x="${c.x.toFixed(1)}" y="${(c.y + (c.r > 40 ? 5 : 4)).toFixed(1)}" style="font-size:${c.r > 40 ? 15 : Math.max(8, Math.min(12, 64 / (NAMES[i].length * .58))).toFixed(1)}px">${NAMES[i]}</text>`; }
+    for (const [k, i] of order) { const c = C[k]; out += `<text class="${c.on ? "cn" : "cn off"}" x="${c.x.toFixed(1)}" y="${(c.y + (c.r >= 90 ? 7 : c.r >= 48 ? 5 : 4)).toFixed(1)}" style="font-size:${Math.max(8, Math.min(c.r >= 90 ? 22 : c.r >= 65 ? 18 : c.r >= 48 ? 14 : 12, 1.75 * c.r / (NAMES[i].length * .58))).toFixed(1)}px">${NAMES[i]}</text>`; }
     return out;
   }
   function renderCircles() {
