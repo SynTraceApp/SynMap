@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-13
+- **Text** – Sidan som man kommer till med Läs mer om synestesi (och från Mina resultat och Min profil) har bara de utfällbara frågorna kvar. Rubriken Vad betyder det? och ingressen är borta, liksom frågan Vad är synestesi?, eftersom den redan står på Om synestesi. (Cajsa)
 - **Design** – Om synestesi i menyn är nu en egen sida i samma format som Så fungerar SynTrace (rubrik, ruta med utfällbara delar, tillbakapil), i stället för en liten ruta som dök upp längst ned. Texten är densamma, uppdelad i Vad är synestesi? i den orangea rutan som på Så fungerar SynTrace. Raden Om prototypen är borttagen därifrån, eftersom den handlar om appen och samma sak redan står under Så fungerar SynTrace, och länken Läs mer om synestesi leder till Vad betyder det?. Finns på svenska, engelska, franska, tyska och spanska. (Cajsa)
 - **Design** – Föregående och Nästa ligger nu över bilden i Spegelberöring, Personlighet, Ord → smak och Tid i rummet, precis som i färgtesterna, så att man slipper skrolla upp och ned mellan bilden och knapparna. (Cajsa)
 - **Design** – Cirklarna som är testade är större i Min profil (mitten störst, primära sinnen näst störst, sekundära större än förut), medan ostestade är kvar små och grå. De ostestade fördelas jämnt i en yttre ring runt de testade, så att bilden fylls ut bättre och de testade syns tydligare. (Cajsa)
