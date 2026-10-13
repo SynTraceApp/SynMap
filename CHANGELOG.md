@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-13
+- **Text** – Under siffrorna i resultaten står nu att talen är färgavstånd och inte procent, och vad ett lägre respektive högre värde betyder (lägre = mer lika färger, högre = färgerna skilde sig mer åt). Inga gränsvärden visas, i enlighet med Rickards beslut. På alla fem språken. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Vladimir Nabokov har fått en ny illustration (Cajsas bild, färgad i fyra toner med bruna glasögon och kostym) i Kända personer med synestesi, med samma dammröda bakgrund som förut. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Text** – Den korta texten överst i Kända personer med synestesi ("Några av dem som har eller har haft synestesi, enligt Wikipedias lista …") är borttagen på alla språk. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – David Hockney och Itzhak Perlman har bytt bakgrundsfärg i Kända personer med synestesi (Hockney har nu den blå och Perlman den blågröna). Placeringen är densamma. Går tillbaka med `git revert` på commiten. (Cajsa)
