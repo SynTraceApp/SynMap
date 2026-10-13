@@ -2018,8 +2018,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     document.querySelectorAll("svg[data-pc]").forEach((e, i) => {
       const st = { col: true, hear: .45, lang: .3, room: .15, taste: null, touch: null, pers: null };
       e.innerHTML = circlesSvg(st, "pcd" + i);
-      const C = Object.values(layoutCircles(st)), x0 = Math.min(...C.map(c => c.x - c.r)) - 6, x1 = Math.max(...C.map(c => c.x + c.r)) + 6, y0 = Math.min(...C.map(c => c.y - c.r)) - 6, y1 = Math.max(...C.map(c => c.y + c.r)) + 6;
-      e.setAttribute("viewBox", `${x0} ${y0} ${x1 - x0} ${y1 - y0}`);
+      e.setAttribute("viewBox", circlesView(st));
     });
     document.querySelectorAll("[data-ill]").forEach(e => { if (!e.firstChild) e.innerHTML = ILL[e.dataset.ill]; });
     document.querySelectorAll("#s-about-app .faq > details").forEach(d => { const s = d.querySelector("summary"), first = d === d.parentElement.querySelector(":scope > details"); d.classList.toggle("ab-plain", !!s && !first && !/^\s*\d+\./.test(s.textContent)); d.classList.toggle("ab-short", first); if (first) { d.open = true; if (!s.dataset.lock) { s.dataset.lock = "1"; s.addEventListener("click", e => e.preventDefault()); } } });
@@ -3836,7 +3835,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // ---------- profile: senses as overlapping circles ----------
   // Overlap = how strongly the answers support the link (share of the smaller circle). Untested circles are dashed and do not overlap.
   function layoutCircles(st) { // st: {hear,lang,room,taste,touch,pers: null|0..1, col: bool}
-    const W = 400, H = 480, cx = 200, cy = 240;
+    const W = 640, H = 640, cx = 320, cy = 320;
     const lens = (d, a, b) => {
       if (d >= a + b) return 0;
       if (d <= Math.abs(a - b)) return Math.PI * Math.min(a, b) ** 2;
@@ -3858,7 +3857,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       ["room", "lang", "pers", "emo", "taste", "smell", "touch", "sight", "hear", "col"].forEach((k, i) => { const a = (-90 + i * 36) * Math.PI / 180; C[k] = { r: R0, x: cx + d * Math.cos(a), y: cy + d * Math.sin(a), on: false }; });
       return C;
     }
-    const free = (x, y, r, skip) => Object.keys(C).every(k => k === "col" || k === skip || Math.hypot(C[k].x - x, C[k].y - y) >= C[k].r + r + 2);
+    const free = (x, y, r, skip) => Object.keys(C).every(k => k === "col" || k === skip || !C[k].on || Math.hypot(C[k].x - x, C[k].y - y) >= C[k].r + r + 2);
     const put = (k, r, ang, s, on) => {
       let best = null;
       // Cirklar utan test (s = null) skjuts längre ut om det är trångt, så att inget överlappar av misstag.
@@ -3896,7 +3895,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     // Personlighet vid Språk (bokstäver och siffror med personlighet) och Lukt vid Smak.
     const relPut = (k, r, ref, s, base, on) => {
       const S0 = C[ref], d = dd(S0.r, r, s);
-      const ok = (x, y) => x - r >= 3 && x + r <= W - 3 && y - r >= 0 && y + r <= H && Math.hypot(x - cx, y - cy) >= R + r + 2 && Object.keys(C).every(q => q === "col" || q === ref || Math.hypot(C[q].x - x, C[q].y - y) >= C[q].r + r + 2);
+      const ok = (x, y) => x - r >= 3 && x + r <= W - 3 && y - r >= 0 && y + r <= H && Math.hypot(x - cx, y - cy) >= R + r + 2 && Object.keys(C).every(q => q === "col" || q === ref || !C[q].on || Math.hypot(C[q].x - x, C[q].y - y) >= C[q].r + r + 2);
       let best = null;
       for (const ex of s === null ? [0, 14, 28, 42] : [0]) for (let i = 0; i < 120 && !best; i++) for (const sg of i ? [1, -1] : [1]) {
         const a = (base + sg * i * 3) * Math.PI / 180, x = S0.x + (d + ex) * Math.cos(a), y = S0.y + (d + ex) * Math.sin(a);
@@ -3909,10 +3908,25 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     relPut("pers", R0, "lang", st.pers, Math.atan2(C.lang.y - cy, C.lang.x - cx) * 180 / Math.PI, st.pers !== null);
     relPut("smell", R0, "taste", null, Math.atan2(C.taste.y - cy, C.taste.x - cx) * 180 / Math.PI, false);
     put("emo", R0, 20, null, false);
+    // Cirklar utan test (eller som inte är aktuella) stannar kvar i den yttre ringen. De testade ligger innanför, runt mitten som är reserverad för Färg.
+    {
+      const tested = Object.keys(C).filter(k => C[k].on);
+      const ext = Math.max(...tested.map(k => Math.hypot(C[k].x - cx, C[k].y - cy) + C[k].r));
+      const Rr = Math.max(124, ext + R0 + 8);
+      ["room", "lang", "pers", "emo", "taste", "smell", "touch", "sight", "hear", "col"].forEach((k, i) => {
+        if (C[k].on) return;
+        const a = (-90 + i * 36) * Math.PI / 180;
+        C[k] = { r: R0, x: cx + Rr * Math.cos(a), y: cy + Rr * Math.sin(a), on: false };
+      });
+    }
     return C;
   }
   
   const anyTested = () => KEYS.some(k => S.sessions[k].length) || S.mt.sessions.length > 0 || trSessions("ol").length > 0 || trSessions("lg").length > 0;
+  function circlesView(st) { // viewBox som passar runt alla cirklar
+    const C = Object.values(layoutCircles(st)), x0 = Math.min(...C.map(c => c.x - c.r)) - 6, x1 = Math.max(...C.map(c => c.x + c.r)) + 6, y0 = Math.min(...C.map(c => c.y - c.r)) - 6, y1 = Math.max(...C.map(c => c.y + c.r)) + 6;
+    return `${x0.toFixed(1)} ${y0.toFixed(1)} ${(x1 - x0).toFixed(1)} ${(y1 - y0).toFixed(1)}`;
+  }
   function circlesSvg(st, gid) {
     const C = layoutCircles(st);
     const NAMES = { sv: ["Färg", "Hörsel", "Språk", "Rum", "Smak", "Känsel", "Syn", "Personlighet", "Lukt", "Känslor"], en: ["Colour", "Hearing", "Language", "Space", "Taste", "Touch", "Sight", "Personality", "Smell", "Emotions"], fr: ["Couleur", "Ouïe", "Langage", "Espace", "Goût", "Toucher", "Vue", "Personnalité", "Odorat", "Émotions"], de: ["Farbe", "Gehör", "Sprache", "Raum", "Geschmack", "Tastsinn", "Sehen", "Persönlichkeit", "Geruch", "Gefühle"], es: ["Color", "Oído", "Lenguaje", "Espacio", "Gusto", "Tacto", "Vista", "Personalidad", "Olfato", "Emociones"] }[S.lang] || ["Färg", "Hörsel", "Språk", "Rum", "Smak", "Känsel", "Syn", "Personlighet", "Lukt", "Känslor"];
@@ -3931,6 +3945,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const taste = lgS.length ? (() => { const sc = lgScore(lgS[lgS.length - 1]).score; return sc === null ? 0 : sc >= 26 ? .3 : .1; })() : null;
     const st = { col: KEYS.some(k => S.sessions[k].length && k !== "space"), hear: lv("sound"), lang: top(lv("digits"), lv("letters"), lv("time")), room: lv("space"), taste, pers: trSessions("ol").length ? (() => { const v = trScore("ol", trSessions("ol")[trSessions("ol").length - 1]).verdict; return v === "pos" ? .3 : v === "neg" ? .1 : 0; })() : null, touch: S.mt.sessions.length ? (() => { const m = mtScore(S.mt.sessions[S.mt.sessions.length - 1]), f = m.nHuman ? m.human / m.nHuman : 0; return f >= .6 ? .45 : f >= .3 ? .3 : m.human >= 1 ? .15 : 0; })() : null };
     $("profile-circles").innerHTML = circlesSvg(st, "pc-rainbow");
+    $("profile-circles").setAttribute("viewBox", circlesView(st));
   }
   // Personlighet, Ord → smak och Spegelberöring får en ring i kartan när testet är gjort: andelen tecken, ord eller klipp som gav en upplevelse.
   function testRing(q) {
