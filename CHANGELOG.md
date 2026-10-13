@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-13
+- **Design** – Rättat bakgrundsfärger som blödde in i illustrationerna i Kända personer med synestesi: rester av gammal bakgrund i håret (Billie), vid konturen (Tesla, Pharrell, Tammet) och vid stråken (Perlman). Kanterna är också renare mot bakgrunden. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Bakgrunderna på illustrationerna i Kända personer med synestesi är lite mörkare. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Bakgrunderna på illustrationerna i Kända personer med synestesi är lite mindre mättade (ca 72 % färg i stället för 95 %). Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Bakgrunderna på illustrationerna i Kända personer med synestesi är nu mättade, i appens egna färger (samma som personernas tidigare silhuettrutor, fast i full styrka), i stället för blekt pastell. Går tillbaka med `git revert` på commiten. (Cajsa)
