@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-13
+- **Text** – Länken till Wikipedias lista (Wikipedia: List of people with synesthesia) under Kända personer med synestesi är borttagen på alla fem språk. Källhänvisningen finns kvar i texten ovanför bilderna. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Nabokov och Pharrell har bytt bakgrundsfärg i Kända personer med synestesi. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Bakgrunderna på illustrationerna i Kända personer med synestesi är lite mörkare (ca 14 %). Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Vladimir Nabokov och Beyoncé har bytt plats i Kända personer med synestesi. Går tillbaka med `git revert` på commiten. (Cajsa)
