@@ -291,6 +291,13 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 .legend span.nc { border: 1.5px dashed var(--line); }
 .kv { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; border-top: 1px solid var(--line); padding-top: 8px; }
 .kv span:last-child { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.scale { display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 10px; font-size: 14px; }
+.scale-h { display: flex; justify-content: space-between; gap: 12px; }
+.scale-h .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.scale-bar { position: relative; height: 12px; border-radius: 6px; background: var(--line); overflow: visible; }
+.scale-bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--violet-line); border-radius: 6px 0 0 6px; }
+.scale-bar b { position: absolute; top: 50%; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; background: var(--violet); border: 3px solid var(--card); box-shadow: 0 0 0 1px var(--violet); }
+.scale-ends { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--muted); }
 .consist { display: flex; gap: 12px; align-items: flex-start; background: var(--violet-soft); border-radius: 18px; padding: 14px 16px; }
 .consist svg { width: 22px; height: 22px; color: var(--navy); flex: none; margin-top: 1px; }
 .consist b { color: var(--navy); font-weight: 600; display: block; }
@@ -1641,6 +1648,10 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
  "för få färgsvar": "too few colour answers",
  "Skillnad mot första sessionen": "Difference from the first session",
  "Talen är färgavstånd, inte procent. Lägre värde betyder att du valde mer lika färger varje gång, högre värde att färgerna skilde sig mer åt.": "The numbers are colour distances, not percentages. A lower value means you chose more similar colours each time; a higher value means the colours differed more.",
+ "Mer olika": "More different",
+ "Mer lika": "More similar",
+ "Det skuggade området är ett mönster som är vanligt vid synestesi, och längre åt höger är vanligare hos andra. Det är preliminärt och ingen diagnos.": "The shaded area is a pattern that is common in synesthesia, and further right is more common in others. It is preliminary and not a diagnosis.",
+ "Markören visar var dina färgval ligger. Längre åt vänster betyder att du valde mer lika färger varje gång, längre åt höger att färgerna skilde sig mer åt.": "The marker shows where your colour choices fall. Further left means you chose more similar colours each time; further right means the colours differed more.",
  "Värden under cirka {x} är ett mönster som är vanligt vid synestesi, och högre värden är vanligare hos andra. Det är preliminärt och ingen diagnos.": "Values below about {x} are a pattern that is common in synesthesia, and higher values are more common in others. It is preliminary and not a diagnosis.",
  "För ljud finns ingen etablerad gräns ännu.": "There is no established limit for sound yet.",
  "Som jämförelse har forskning om bokstäver och siffror använt gränsen {l} (Rothen m.fl., 2013).": "For comparison, research on letters and digits has used the limit {l} (Rothen et al., 2013).",
@@ -1996,10 +2007,22 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   Object.assign(BUNDLED.fr, { "Självskattning": "Auto-évaluation" }); Object.assign(BUNDLED.de, { "Självskattning": "Selbsteinschätzung" }); Object.assign(BUNDLED.es, { "Självskattning": "Autoevaluación" });
   Object.assign(BUNDLED.fr, {"Korta ja/nej-frågor om vilka former av synestesi du tror att du har. Det här testet rekommenderar vidare tester åt dig, utifrån dina svar.": "De courtes questions oui/non sur les formes de synesthésie que vous pensez avoir. Ce test vous recommande d'autres tests, selon vos réponses.", "Rekommenderas": "Recommandé"});
   Object.assign(BUNDLED.fr, {"Värden under cirka {x} är ett mönster som är vanligt vid synestesi, och högre värden är vanligare hos andra. Det är preliminärt och ingen diagnos.": "Les valeurs inférieures à environ {x} correspondent à un schéma fréquent dans la synesthésie, et les valeurs plus élevées sont plus fréquentes chez les autres. C’est préliminaire et ce n’est pas un diagnostic."});
+  Object.assign(BUNDLED.fr, {"Markören visar var dina färgval ligger. Längre åt vänster betyder att du valde mer lika färger varje gång, längre åt höger att färgerna skilde sig mer åt.": "Le marqueur indique où se situent vos choix de couleurs. Plus il est à gauche, plus les couleurs choisies étaient semblables à chaque fois ; plus il est à droite, plus elles différaient."});
+  Object.assign(BUNDLED.fr, {"Det skuggade området är ett mönster som är vanligt vid synestesi, och längre åt höger är vanligare hos andra. Det är preliminärt och ingen diagnos.": "La zone ombrée correspond à un schéma fréquent dans la synesthésie ; plus à droite, c’est plus fréquent chez les autres. C’est préliminaire et ce n’est pas un diagnostic."});
+  Object.assign(BUNDLED.fr, {"Mer lika": "Plus semblables"});
+  Object.assign(BUNDLED.fr, {"Mer olika": "Plus différentes"});
   Object.assign(BUNDLED.de, {"Korta ja/nej-frågor om vilka former av synestesi du tror att du har. Det här testet rekommenderar vidare tester åt dig, utifrån dina svar.": "Kurze Ja/Nein-Fragen dazu, welche Formen von Synästhesie du zu haben glaubst. Dieser Test empfiehlt dir weitere Tests, abhängig von deinen Antworten.", "Rekommenderas": "Empfohlen"});
   Object.assign(BUNDLED.de, {"Värden under cirka {x} är ett mönster som är vanligt vid synestesi, och högre värden är vanligare hos andra. Det är preliminärt och ingen diagnos.": "Werte unter etwa {x} sind ein Muster, das bei Synästhesie häufig ist; höhere Werte sind bei anderen häufiger. Das ist vorläufig und keine Diagnose."});
+  Object.assign(BUNDLED.de, {"Markören visar var dina färgval ligger. Längre åt vänster betyder att du valde mer lika färger varje gång, längre åt höger att färgerna skilde sig mer åt.": "Die Markierung zeigt, wo deine Farbwahl liegt. Weiter links bedeutet, dass du jedes Mal ähnlichere Farben gewählt hast; weiter rechts, dass sich die Farben stärker unterschieden."});
+  Object.assign(BUNDLED.de, {"Det skuggade området är ett mönster som är vanligt vid synestesi, och längre åt höger är vanligare hos andra. Det är preliminärt och ingen diagnos.": "Der schattierte Bereich ist ein Muster, das bei Synästhesie häufig ist; weiter rechts ist bei anderen häufiger. Das ist vorläufig und keine Diagnose."});
+  Object.assign(BUNDLED.de, {"Mer lika": "Ähnlicher"});
+  Object.assign(BUNDLED.de, {"Mer olika": "Unterschiedlicher"});
   Object.assign(BUNDLED.es, {"Korta ja/nej-frågor om vilka former av synestesi du tror att du har. Det här testet rekommenderar vidare tester åt dig, utifrån dina svar.": "Preguntas breves de sí/no sobre qué formas de sinestesia crees tener. Esta prueba te recomienda otras pruebas, según tus respuestas.", "Rekommenderas": "Recomendado"});
   Object.assign(BUNDLED.es, {"Värden under cirka {x} är ett mönster som är vanligt vid synestesi, och högre värden är vanligare hos andra. Det är preliminärt och ingen diagnos.": "Los valores por debajo de aproximadamente {x} son un patrón frecuente en la sinestesia, y los valores más altos son más frecuentes en otras personas. Es preliminar y no es un diagnóstico."});
+  Object.assign(BUNDLED.es, {"Markören visar var dina färgval ligger. Längre åt vänster betyder att du valde mer lika färger varje gång, längre åt höger att färgerna skilde sig mer åt.": "El marcador muestra dónde se sitúan tus elecciones de color. Más a la izquierda significa que elegiste colores más parecidos cada vez; más a la derecha, que los colores diferían más."});
+  Object.assign(BUNDLED.es, {"Det skuggade området är ett mönster som är vanligt vid synestesi, och längre åt höger är vanligare hos andra. Det är preliminärt och ingen diagnos.": "La zona sombreada es un patrón frecuente en la sinestesia; más a la derecha es más frecuente en otras personas. Es preliminar y no es un diagnóstico."});
+  Object.assign(BUNDLED.es, {"Mer lika": "Más parecidos"});
+  Object.assign(BUNDLED.es, {"Mer olika": "Más distintos"});
   const trv = (l, k) => BUNDLED[l]?.[k] ?? RT[l]?.[k];
   function t(str, vars) {
     let out = S.lang === "sv" ? str : (S.lang === "en" ? undefined : (BUNDLED[S.lang]?.[str] ?? RT[S.lang]?.[str])) ?? EN[str] ?? str;
@@ -3731,6 +3754,15 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   const ICONS = { mirror: document.querySelector('[data-icon="mirror"]').innerHTML, ol: document.querySelector('[data-icon="ol"]').innerHTML, lg: document.querySelector('[data-icon="lg"]').innerHTML, pa: document.querySelector('[data-icon="pa"]').innerHTML, clan: document.querySelector('[data-icon="clan"]').innerHTML, sound: document.querySelector('[data-icon="sound"]').innerHTML, digits: document.querySelector('[data-icon="digits"]').innerHTML, letters: document.querySelector('[data-icon="letters"]').innerHTML, time: document.querySelector('[data-icon="time"]').innerHTML, space: document.querySelector('[data-icon="space"]').innerHTML };
   const secs = ms => dec(ms / 1000, 2) + " s";
   const n1 = x => dec(x);
+  // Skala i stället för siffror (Cajsa 2026-10-13): markören visar var värdet ligger, det skuggade området är gränsen 135,3.
+  // Siffran finns kvar i beräkningen och i forskarfilen, och visas bara i testläget (?dev).
+  const SCALE_MAX = 300;
+  function scaleRow(label, val, zone) {
+    const pos = Math.max(0, Math.min(1, val / SCALE_MAX)) * 100;
+    return `<div class="scale"><div class="scale-h"><span>${label}</span>${DEV ? `<span class="mono">${n1(val)}</span>` : ""}</div>`
+      + `<div class="scale-bar" role="img" aria-label="${label}">${zone ? `<i style="width:${(LIM_LUV / SCALE_MAX * 100).toFixed(1)}%"></i>` : ""}<b style="left:${pos.toFixed(1)}%"></b></div>`
+      + `<div class="scale-ends"><span>${t("Mer lika")}</span><span>${t("Mer olika")}</span></div></div>`;
+  }
   function renderResults() {
     const list = $("res-list"); list.innerHTML = "";
     let any = false, followed = false;
@@ -3748,11 +3780,12 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       let rows = kv(t("Sessioner gjorda"), ss.length);
       rows += kv(t("{x} med färgupplevelse", { x: t(NOUN[key]) }), t("{a} av {b}", { a: coloured, b: order.length }));
       if (last.clarity) rows += kv(t("Din skattning av tydlighet"), t("{a} av {b}", { a: last.clarity, b: 5 }));
-      rows += kv(t("Konsistens inom sessionen"), !v.ok ? t("kan inte bedömas") : w.n >= 3 ? n1(w.mean) : t("för få färgsvar"));
-      if (ss.length > 1) { const b = between(ss[0], last); rows += kv(t("Skillnad mot första sessionen"), b ? n1(b.mean) : "–"); }
-      let note = `<p class="muted small">${t("Talen är färgavstånd, inte procent. Lägre värde betyder att du valde mer lika färger varje gång, högre värde att färgerna skilde sig mer åt.")}`;
+      const showZone = key !== "sound";
+      rows += !v.ok ? kv(t("Konsistens inom sessionen"), t("kan inte bedömas")) : w.n >= 3 ? scaleRow(t("Konsistens inom sessionen"), w.mean, showZone) : kv(t("Konsistens inom sessionen"), t("för få färgsvar"));
+      if (ss.length > 1) { const b = between(ss[0], last); rows += b ? scaleRow(t("Skillnad mot första sessionen"), b.mean, showZone) : kv(t("Skillnad mot första sessionen"), "–"); }
+      let note = `<p class="muted small">${t("Markören visar var dina färgval ligger. Längre åt vänster betyder att du valde mer lika färger varje gång, längre åt höger att färgerna skilde sig mer åt.")}`;
       if (key === "sound") note += `</p><p class="muted small">${t("A2–Eb6 är pianotoner från låg till hög. De andra är samma ton (C4) på piano, stråkar, flöjt, klarinett och som ren ton.")}`;
-      else if (w.n >= 3) note += " " + t("Värdet är ingen bedömning av dig.") + " " + t("Värden under cirka {x} är ett mönster som är vanligt vid synestesi, och högre värden är vanligare hos andra. Det är preliminärt och ingen diagnos.", { x: Math.round(LIM_LUV) });
+      else if (w.n >= 3) note += " " + t("Värdet är ingen bedömning av dig.") + (showZone ? " " + t("Det skuggade området är ett mönster som är vanligt vid synestesi, och längre åt höger är vanligare hos andra. Det är preliminärt och ingen diagnos.") : "");
       note += "</p>";
       if (last.speed) {
         rows += kv(t("Snabbtest, rätt svar"), t("{a} av {b} ({p} %)", { a: last.speed.correct, b: last.speed.n, p: Math.round(last.speed.acc * 100) }));
