@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-13
+- **Design** – David Hockney och Itzhak Perlman har bytt bakgrundsfärg i Kända personer med synestesi (Hockney har nu den blå och Perlman den blågröna). Placeringen är densamma. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Test** – Svar som betyder att man inte har någon upplevelse går nu vidare till nästa fråga av sig själva, efter ungefär en tredjedels sekund så att man ser valet: Ingen smak (Ord → smak), Ingen personlighet + Inget kön (Personlighet, först när båda är valda), Nej (Spegelberöring), Nej på "Upplevde du en färg automatiskt?" (Ljud → färg), Inget av detta (Självskattning) och Nej (Inledande frågor). Ingen färg och Har ingen plats gick redan vidare direkt. Sista frågan i ett test avslutas aldrig automatiskt. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Hans Zimmer och Daniel Tammet har bytt bakgrundsfärg (Zimmer har nu den gyllene och Tammet den gröna). Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Nabokovs hår är gjort lite mörkare i illustrationen. Går tillbaka med `git revert` på commiten. (Cajsa)
