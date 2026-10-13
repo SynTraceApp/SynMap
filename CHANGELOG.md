@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-13
+- **Design** – Nabokov och Pharrell har bytt bakgrundsfärg i Kända personer med synestesi. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Bakgrunderna på illustrationerna i Kända personer med synestesi är lite mörkare (ca 14 %). Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Vladimir Nabokov och Beyoncé har bytt plats i Kända personer med synestesi. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Sista bakgrundsresterna vid Billies hår och Tammets hårfäste är borttagna. Går tillbaka med `git revert` på commiten. (Cajsa)
