@@ -11,6 +11,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 
 ## 2026-10-13
 - **Test** – Svar som betyder att man inte har någon upplevelse går nu vidare till nästa fråga av sig själva, efter ungefär en tredjedels sekund så att man ser valet: Ingen smak (Ord → smak), Ingen personlighet + Inget kön (Personlighet, först när båda är valda), Nej (Spegelberöring), Nej på "Upplevde du en färg automatiskt?" (Ljud → färg), Inget av detta (Självskattning) och Nej (Inledande frågor). Ingen färg och Har ingen plats gick redan vidare direkt. Sista frågan i ett test avslutas aldrig automatiskt. Går tillbaka med `git revert` på commiten. (Cajsa)
+- **Design** – Hans Zimmer har fått en ny illustration (Cajsas bild) i Kända personer med synestesi. Bakgrunden är bytt till samma gröna som den gamla bilden hade. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Marilyns mörka hårpartier och konturer på bildens vänstra sida (och längst upp till vänster) är borttagna i illustrationen, så håret är genomgående ljust. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Pharrell Williams och Daniel Tammet har bytt plats i Kända personer med synestesi. Bakgrundsfärgerna ligger kvar på sina platser. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Billie Eilish och Daniel Tammet har bytt plats i Kända personer med synestesi. Bakgrundsfärgerna ligger kvar på sina platser (Billie har nu den blå, Tammet den rosa). Går tillbaka med `git revert` på commiten. (Cajsa)
