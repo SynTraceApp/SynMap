@@ -3848,77 +3848,54 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       return (lo + hi) / 2;
     };
     const dd = (r1, r2, s) => s === null ? r1 + r2 + 4 : s <= 0 ? r1 + r2 : dist(r1, r2, s);
-    // Ostestade cirklar är lika stora (R0) och grå. De får sin storlek, färg och plats först när testerna är gjorda.
-    const R0 = 36, R = st.col ? 66 : R0, rh = st.hear !== null ? 52 : R0, rl = st.lang !== null ? 52 : R0;
-    const C = { col: { r: R, x: cx, y: cy, on: st.col } };
-    if (!st.col && [st.hear, st.lang, st.room, st.taste, st.touch, st.pers].every(v => v === null)) {
+    // Ostestade cirklar är lika stora (R0) och grå och ligger i en yttre ring. De testade läggs innanför, med det mest primära sinnet i mitten.
+    const R0 = 36, RH = 66, RP = 52;
+    const ALL = ["room", "lang", "pers", "emo", "taste", "smell", "touch", "sight", "hear", "col"];
+    const on = { col: !!st.col, hear: st.hear !== null, lang: st.lang !== null, room: st.room !== null, taste: st.taste !== null, touch: st.touch !== null, sight: st.touch !== null, pers: st.pers !== null, smell: false, emo: false };
+    const tested = ALL.filter(k => on[k]), C = {};
+    if (!tested.length) {
       // Inget är testat: alla tio cirklarna ligger där från början, lika stora, i en ring utan cirkel i mitten. Besläktade sinnen ligger bredvid varandra.
-      const d = 124;
-      ["room", "lang", "pers", "emo", "taste", "smell", "touch", "sight", "hear", "col"].forEach((k, i) => { const a = (-90 + i * 36) * Math.PI / 180; C[k] = { r: R0, x: cx + d * Math.cos(a), y: cy + d * Math.sin(a), on: false }; });
+      ALL.forEach((k, i) => { const a = (-90 + i * 36) * Math.PI / 180; C[k] = { r: R0, x: cx + 124 * Math.cos(a), y: cy + 124 * Math.sin(a), on: false }; });
       return C;
     }
-    const free = (x, y, r, skip) => Object.keys(C).every(k => k === "col" || k === skip || !C[k].on || Math.hypot(C[k].x - x, C[k].y - y) >= C[k].r + r + 2);
-    const put = (k, r, ang, s, on) => {
+    // Samband mellan cirklar (överlappet = stödet i testerna). Det sinne som har flest samband ligger i mitten och är störst; vid lika många går Färg före.
+    const edges = [["col", "lang", st.lang], ["col", "hear", st.hear], ["col", "room", st.room], ["lang", "taste", st.taste], ["lang", "pers", st.pers], ["sight", "touch", st.touch]].filter(([a, b]) => on[a] && on[b]);
+    const deg = k => edges.filter(e => e[0] === k || e[1] === k).length;
+    const PRI = ["col", "lang", "sight", "hear", "room", "taste", "pers", "touch"];
+    const byPri = tested.slice().sort((a, b) => deg(b) - deg(a) || PRI.indexOf(a) - PRI.indexOf(b));
+    const hub = byPri[0];
+    const rad = k => k === hub ? RH : ["lang", "hear", "sight"].includes(k) ? RP : R0; // primära sinnen är större än sekundära
+    const DEF = { lang: -8, hear: 172, room: -90, taste: 50, sight: 125, touch: 125, pers: -45, col: 200 };
+    C[hub] = { r: RH, x: cx, y: cy, on: true };
+    const place = (k, parent, level) => {
+      const P = C[parent], r = rad(k), d0 = level === null ? P.r + r + 4 : dd(P.r, r, level);
+      const base = parent === hub ? DEF[k] : Math.atan2(P.y - cy, P.x - cx) * 180 / Math.PI;
       let best = null;
-      // Cirklar utan test (s = null) skjuts längre ut om det är trångt, så att inget överlappar av misstag.
-      for (const ex of s === null ? [0, 14, 28, 42, 56, 70, 84] : [0]) {
-        const d = dd(R, r, s) + ex;
-        for (let i = 0; i < 40 && !best; i++) {
-          for (const sg of i ? [1, -1] : [1]) {
-            const a = (ang + sg * i * 3) * Math.PI / 180;
-            const x = Math.min(W - r - 3, Math.max(r + 3, cx + d * Math.cos(a))), y = cy + d * Math.sin(a);
-            if (y - r >= 0 && y + r <= H && free(x, y, r)) { best = { r, x, y, on }; break; }
-          }
+      for (const ex of level === null ? [0, 14, 28, 42, 56] : [0]) {
+        for (let i = 0; i < 120 && !best; i++) for (const sg of i ? [1, -1] : [1]) {
+          const a = (base + sg * i * 3) * Math.PI / 180, x = P.x + (d0 + ex) * Math.cos(a), y = P.y + (d0 + ex) * Math.sin(a);
+          if (x - r >= 3 && x + r <= W - 3 && y - r >= 3 && y + r <= H - 3 && Object.keys(C).every(q => q === parent || Math.hypot(C[q].x - x, C[q].y - y) >= C[q].r + r + 2)) { best = { r, x, y, on: true }; break; }
         }
         if (best) break;
       }
-      const d = dd(R, r, s);
-      C[k] = best || { r, x: Math.min(W - r - 3, Math.max(r + 3, cx + d * Math.cos(ang * Math.PI / 180))), y: cy + d * Math.sin(ang * Math.PI / 180), on };
+      C[k] = best || { r, x: Math.min(W - r - 3, Math.max(r + 3, P.x + d0)), y: Math.min(H - r - 3, P.y + d0), on: true };
     };
-    put("lang", rl, -8, st.lang, st.lang !== null);
-    const rt = 36;
-    let sm = null;
-    if (st.taste !== null) {
-      const f = R + rt, l = dd(rl, rt, st.taste), L = C.lang, D = Math.hypot(L.x - cx, L.y - cy);
-      const a = (f * f - l * l + D * D) / (2 * D), h2 = f * f - a * a;
-      if (h2 >= 0) {
-        const h = Math.sqrt(h2), ux = (L.x - cx) / D, uy = (L.y - cy) / D;
-        const c = [[cx + a * ux - h * uy, cy + a * uy + h * ux], [cx + a * ux + h * uy, cy + a * uy - h * ux]];
-        sm = c[0][1] > c[1][1] ? c[0] : c[1];
+    const vis = new Set([hub]);
+    const grow = () => {
+      for (let more = true; more;) {
+        more = false;
+        for (const [a, b, lv] of edges) {
+          if (vis.has(a) && !vis.has(b)) { place(b, a, lv); vis.add(b); more = true; }
+          else if (vis.has(b) && !vis.has(a)) { place(a, b, lv); vis.add(a); more = true; }
+        }
       }
-    }
-    if (!sm) { const a = 50 * Math.PI / 180, d = R + rt + 4; sm = [cx + d * Math.cos(a), cy + d * Math.sin(a)]; }
-    C.taste = { r: rt, x: Math.min(W - rt - 3, sm[0]), y: sm[1], on: st.taste !== null };
-    put("hear", rh, 172, st.hear, st.hear !== null);
-    put("room", 36, -90, st.room, st.room !== null);
-    // Cirklar som hör ihop med en annan läggs vid den, med överlapp efter stödet: Känsel vid Syn (spegelberöring: man ser att någon blir berörd),
-    // Personlighet vid Språk (bokstäver och siffror med personlighet) och Lukt vid Smak.
-    const relPut = (k, r, ref, s, base, on) => {
-      const S0 = C[ref], d = dd(S0.r, r, s);
-      const ok = (x, y) => x - r >= 3 && x + r <= W - 3 && y - r >= 0 && y + r <= H && Math.hypot(x - cx, y - cy) >= R + r + 2 && Object.keys(C).every(q => q === "col" || q === ref || !C[q].on || Math.hypot(C[q].x - x, C[q].y - y) >= C[q].r + r + 2);
-      let best = null;
-      for (const ex of s === null ? [0, 14, 28, 42] : [0]) for (let i = 0; i < 120 && !best; i++) for (const sg of i ? [1, -1] : [1]) {
-        const a = (base + sg * i * 3) * Math.PI / 180, x = S0.x + (d + ex) * Math.cos(a), y = S0.y + (d + ex) * Math.sin(a);
-        if (ok(x, y)) { best = { r, x, y, on }; break; }
-      }
-      C[k] = best || { r, x: Math.min(W - r - 3, Math.max(r + 3, S0.x + d)), y: Math.min(H - r, S0.y + d), on };
     };
-    put("sight", R0, 125, null, st.touch !== null);
-    relPut("touch", R0, "sight", st.touch, Math.atan2(C.sight.y - cy, C.sight.x - cx) * 180 / Math.PI, st.touch !== null);
-    relPut("pers", R0, "lang", st.pers, Math.atan2(C.lang.y - cy, C.lang.x - cx) * 180 / Math.PI, st.pers !== null);
-    relPut("smell", R0, "taste", null, Math.atan2(C.taste.y - cy, C.taste.x - cx) * 180 / Math.PI, false);
-    put("emo", R0, 20, null, false);
-    // Cirklar utan test (eller som inte är aktuella) stannar kvar i den yttre ringen. De testade ligger innanför, runt mitten som är reserverad för Färg.
-    {
-      const tested = Object.keys(C).filter(k => C[k].on);
-      const ext = Math.max(...tested.map(k => Math.hypot(C[k].x - cx, C[k].y - cy) + C[k].r));
-      const Rr = Math.max(124, ext + R0 + 8);
-      ["room", "lang", "pers", "emo", "taste", "smell", "touch", "sight", "hear", "col"].forEach((k, i) => {
-        if (C[k].on) return;
-        const a = (-90 + i * 36) * Math.PI / 180;
-        C[k] = { r: R0, x: cx + Rr * Math.cos(a), y: cy + Rr * Math.sin(a), on: false };
-      });
-    }
+    grow();
+    for (const k of byPri) if (!vis.has(k)) { place(k, hub, null); vis.add(k); grow(); } // testad men utan samband med de andra: läggs vid mitten
+    // Cirklar utan test (eller som inte är aktuella) stannar kvar i den yttre ringen, utanför de testade.
+    const ext = Math.max(...tested.map(k => Math.hypot(C[k].x - cx, C[k].y - cy) + C[k].r));
+    const Rr = Math.max(124, ext + R0 + 8);
+    ALL.forEach((k, i) => { if (on[k]) return; const a = (-90 + i * 36) * Math.PI / 180; C[k] = { r: R0, x: cx + Rr * Math.cos(a), y: cy + Rr * Math.sin(a), on: false }; });
     return C;
   }
   
@@ -3933,7 +3910,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
     const OFF = "#9aa0a6";
     const order = [["col", 0, `url(#${gid})`], ["hear", 1, "#4d8ef0"], ["lang", 2, "#8b7be8"], ["room", 3, "#47bdb1"], ["taste", 4, "#ffb56b"], ["touch", 5, "#ff6fa8"], ["sight", 6, "#f2c94c"], ["pers", 7, "#9c6b4e"], ["smell", 8, "#8bc34a"], ["emo", 9, "#e8636b"]];
     let out = `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6fa8"/><stop offset=".35" stop-color="#ffb56b"/><stop offset=".65" stop-color="#47bdb1"/><stop offset="1" stop-color="#8b7be8"/></linearGradient></defs>`;
-    for (const [k, , col] of order) { const c = C[k]; out += `<circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="${c.r}" fill="${c.on ? col : OFF}" fill-opacity="${c.on ? .32 : .12}" stroke="${c.on ? col : OFF}" stroke-opacity="${c.on ? .9 : .8}" stroke-width="2"${c.on ? "" : ' stroke-dasharray="5 4"'}/>`; }
+    for (const [k, , col] of order.slice().sort((p, q) => C[q[0]].r - C[p[0]].r)) { const c = C[k]; out += `<circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="${c.r}" fill="${c.on ? col : OFF}" fill-opacity="${c.on ? .32 : .12}" stroke="${c.on ? col : OFF}" stroke-opacity="${c.on ? .9 : .8}" stroke-width="2"${c.on ? "" : ' stroke-dasharray="5 4"'}/>`; }
     for (const [k, i] of order) { const c = C[k]; out += `<text class="${c.on ? "cn" : "cn off"}" x="${c.x.toFixed(1)}" y="${(c.y + (c.r > 40 ? 5 : 4)).toFixed(1)}" style="font-size:${c.r > 40 ? 15 : Math.max(8, Math.min(12, 64 / (NAMES[i].length * .58))).toFixed(1)}px">${NAMES[i]}</text>`; }
     return out;
   }
