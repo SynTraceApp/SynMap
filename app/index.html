@@ -442,6 +442,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 #profile-map .tc, .pm .tc { fill: var(--navy); font-family: var(--font); font-size: 15px; font-weight: 800; }
 #profile-map .pc, .pm .pc { fill: var(--navy); font-family: var(--mono); font-size: 12px; font-weight: 500; }
 #profile-circles { width: 100%; height: auto; display: block; }
+#profile-circles .cn.off, .pcdemo .cn.off { fill: var(--muted); }
 .pcdemo { width: 100%; max-width: 320px; height: auto; display: block; margin: 0 auto; }
 #profile-circles .cn, .selfcircles .cn, .pcdemo .cn { fill: var(--ink); font-family: var(--font); font-weight: 700; text-anchor: middle; paint-order: stroke; stroke: var(--card); stroke-width: 3px; stroke-linejoin: round; }
 .prow { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
@@ -3848,10 +3849,18 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       return (lo + hi) / 2;
     };
     const dd = (r1, r2, s) => s === null ? r1 + r2 + 4 : s <= 0 ? r1 + r2 : dist(r1, r2, s);
-    const C = { col: { r: 66, x: cx, y: cy, on: st.col } };
+    // Ostestade cirklar är lika stora (R0) och grå. De får sin storlek, färg och plats först när testerna är gjorda.
+    const R0 = 36, R = st.col ? 66 : R0, rh = st.hear !== null ? 52 : R0, rl = st.lang !== null ? 52 : R0;
+    const C = { col: { r: R, x: cx, y: cy, on: st.col } };
+    if (!st.col && st.hear === null && st.lang === null && st.room === null && st.taste === null && st.touch === null) {
+      // Inget är testat: alla sju cirklarna ligger där från början, lika stora, som ett blommönster runt mitten.
+      const d = 2 * R0 + 4;
+      [["room", -90], ["lang", -30], ["taste", 30], ["touch", 90], ["sight", 150], ["hear", 210]].forEach(([k, a]) => { C[k] = { r: R0, x: cx + d * Math.cos(a * Math.PI / 180), y: cy + d * Math.sin(a * Math.PI / 180), on: false }; });
+      return C;
+    }
     const free = (x, y, r, skip) => Object.keys(C).every(k => k === "col" || k === skip || Math.hypot(C[k].x - x, C[k].y - y) >= C[k].r + r + 2);
     const put = (k, r, ang, s, on) => {
-      const d = dd(66, r, s);
+      const d = dd(R, r, s);
       let best = null;
       for (let i = 0; i < 40 && !best; i++) {
         for (const sg of i ? [1, -1] : [1]) {
@@ -3862,11 +3871,11 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       }
       C[k] = best || { r, x: Math.min(W - r - 3, Math.max(r + 3, cx + d * Math.cos(ang * Math.PI / 180))), y: cy + d * Math.sin(ang * Math.PI / 180), on };
     };
-    put("lang", 52, -8, st.lang, st.lang !== null);
+    put("lang", rl, -8, st.lang, st.lang !== null);
     const rt = 36;
     let sm = null;
     if (st.taste !== null) {
-      const f = 66 + rt, l = dd(52, rt, st.taste), L = C.lang, D = Math.hypot(L.x - cx, L.y - cy);
+      const f = R + rt, l = dd(rl, rt, st.taste), L = C.lang, D = Math.hypot(L.x - cx, L.y - cy);
       const a = (f * f - l * l + D * D) / (2 * D), h2 = f * f - a * a;
       if (h2 >= 0) {
         const h = Math.sqrt(h2), ux = (L.x - cx) / D, uy = (L.y - cy) / D;
@@ -3874,15 +3883,15 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
         sm = c[0][1] > c[1][1] ? c[0] : c[1];
       }
     }
-    if (!sm) { const a = 50 * Math.PI / 180, d = 66 + rt + 4; sm = [cx + d * Math.cos(a), cy + d * Math.sin(a)]; }
+    if (!sm) { const a = 50 * Math.PI / 180, d = R + rt + 4; sm = [cx + d * Math.cos(a), cy + d * Math.sin(a)]; }
     C.taste = { r: rt, x: Math.min(W - rt - 3, sm[0]), y: sm[1], on: st.taste !== null };
-    put("hear", 52, 172, st.hear, st.hear !== null);
+    put("hear", rh, 172, st.hear, st.hear !== null);
     put("room", 36, -90, st.room, st.room !== null);
     put("sight", 36, 125, null, st.touch !== null);
     {
       // Känsel hänger ihop med Syn (spegelberöring: man ser att någon blir berörd): den läggs vid Syn, med överlapp efter stödet.
       const S0 = C.sight, d = dd(36, 36, st.touch), base = Math.atan2(S0.y - cy, S0.x - cx) * 180 / Math.PI;
-      const ok = (x, y) => x - 36 >= 3 && x + 36 <= W - 3 && y - 36 >= 0 && y + 36 <= H && Math.hypot(x - cx, y - cy) >= 66 + 36 + 2 && Object.keys(C).every(k => k === "col" || k === "sight" || Math.hypot(C[k].x - x, C[k].y - y) >= C[k].r + 36 + 2);
+      const ok = (x, y) => x - 36 >= 3 && x + 36 <= W - 3 && y - 36 >= 0 && y + 36 <= H && Math.hypot(x - cx, y - cy) >= R + 36 + 2 && Object.keys(C).every(k => k === "col" || k === "sight" || Math.hypot(C[k].x - x, C[k].y - y) >= C[k].r + 36 + 2);
       let best = null;
       for (let i = 0; i < 120 && !best; i++) for (const sg of i ? [1, -1] : [1]) {
         const a = (base + sg * i * 3) * Math.PI / 180, x = S0.x + d * Math.cos(a), y = S0.y + d * Math.sin(a);
@@ -3897,14 +3906,14 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   function circlesSvg(st, gid) {
     const C = layoutCircles(st);
     const NAMES = { sv: ["Färg", "Hörsel", "Språk", "Rum", "Smak", "Känsel", "Syn"], en: ["Colour", "Hearing", "Language", "Space", "Taste", "Touch", "Sight"], fr: ["Couleur", "Ouïe", "Langage", "Espace", "Goût", "Toucher", "Vue"], de: ["Farbe", "Gehör", "Sprache", "Raum", "Geschmack", "Tastsinn", "Sehen"], es: ["Color", "Oído", "Lenguaje", "Espacio", "Gusto", "Tacto", "Vista"] }[S.lang] || ["Färg", "Hörsel", "Språk", "Rum", "Smak", "Känsel", "Syn"];
+    const OFF = "#9aa0a6";
     const order = [["col", 0, `url(#${gid})`], ["hear", 1, "#4d8ef0"], ["lang", 2, "#8b7be8"], ["room", 3, "#47bdb1"], ["taste", 4, "#ffb56b"], ["touch", 5, "#ff6fa8"], ["sight", 6, "#f2c94c"]];
     let out = `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6fa8"/><stop offset=".35" stop-color="#ffb56b"/><stop offset=".65" stop-color="#47bdb1"/><stop offset="1" stop-color="#8b7be8"/></linearGradient></defs>`;
-    for (const [k, , col] of order) { const c = C[k]; out += `<circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="${c.r}" fill="${col}" fill-opacity="${c.on ? .32 : .07}" stroke="${col}" stroke-opacity="${c.on ? .9 : .7}" stroke-width="2"${c.on ? "" : ' stroke-dasharray="5 4"'}/>`; }
-    for (const [k, i] of order) { const c = C[k]; out += `<text class="cn" x="${c.x.toFixed(1)}" y="${(c.y + (c.r > 40 ? 5 : 4)).toFixed(1)}" style="font-size:${c.r > 40 ? 15 : 12}px">${NAMES[i]}</text>`; }
+    for (const [k, , col] of order) { const c = C[k]; out += `<circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="${c.r}" fill="${c.on ? col : OFF}" fill-opacity="${c.on ? .32 : .12}" stroke="${c.on ? col : OFF}" stroke-opacity="${c.on ? .9 : .8}" stroke-width="2"${c.on ? "" : ' stroke-dasharray="5 4"'}/>`; }
+    for (const [k, i] of order) { const c = C[k]; out += `<text class="${c.on ? "cn" : "cn off"}" x="${c.x.toFixed(1)}" y="${(c.y + (c.r > 40 ? 5 : 4)).toFixed(1)}" style="font-size:${c.r > 40 ? 15 : 12}px">${NAMES[i]}</text>`; }
     return out;
   }
   function renderCircles() {
-    if (!anyTested()) { $("profile-circles").innerHTML = `<circle cx="179" cy="215" r="66" fill="#8b7be8" fill-opacity=".07" stroke="#8b7be8" stroke-opacity=".7" stroke-width="2" stroke-dasharray="5 4"/>`; return; }
     const LV = { strong: .45, moderate: .3, weak: .15, na: 0 };
     const lv = k => { const a = assess(k); return a ? LV[a.level] : null; };
     const top = (...v) => { v = v.filter(x => x !== null); return v.length ? Math.max(...v) : null; };

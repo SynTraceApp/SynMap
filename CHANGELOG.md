@@ -9,6 +9,9 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Skriv för en människa, inte för en dator. Säg vad användaren märker eller vad den andra behöver veta, inte vilka rader som ändrats.
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
+## 2026-10-13
+- **Resultat** – Cirklarna i Min profil ligger nu där från början: alla sju sinnena (Färg, Hörsel, Språk, Rum, Smak, Känsel, Syn) som lika stora, grå, streckade cirklar med grå text. Varje cirkel får färg, storlek och plats i förhållande till de andra först när testerna för den är gjorda. Förut visades bara en enda streckad cirkel innan något var testat, och ostestade cirklar hade egen färg och storlek. (Cajsa)
+
 ## 2026-10-12
 - **App** – Små rättelser: veckodagar och månader visas hela i färgtestet (förut "Septemb" och "Donnerst"), Syn-cirkeln i självskattningen syns alltid i Min profil, Enter på Föregående går bakåt, ingen blå blixt över färghjulet vid tryck, inget "?." i rutan om uppföljningar, och den första uppföljningen heter Uppföljning 1. (Rickard)
 - **App** – Dela dina svar: om mejllänken blir längre än 1 900 tecken kopieras texten i stället och mejlet öppnas med en rad om att klistra in, eftersom en del mejlprogram kapar längre länkar vid cirka 2 000 tecken. Texten visas alltid, så den går att kopiera om inget mejlprogram öppnas. (Rickard)
