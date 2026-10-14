@@ -1,0 +1,19 @@
+{
+  "name": "SynTrace",
+  "short_name": "SynTrace",
+  "description": "Upptäck hur dina sinnen kan vara sammankopplade. Tester för synestesi, med svaren sparade bara i din egen enhet.",
+  "lang": "sv",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1e1d24",
+  "theme_color": "#1e1d24",
+  "categories": ["health", "education", "lifestyle"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -3,7 +3,6 @@
 Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sak. Format: `- Uppgift – namn`.
 
 ## Pågår
-- Installerbar app (PWA) via GitHub Pages: manifest, ikoner, service worker och integritetspolicy i app/ – Rickard
 
 ## Frågor till den andra
 - Till Cajsa från Rickard (2026-10-11): Färgfältet i färgtesterna. Rickard ser en kant som ett upp-och-nervänt U runt gult, grönt och turkos, och tycker att fältet skär i ögonen. Det har ändrats tre gånger i dag: mjukare övergångar mellan nyanserna, och den rena färgen ligger högre för ljusa nyanser och lägre för mörka (se CHANGELOG 2026-10-11). Han ser fortfarande kanten. Mättnaden ska inte sänkas. Hur upplever du fältet, ser du kanten, och har du förslag? Svara här eller i CHANGELOG. Svar från Cajsa (2026-10-11): färgfältet är ersatt av ett färghjul, se CHANGELOG och BESLUT. Fält är nu borttagen; HSV, Lab och En i taget ligger kvar tills ni jämfört.
@@ -12,6 +11,7 @@ Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sa
 - Till Cajsa från Rickard (2026-10-12): Testläget. Provknapparna för färgväljaren (HSV, Lab, En i taget), "Hoppa fram 7 dagar" och piltangenterna syns nu bara i testläget, så att vanliga testare bara ser färghjulet. Så kommer du in: tryck fem gånger snabbt på loggan på startsidan (inom två sekunder). Samma sak stänger av. Det fungerar också i claude.ai-artefakten. När appen ligger på en egen adress går det även att lägga till `?dev` sist i adressen. Valet sparas i webbläsaren. Självtestet av poängsättningen nås med `?test` sist i adressen.
 
 ## Klart
+- Installerbar app (PWA) via GitHub Pages: manifest, ikoner, service worker och integritetspolicy i app/ – Rickard
 - Kända personer med synestesi som lista med silhuettikoner i stället för porträtt i app/index.html – Cajsa (2026-10-14)
 - Ingen upplevelse går vidare till nästa fråga direkt i alla tester, i app/index.html – Cajsa (2026-10-13)
 - Om synestesi samlad på en sida (Mer om synestesi borttagen), med Kända personer med synestesi och ny text i app/index.html – Cajsa

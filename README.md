@@ -9,6 +9,8 @@ SynMap är ett screeningverktyg och ställer ingen diagnos.
 | Sökväg | Vad det är |
 |---|---|
 | `app/index.html` | Prototypen. Det är en enda HTML-fil, så öppna den direkt i en webbläsare. |
+| `app/manifest.webmanifest`, `app/sw.js`, `app/icons/` | Det som gör appen installerbar (PWA) när den ligger på GitHub Pages. |
+| `app/integritet.html` | Integritetspolicyn. |
 | `docs/projektbeskrivning.txt` | Den samlade projektbeskrivningen med idé, funktioner, testupplägg, design och nästa steg. |
 | `docs/koncept_sju_skarmar.png` | Konceptbild med de sju skärmarna i den första prototypen. |
 | `docs/inspirationsbilder_oversikt.jpg` | Översikt över inspirationsbilder. |
