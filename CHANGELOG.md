@@ -10,7 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-14
-- **Design** – Perlmans silhuett visar lite av halsen på vänster sida, med luft mellan huvudet och axeln. Går tillbaka med `git revert` på commiten. (Cajsa)
+- **Design** – Perlmans silhuett visar lite av halsen på vänster sida, som en smal glugg mellan huvudet och axeln (han har en kraftig hals). Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Wagners silhuett har nu en barett med kant, pagefrisyr som sticker ut åt vänster samt näsa och haka i profil åt höger, och en tjockare hals. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Silhuetterna i Kända personer med synestesi är justerade: Wagner har mössa och haka, Marilyn har synlig hals och axlar, Beyoncés huvud är rundare och Perlman är utan stråke och fiol. Halsen och axlarna på Wagner, Marilyn och Perlman är ritade i efterhand eftersom porträtten är beskurna. Rättat också ett fel som gjorde Wagner och Marilyn för breda. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Kända personer med synestesi är nu en lista utan bilder: en rad per person med en liten hel silhuett (huvud och axlar, utan cirkel, utklippt efter porträttens konturer) i personens bakgrundsfärg, namn och typ. Texten under listan säger att ikonerna är förenklade silhuetter (alla fem språk). Porträtten finns kvar i koden men visas inte. Ersätter BESLUT-raden från 2026-10-13 om tolv illustrationer. Går tillbaka med `git revert` på commiten. (Cajsa)
