@@ -11,6 +11,7 @@ Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sa
 - Till Cajsa från Rickard (2026-10-12): Testläget. Provknapparna för färgväljaren (HSV, Lab, En i taget), "Hoppa fram 7 dagar" och piltangenterna syns nu bara i testläget, så att vanliga testare bara ser färghjulet. Så kommer du in: tryck fem gånger snabbt på loggan på startsidan (inom två sekunder). Samma sak stänger av. Det fungerar också i claude.ai-artefakten. När appen ligger på en egen adress går det även att lägga till `?dev` sist i adressen. Valet sparas i webbläsaren. Självtestet av poängsättningen nås med `?test` sist i adressen.
 
 ## Klart
+- Kända personer med synestesi som lista med silhuettikoner i stället för porträtt i app/index.html – Cajsa (2026-10-14)
 - Ingen upplevelse går vidare till nästa fråga direkt i alla tester, i app/index.html – Cajsa (2026-10-13)
 - Om synestesi samlad på en sida (Mer om synestesi borttagen), med Kända personer med synestesi och ny text i app/index.html – Cajsa
 - Tio förbättringar från förslagspaketet (uppföljning vid midnatt, testläge, korsvis uppföljning, Personlighet-spärr, jämförelsen, snabbare färghjul, Måttligt stöd, självtest, långa mejl, små rättelser) i app/index.html – Rickard
