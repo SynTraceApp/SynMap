@@ -9,6 +9,9 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Skriv för en människa, inte för en dator. Säg vad användaren märker eller vad den andra behöver veta, inte vilka rader som ändrats.
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
+## 2026-10-14
+- **Text** – Upphovsraderna visar nu Cajsa Gustafsson i stället för Cajsa G, på alla språk, också i © 2026-raden. Går tillbaka med `git revert` på commiten. (Cajsa)
+
 ## 2026-10-13
 - **Resultat** – Cajsas ändringar av resultaten är ångrade: förklaringen av talen, spannet "vanligt vid synestesi", skalan med markör och färgerna grönt, gult och rött är borta. Resultaten ser ut och fungerar som före de ändringarna, med siffrorna och Rickards beslut från 2026-10-11 som de var. Går att få tillbaka med `git revert` på ångrings-commiten. (Cajsa)
 - **Design** – Vladimir Nabokov har fått en ny illustration (Cajsas bild, färgad i fyra toner med bruna glasögon och kostym) i Kända personer med synestesi, med samma dammröda bakgrund som förut. Går tillbaka med `git revert` på commiten. (Cajsa)
