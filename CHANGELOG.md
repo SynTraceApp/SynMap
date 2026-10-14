@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-14
+- **Design** – Silhuetterna i Kända personer med synestesi är justerade: Wagner har mössa och haka, Marilyn har synlig hals och axlar, Beyoncés huvud är rundare och Perlman är utan stråke och fiol. Halsen och axlarna på Wagner, Marilyn och Perlman är ritade i efterhand eftersom porträtten är beskurna. Rättat också ett fel som gjorde Wagner och Marilyn för breda. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Kända personer med synestesi är nu en lista utan bilder: en rad per person med en liten hel silhuett (huvud och axlar, utan cirkel, utklippt efter porträttens konturer) i personens bakgrundsfärg, namn och typ. Texten under listan säger att ikonerna är förenklade silhuetter (alla fem språk). Porträtten finns kvar i koden men visas inte. Ersätter BESLUT-raden från 2026-10-13 om tolv illustrationer. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Text** – Om synestesi säger nu uttryckligen att synestesi är ett icke-patologiskt sensoriskt tillstånd, alltså inte en sjukdom. Meningen står i svaret på Är det en sjukdom?, på alla fem språken. Går tillbaka med `git revert` på commiterna. (Cajsa)
 - **Text** – Upphovsraderna visar nu Cajsa Gustafsson i stället för Cajsa G, på alla språk, också i © 2026-raden. Går tillbaka med `git revert` på commiten. (Cajsa)
