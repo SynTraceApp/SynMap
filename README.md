@@ -1,8 +1,8 @@
-# SynMap
+# SynTrace
 
-SynMap är en gratis app med öppen källkod där man kan utforska om man har synestesi. Appen börjar med en kort enkät och går sedan vidare till konsistenstest för olika typer av synestesi. Resultatet visas som en personlig synestesiprofil.
+SynTrace är en gratis app med öppen källkod där man kan utforska om man har synestesi. Appen börjar med en kort enkät och går sedan vidare till konsistenstest för olika typer av synestesi. Resultatet visas som en personlig synestesiprofil.
 
-SynMap är ett screeningverktyg och ställer ingen diagnos.
+SynTrace är ett screeningverktyg och ställer ingen diagnos.
 
 ## Innehåll
 
