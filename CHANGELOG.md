@@ -10,7 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-14
-- **Text** – Om synestesi säger nu uttryckligen att synestesi är ett icke-patologiskt sensoriskt tillstånd, alltså inte en sjukdom (första stycket i rutan, på alla fem språken). Går tillbaka med `git revert` på commiten. (Cajsa)
+- **Text** – Om synestesi säger nu uttryckligen att synestesi är ett icke-patologiskt sensoriskt tillstånd, alltså inte en sjukdom. Meningen står i svaret på Är det en sjukdom?, på alla fem språken. Går tillbaka med `git revert` på commiterna. (Cajsa)
 - **Text** – Upphovsraderna visar nu Cajsa Gustafsson i stället för Cajsa G, på alla språk, också i © 2026-raden. Går tillbaka med `git revert` på commiten. (Cajsa)
 
 ## 2026-10-13
