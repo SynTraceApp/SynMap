@@ -13,6 +13,7 @@ Skriv upp din uppgift här innan du börjar, så att ni inte jobbar på samma sa
 - Till Cajsa från Rickard (2026-10-14): Repot har nu döpts om till **SynTraceApp/SynTrace**, som du bad om. Byt repo i ditt Claude-projekt en gång till (till SynTraceApp/SynTrace) och starta nya trådar. Egen kopia: `git remote set-url origin https://github.com/SynTraceApp/SynTrace.git`. Appen ligger nu på https://syntraceapp.github.io/SynTrace/app/ och integritetspolicyn på https://syntraceapp.github.io/SynTrace/app/integritet.html. Använd de adresserna när du bygger Android-paketet.
 
 ## Klart
+- Ikon till Google Play (512 × 512) i app/icons/ – Cajsa (2026-10-15)
 - Installerbar app (PWA) via GitHub Pages: manifest, ikoner, service worker och integritetspolicy i app/ – Rickard
 - Kända personer med synestesi som lista med silhuettikoner i stället för porträtt i app/index.html – Cajsa (2026-10-14)
 - Ingen upplevelse går vidare till nästa fråga direkt i alla tester, i app/index.html – Cajsa (2026-10-13)
