@@ -10,7 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-15
-- **Design** – Ny ikon till Google Play: `app/icons/play-store-512.png` (512 × 512 px, PNG). Cajsas egen bild: en hjärna sedd uppifrån av fina trådar med ett X av ljusstrålar över, beskuren till kvadrat och nedskalad till 512 px. Rickards PWA-ikoner är orörda. Går tillbaka genom att ta bort filen. (Cajsa)
+- **Design** – Ny ikon till Google Play: `app/icons/play-store-512.png` (512 × 512 px, PNG). En hjärna sedd uppifrån av fina, skarpa trådar i appens färger (turkos, blått, violett, rosa) med ett X av spetsiga ljusstrålar över: vit kärna och färgat sken, utformat efter Cajsas bild. Rickards PWA-ikoner är orörda. Går tillbaka genom att ta bort filen. (Cajsa)
 
 ## 2026-10-14
 - **Repo** – Repot heter nu SynTraceApp/SynTrace i stället för SynMap, på Cajsas begäran. Appen ligger på https://syntraceapp.github.io/SynTrace/app/ (gamla /SynMap/app/ fungerar inte längre) och kortlänken https://syntraceapp.github.io skickar dit. Ersätter Cajsas beslut från 2026-10-12 att repots namn behålls; gå tillbaka genom att döpa om repot till SynMap i GitHub och köra `git revert` på den här commiten och commiten i syntraceapp.github.io. (Rickard)
