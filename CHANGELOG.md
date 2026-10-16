@@ -15,7 +15,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - **Repo** – Porträtten av levande personer (`PIMG`, tolv bilder, visades inte längre) är borttagna ur `app/index.html`, som blir ca 100 kB mindre. Appen ser likadan ut. De finns kvar i den gamla historiken på GitHub (repot har varit publikt) tills historiken skrivs om, vilket kräver Rickard. Går tillbaka med `git revert` på commiten. (Cajsa)
 
 ## 2026-10-15
-- **Design** – Ny ikon till Google Play: `app/icons/play-store-512.png` (512 × 512 px, PNG). Cajsas valda bild: två vågiga fält av fina trådar som går in i varandra (turkos till violett) med ett X av spetsiga ljusstrålar över (vit kärna, turkost sken upptill och lila nedtill), beskuren till kvadrat och nedskalad till 512 px. Rickards PWA-ikoner är orörda. Går tillbaka genom att ta bort filen. (Cajsa)
+- **Design** – Ny ikon till Google Play: `app/icons/play-store-512.png` (512 × 512 px, PNG). Cajsas valda bild: en neonhjärna med nät, bokstäver och noter i turkos, lila och rosa på mörk botten, beskuren till kvadrat och nedskalad till 512 px. Ersätter den tidigare ikonen med fält av trådar och X. Rickards PWA-ikoner är orörda. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Design** – Grafikbild till Google Play (1024 × 500): `app/icons/play-grafikbild-1024x500.png` med SynTrace, "Upptäck hur dina sinnen kan vara sammankopplade." i appens typsnitt, på samma bakgrund som appens startsida. Går tillbaka genom att ta bort filen. (Cajsa)
 
 ## 2026-10-14
