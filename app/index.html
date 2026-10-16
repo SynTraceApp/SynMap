@@ -346,6 +346,8 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
 .stack > .credit.contact { margin-top: 4px; }
 .stack > .credit.contact + .credit { margin-top: 12px; }
 .credit.contact a { color: var(--violet); font-weight: 600; }
+.legal { text-align: center; margin: 8px 0 0; }
+.legal a { color: var(--violet); font-weight: 600; }
 .copied-note { display: inline-block; margin-left: 6px; font-size: 12px; font-weight: 600; padding: 1px 9px; border-radius: 999px; background: color-mix(in srgb, var(--teal) 18%, transparent); color: var(--ink); white-space: nowrap; }
 #s-welcome .credit .nm { color: #e6e4f2; }
 .export textarea { min-height: 120px; font-family: var(--mono); font-size: 11px; }
@@ -584,6 +586,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
       <p class="muted small">SynTrace is a concept prototype. It is not validated and does not give a diagnosis.</p>
       <p class="muted small credit contact">Questions, feedback or bug reports? Use the form in My results.</p><p class="muted small credit">Concept <b class="nm">Cajsa Gustafsson</b></p><p class="muted small credit">Development <b class="nm">Cajsa Gustafsson</b> and <b class="nm">Rickard Lundgren</b></p><p class="muted small credit">Programming <b class="nm">Rickard Lundgren</b></p><p class="muted small credit cp">© 2026 Cajsa Gustafsson and Rickard Lundgren</p><p class="muted small credit cp">Built with the help of AI (Claude, Anthropic)</p>
     </div>
+    <p class="muted small legal"><a href="https://syntraceapp.github.io/SynTrace/app/integritet.html" target="_blank" rel="noopener">Integritetspolicy</a> · <a href="https://github.com/SynTraceApp/SynTrace" target="_blank" rel="noopener">Källkod på GitHub</a></p>
   </section>
 
   <!-- Samtycke -->
@@ -1156,6 +1159,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   // ---------- language ----------
   // Swedish is the source text; EN maps it to English. t() also fills {placeholders}.
   const EN = {
+    "Integritetspolicy": "Privacy policy", "Källkod på GitHub": "Source code on GitHub",
  "Här kan du ändra dina svar. Det påverkar vilka tester som rekommenderas.": "Here you can change your answers. This affects which tests are recommended.",
  "Tecknet visas bara en gång. Nästa kommer först när du har svarat.": "The character is shown only once. The next one comes only when you have answered.",
  "och": "and",
@@ -1993,6 +1997,7 @@ details > div { display: flex; flex-direction: column; gap: 10px; margin-top: 10
   Object.assign(BUNDLED.fr, {"Här kan du ändra dina svar. Det påverkar vilka tester som rekommenderas.": "Vous pouvez modifier vos réponses ici. Cela influence les tests recommandés."});
   Object.assign(BUNDLED.de, {"Här kan du ändra dina svar. Det påverkar vilka tester som rekommenderas.": "Hier kannst du deine Antworten ändern. Das beeinflusst, welche Tests empfohlen werden."});
   Object.assign(BUNDLED.es, {"Här kan du ändra dina svar. Det påverkar vilka tester som rekommenderas.": "Aquí puedes cambiar tus respuestas. Esto influye en qué pruebas se recomiendan."});
+  Object.assign(BUNDLED.fr, {"Integritetspolicy": "Politique de confidentialité", "Källkod på GitHub": "Code source sur GitHub"}); Object.assign(BUNDLED.de, {"Integritetspolicy": "Datenschutzerklärung", "Källkod på GitHub": "Quellcode auf GitHub"}); Object.assign(BUNDLED.es, {"Integritetspolicy": "Política de privacidad", "Källkod på GitHub": "Código fuente en GitHub"});
   Object.assign(BUNDLED.fr, { "Självskattning": "Auto-évaluation" }); Object.assign(BUNDLED.de, { "Självskattning": "Selbsteinschätzung" }); Object.assign(BUNDLED.es, { "Självskattning": "Autoevaluación" });
   Object.assign(BUNDLED.fr, {"Korta ja/nej-frågor om vilka former av synestesi du tror att du har. Det här testet rekommenderar vidare tester åt dig, utifrån dina svar.": "De courtes questions oui/non sur les formes de synesthésie que vous pensez avoir. Ce test vous recommande d'autres tests, selon vos réponses.", "Rekommenderas": "Recommandé"});
   Object.assign(BUNDLED.de, {"Korta ja/nej-frågor om vilka former av synestesi du tror att du har. Det här testet rekommenderar vidare tester åt dig, utifrån dina svar.": "Kurze Ja/Nein-Fragen dazu, welche Formen von Synästhesie du zu haben glaubst. Dieser Test empfiehlt dir weitere Tests, abhängig von deinen Antworten.", "Rekommenderas": "Empfohlen"});
