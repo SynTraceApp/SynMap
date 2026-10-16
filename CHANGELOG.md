@@ -10,6 +10,7 @@ Allt som ändras i SynMap skrivs upp här, nyast överst. Läs den överst i bö
 - Nämn det som är ofärdigt eller trasigt, så att den andra inte tror att det fungerar.
 
 ## 2026-10-16
+- **Repo** – Ny fil `CITATION.cff` så att GitHub visar knappen "Cite this repository" (författare Cajsa Gustafsson och Rickard Lundgren, ingen licens angiven eftersom den inte är vald). README har ett nytt avsnitt "Poängsättning och gränsvärden (för forskare)" som visar hur testerna räknas och vilka gränser som är vår egen tillämpning och inte validerade. Går tillbaka genom att ta bort filen och avsnittet. (Cajsa)
 - **App** – Längst ned i Om appen finns nu två länkar: Integritetspolicy (https://syntraceapp.github.io/SynTrace/app/integritet.html) och Källkod på GitHub (https://github.com/SynTraceApp/SynTrace). Båda öppnas i en ny flik och skickar inga data. Översatt till de fem språken. Texten säger inte "öppen källkod", eftersom licensen inte är vald än. Går tillbaka med `git revert` på commiten. (Cajsa)
 - **Repo** – Porträtten av levande personer (`PIMG`, tolv bilder, visades inte längre) är borttagna ur `app/index.html`, som blir ca 100 kB mindre. Appen ser likadan ut. De finns kvar i den gamla historiken på GitHub (repot har varit publikt) tills historiken skrivs om, vilket kräver Rickard. Går tillbaka med `git revert` på commiten. (Cajsa)
 

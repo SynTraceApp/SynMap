@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "Om du använder SynTrace i ditt arbete, referera till det så här. If you use SynTrace in your work, please cite it as below."
+title: "SynTrace"
+type: software
+abstract: >-
+  SynTrace är en gratis app där man kan utforska om man har synestesi. Appen
+  innehåller konsistenstest för olika typer av synestesi och visar resultaten som
+  en preliminär profil. Den ställer ingen diagnos, och svaren sparas bara i
+  användarens egen webbläsare. / SynTrace is a free app for exploring whether you
+  have synesthesia, with consistency tests and a preliminary profile. It does not
+  give a diagnosis, and answers are stored only in the user's own browser.
+authors:
+  - family-names: Gustafsson
+    given-names: Cajsa
+  - family-names: Lundgren
+    given-names: Rickard
+repository-code: "https://github.com/SynTraceApp/SynTrace"
+url: "https://syntraceapp.github.io/SynTrace/app/"
+keywords:
+  - synesthesia
+  - synestesi
+  - screening
+date-released: 2026-10-16
